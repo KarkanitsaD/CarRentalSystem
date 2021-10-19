@@ -1,3 +1,4 @@
+using Business.Extensions;
 using Data;
 using Data.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +26,7 @@ namespace API
                 UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
 
             services.AddRepositories();
+            services.AddServices();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
