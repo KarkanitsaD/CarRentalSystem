@@ -15,6 +15,7 @@ namespace Data.Models
         public virtual RentalPointEntity RentalPoint { get; set; }
         public bool IsBooked { get; set; }
         public DateTime LastViewTime { get; set; }
+        public decimal PricePerDay { get; set; }
 
         public virtual ICollection<OrderEntity> Orders { get; set; }
     }

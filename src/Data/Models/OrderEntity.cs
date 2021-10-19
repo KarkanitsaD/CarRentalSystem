@@ -10,7 +10,7 @@ namespace Data.Models
         public int? RentalPointId { get; set; }
         public virtual RentalPointEntity RentalPoint { get; set; }
         public Guid CarId { get; set; }
-        public CarEntity Car { get; set; }
+        public virtual CarEntity Car { get; set; }
         public DateTime KeyReceivingTime { get; set; }
         public DateTime KeyHandOverTime { get; set; }
         public DateTime OrderTime { get; set; }

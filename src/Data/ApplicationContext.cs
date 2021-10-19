@@ -1,4 +1,5 @@
-﻿using Data.Models;
+﻿using Data.EntitiesConfigurations;
+using Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
@@ -28,7 +29,6 @@ namespace Data
         {
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration())
                 .ApplyConfiguration(new RoleEntityTypeConfiguration())
-                .ApplyConfiguration(new RentalTimeSpanEntityTypeConfiguration())
                 .ApplyConfiguration(new RentalPointEntityTypeConfiguration())
                 .ApplyConfiguration(new OrderEntityTypeConfiguration())
                 .ApplyConfiguration(new LocationEntityTypeConfiguration())
