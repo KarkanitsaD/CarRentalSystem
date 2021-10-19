@@ -1,4 +1,5 @@
 using Data;
+using Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -22,6 +23,8 @@ namespace API
         {
             services.AddDbContext<ApplicationContext>(options => options.UseLazyLoadingProxies().
                 UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
+
+            services.AddRepositories();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
