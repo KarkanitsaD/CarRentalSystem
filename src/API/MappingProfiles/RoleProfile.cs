@@ -2,7 +2,7 @@
 using Business.Models;
 using Data.Entities;
 
-namespace Business.MappingProfiles
+namespace API.MappingProfiles
 {
     public class RoleProfile : Profile
     {

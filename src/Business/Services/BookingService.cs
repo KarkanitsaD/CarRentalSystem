@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
-using Business.FilterModels;
 using Business.Interfaces;
 using Business.Models;
 using Data;
 using Data.Entities;
 using Data.Interfaces;
-using Data.Query;
 
 namespace Business.Services
 {
