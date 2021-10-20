@@ -8,7 +8,6 @@ namespace Data.Repositories
         public RoleRepository(ApplicationContext context)
             : base(context)
         {
-
         }
     }
 }

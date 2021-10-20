@@ -8,7 +8,6 @@ namespace Data.Repositories
         public AdditionalFacilityRepository(ApplicationContext context)
             : base(context)
         {
-
         }
     }
 }

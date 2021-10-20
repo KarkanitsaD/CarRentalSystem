@@ -5,6 +5,5 @@ namespace Data.Interfaces
 {
     public interface IUserRepository : IRepository<UserEntity, Guid>
     {
-
     }
 }

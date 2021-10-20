@@ -9,7 +9,6 @@ namespace Data.Repositories
         public BookingRepository(ApplicationContext context)
             : base(context)
         {
-
         }
     }
 }

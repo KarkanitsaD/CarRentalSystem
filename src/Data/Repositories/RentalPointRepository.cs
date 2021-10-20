@@ -12,7 +12,6 @@ namespace Data.Repositories
         public RentalPointRepository(ApplicationContext context)
             : base(context)
         {
-
         }
 
         public async Task<IList<string>> GetRentalPointsCountriesAsync()

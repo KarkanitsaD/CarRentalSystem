@@ -9,7 +9,6 @@ namespace Data.Repositories
         public UserRepository(ApplicationContext context)
             : base(context)
         {
-
         }
     }
 }

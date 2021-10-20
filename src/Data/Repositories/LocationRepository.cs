@@ -8,7 +8,6 @@ namespace Data.Repositories
         public LocationRepository(ApplicationContext context)
             : base(context)
         {
-
         }
     }
 }

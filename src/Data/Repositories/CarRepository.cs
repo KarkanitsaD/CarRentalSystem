@@ -9,7 +9,6 @@ namespace Data.Repositories
         public CarRepository(ApplicationContext context)
             : base(context)
         {
-
         }
     }
 }
