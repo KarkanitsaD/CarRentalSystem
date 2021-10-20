@@ -4,7 +4,6 @@ using AutoMapper;
 using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
-using Data;
 using Data.Entities;
 using Data.Interfaces;
 
@@ -12,14 +11,12 @@ namespace Business.Services
 {
     public class AdditionalFacilityService : IAdditionalFacilityService
     {
-        private readonly ApplicationContext _context;
         private readonly IAdditionalFacilityRepository _additionalFacilityRepository;
         private readonly IMapper _mapper;
 
-        public AdditionalFacilityService(IMapper mapper, ApplicationContext context, IAdditionalFacilityRepository additionalFacilityRepository)
+        public AdditionalFacilityService(IMapper mapper, IAdditionalFacilityRepository additionalFacilityRepository)
         {
             _mapper = mapper;
-            _context = context;
             _additionalFacilityRepository = additionalFacilityRepository;
         }
 
@@ -35,8 +32,6 @@ namespace Business.Services
             var entity = _mapper.Map<AdditionalFacilityModel, AdditionalFacilityEntity>(additionalFacilityModel);
 
             await _additionalFacilityRepository.CreateAsync(entity);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(AdditionalFacilityModel additionalFacilityModel)
@@ -44,8 +39,6 @@ namespace Business.Services
             var entity = _mapper.Map<AdditionalFacilityModel, AdditionalFacilityEntity>(additionalFacilityModel);
 
             _additionalFacilityRepository.Update(entity);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
@@ -54,8 +47,6 @@ namespace Business.Services
 
             if (entity == null)
                 throw new NotFoundException("Entity not found.");
-
-            await _context.SaveChangesAsync();
         }
     }
 }

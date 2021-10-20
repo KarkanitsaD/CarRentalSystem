@@ -8,7 +8,7 @@ namespace Data.Interfaces
         Task<TEntity> GetAsync(TKey id);
         Task<IList<TEntity>> GetListAsync();
         Task<TEntity> CreateAsync(TEntity entity);
-        TEntity Update(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity);
         Task<TEntity> DeleteAsync(TKey id);
     }
 }

@@ -4,7 +4,6 @@ using AutoMapper;
 using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
-using Data;
 using Data.Entities;
 using Data.Interfaces;
 
@@ -13,13 +12,11 @@ namespace Business.Services
     public class RentalPointService : IRentalPointService
     {
         private readonly IMapper _mapper;
-        private readonly ApplicationContext _context;
         private readonly IRentalPointRepository _rentalPointRepository;
 
-        public RentalPointService(IMapper mapper, ApplicationContext context, IRentalPointRepository rentalPointRepository)
+        public RentalPointService(IMapper mapper, IRentalPointRepository rentalPointRepository)
         {
             _mapper = mapper;
-            _context = context;
             _rentalPointRepository = rentalPointRepository;
         }
 
@@ -42,8 +39,6 @@ namespace Business.Services
             var entity = _mapper.Map<RentalPointModel, RentalPointEntity>(rentalPointModel);
 
             await _rentalPointRepository.CreateAsync(entity);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(RentalPointModel rentalPointModel)
@@ -51,8 +46,6 @@ namespace Business.Services
             var entity = _mapper.Map<RentalPointModel, RentalPointEntity>(rentalPointModel);
 
             _rentalPointRepository.Update(entity);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
@@ -61,8 +54,6 @@ namespace Business.Services
 
             if (entityToDelete == null)
                 throw new NotFoundException("Entity not found.");
-
-            await _context.SaveChangesAsync();
         }
     }
 }

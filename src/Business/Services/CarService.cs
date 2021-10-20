@@ -5,7 +5,6 @@ using AutoMapper;
 using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
-using Data;
 using Data.Entities;
 using Data.Interfaces;
 
@@ -14,13 +13,11 @@ namespace Business.Services
     public class CarService : ICarService
     {
         private readonly IMapper _mapper;
-        private readonly ApplicationContext _context;
         private readonly ICarRepository _carRepository;
 
-        public CarService(IMapper mapper, ApplicationContext context, ICarRepository carRepository)
+        public CarService(IMapper mapper, ICarRepository carRepository)
         {
             _mapper = mapper;
-            _context = context;
             _carRepository = carRepository;
         }
 
@@ -43,8 +40,6 @@ namespace Business.Services
             var entity = _mapper.Map<CarModel, CarEntity>(carModel);
 
             await _carRepository.CreateAsync(entity);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(CarModel carModel)
@@ -52,8 +47,6 @@ namespace Business.Services
             var entity = _mapper.Map<CarModel, CarEntity>(carModel);
 
             _carRepository.Update(entity);
-
-            await _context.SaveChangesAsync();
         }
 
         public async  Task DeleteAsync(Guid id)
@@ -62,9 +55,6 @@ namespace Business.Services
 
             if (entityToDelete == null)
                 throw new NotFoundException("Entity not found.");
-
-
-            await _context.SaveChangesAsync();
         }
     }
 }

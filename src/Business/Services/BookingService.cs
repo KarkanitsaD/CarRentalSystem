@@ -5,7 +5,6 @@ using AutoMapper;
 using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
-using Data;
 using Data.Entities;
 using Data.Interfaces;
 
@@ -14,13 +13,11 @@ namespace Business.Services
     public class BookingService : IBookingService
     {
         private readonly IMapper _mapper;
-        private readonly ApplicationContext _context;
         private readonly IBookingRepository _bookingRepository;
 
-        public BookingService(IMapper mapper, ApplicationContext context, IBookingRepository bookingRepository)
+        public BookingService(IMapper mapper, IBookingRepository bookingRepository)
         {
             _mapper = mapper;
-            _context = context;
             _bookingRepository = bookingRepository;
         }
 
@@ -43,8 +40,6 @@ namespace Business.Services
             var entity = _mapper.Map<BookingModel, BookingEntity>(bookingModel);
 
             await _bookingRepository.CreateAsync(entity);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(BookingModel bookingModel)
@@ -52,8 +47,6 @@ namespace Business.Services
             var entity = _mapper.Map<BookingModel, BookingEntity>(bookingModel);
 
             _bookingRepository.Update(entity);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Guid id)
@@ -62,8 +55,6 @@ namespace Business.Services
 
             if (entityToDelete == null)
                 throw new NotFoundException("Entity not found.");
-
-            await _context.SaveChangesAsync();
         }
     }
 }

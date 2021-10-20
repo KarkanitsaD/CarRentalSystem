@@ -3,7 +3,6 @@ using AutoMapper;
 using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
-using Data;
 using Data.Entities;
 using Data.Interfaces;
 
@@ -13,13 +12,11 @@ namespace Business.Services
     {
 
         private readonly IMapper _mapper;
-        private readonly ApplicationContext _context;
         private readonly IRoleRepository _roleRepository;
 
-        public RoleService(IMapper mapper, ApplicationContext context, IRoleRepository roleRepository)
+        public RoleService(IMapper mapper, IRoleRepository roleRepository)
         {
             _mapper = mapper;
-            _context = context;
             _roleRepository = roleRepository;
         }
 
@@ -28,8 +25,6 @@ namespace Business.Services
             var entity = _mapper.Map<RoleModel, RoleEntity>(roleModel);
 
             await _roleRepository.CreateAsync(entity);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(RoleModel roleModel)
@@ -37,8 +32,6 @@ namespace Business.Services
             var entity = _mapper.Map<RoleModel, RoleEntity>(roleModel);
 
             _roleRepository.Update(entity);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
@@ -47,8 +40,6 @@ namespace Business.Services
 
             if (entity == null)
                 throw new NotFoundException("Entity not found.");
-
-            await _context.SaveChangesAsync();
         }
     }
 }
