@@ -1,30 +1,61 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
+using Data;
+using Data.Interfaces;
+using Data.Models;
 
 namespace Business.Services
 {
     public class AdditionalServiceService : IAdditionalServiceService
     {
-        public Task<IList<AdditionalServiceModel>> GetListAsync()
+        private readonly ApplicationContext _context;
+        private readonly IAdditionalServiceRepository _additionalServiceRepository;
+        private readonly IMapper _mapper;
+
+        public AdditionalServiceService(IMapper mapper, ApplicationContext context, IAdditionalServiceRepository additionalServiceRepository)
         {
-            throw new System.NotImplementedException();
+            _mapper = mapper;
+            _context = context;
+            _additionalServiceRepository = additionalServiceRepository;
         }
 
-        public Task CreateAsync(AdditionalServiceModel businessModel)
+        public async Task<IList<AdditionalServiceModel>> GetListAsync()
         {
-            throw new System.NotImplementedException();
+            var entities = await _additionalServiceRepository.GetListAsync();
+
+            return _mapper.Map<IList<AdditionalServiceEntity>, IList<AdditionalServiceModel>>(entities);
         }
 
-        public Task UpdateAsync(AdditionalServiceModel businessModel)
+        public async Task CreateAsync(AdditionalServiceModel additionalServiceModel)
         {
-            throw new System.NotImplementedException();
+            var entity = _mapper.Map<AdditionalServiceModel, AdditionalServiceEntity>(additionalServiceModel);
+
+            await _additionalServiceRepository.CreateAsync(entity);
+
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task UpdateAsync(AdditionalServiceModel additionalServiceModel)
         {
-            throw new System.NotImplementedException();
+            var entity = _mapper.Map<AdditionalServiceModel, AdditionalServiceEntity>(additionalServiceModel);
+
+            _additionalServiceRepository.Update(entity);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var entity = await _additionalServiceRepository.DeleteAsync(id);
+
+            if (entity == null)
+                throw new NotFoundException("Entity not found.");
+
+            await _context.SaveChangesAsync();
         }
     }
 }
