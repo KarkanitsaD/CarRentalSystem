@@ -7,8 +7,8 @@ using Business.FilterModels;
 using Business.Interfaces;
 using Business.Models;
 using Data;
+using Data.Entities;
 using Data.Interfaces;
-using Data.Models;
 using Data.Query;
 
 namespace Business.Services

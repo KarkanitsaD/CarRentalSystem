@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Data.Models;
+using Data.Entities;
 
 namespace Business.Models
 {

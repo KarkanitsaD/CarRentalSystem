@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Data.Models
+namespace Data.Entities
 {
     public class CarEntity : Entity<Guid>
     {

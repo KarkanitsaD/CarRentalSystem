@@ -1,8 +1,10 @@
-﻿using Data.Interfaces;
+﻿using Business.Interfaces;
+using Business.Services;
+using Data.Interfaces;
 using Data.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Data.Extensions
+namespace API.Extensions
 {
     public static class ServiceProviderExtensions
     {
@@ -18,5 +20,19 @@ namespace Data.Extensions
 
             return services;
         }
+
+        public static IServiceCollection AddServices(this IServiceCollection services)
+        {
+            services.AddScoped<IAdditionalServiceService, AdditionalServiceService>();
+            services.AddScoped<IRentalPointService, RentalPointService>();
+            services.AddScoped<ICarService, CarService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IOrderService, OrderService>();
+
+            return services;
+        }
+
+
     }
 }

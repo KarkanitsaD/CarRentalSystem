@@ -5,8 +5,8 @@ using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
 using Data;
+using Data.Entities;
 using Data.Interfaces;
-using Data.Models;
 
 namespace Business.Services
 {

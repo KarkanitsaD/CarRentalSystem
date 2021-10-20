@@ -1,6 +1,5 @@
-using Business.Extensions;
+using API.Extensions;
 using Data;
-using Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,8 +26,6 @@ namespace API
 
             services.AddRepositories();
             services.AddServices();
-
-            services.AddAutoMapperBusinessProfiles();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Business.Models;
-using Data.Models;
+using Data.Entities;
 
 namespace Business.MappingProfiles
 {

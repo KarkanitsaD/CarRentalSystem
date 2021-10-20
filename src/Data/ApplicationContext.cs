@@ -1,5 +1,5 @@
-﻿using Data.EntitiesConfigurations;
-using Data.Models;
+﻿using Data.Entities;
+using Data.EntitiesConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data

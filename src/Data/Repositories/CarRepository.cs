@@ -1,6 +1,6 @@
 ﻿using System;
+using Data.Entities;
 using Data.Interfaces;
-using Data.Models;
 
 namespace Data.Repositories
 {

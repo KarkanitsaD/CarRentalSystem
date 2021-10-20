@@ -1,6 +1,6 @@
 ﻿using Data.Interfaces;
 
-namespace Data.Models
+namespace Data.Entities
 {
     public abstract class Entity<TKey> : IEntity<TKey>
     {

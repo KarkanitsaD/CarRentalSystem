@@ -7,7 +7,7 @@ using Business.FilterModels;
 using Business.Interfaces;
 using Business.Models;
 using Data;
-using Data.Models;
+using Data.Entities;
 using Data.Query;
 using Data.Repositories;
 

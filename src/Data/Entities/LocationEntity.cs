@@ -1,4 +1,4 @@
-﻿namespace Data.Models
+﻿namespace Data.Entities
 {
     public class LocationEntity : Entity<int>
     {

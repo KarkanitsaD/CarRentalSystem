@@ -1,5 +1,5 @@
-﻿using Data.Interfaces;
-using Data.Models;
+﻿using Data.Entities;
+using Data.Interfaces;
 
 namespace Data.Repositories
 {
