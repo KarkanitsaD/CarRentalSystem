@@ -7,7 +7,7 @@ namespace Business.Interfaces
 {
     public interface IUserService
     {
-        Task<UserModel> GetAsync(Guid id);
+        UserModel Get(Guid id);
         Task<IList<UserModel>> GetListAsync();
         Task CreateAsync(UserModel userModel);
         Task UpdateAsync(UserModel userModel);

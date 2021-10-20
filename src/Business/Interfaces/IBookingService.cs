@@ -7,7 +7,7 @@ namespace Business.Interfaces
 {
     public interface IBookingService
     {
-        Task<BookingModel> GetAsync(Guid id);
+        BookingModel Get(Guid id);
         Task<IList<BookingModel>> GetListAsync();
         Task CreateAsync(BookingModel bookingModel);
         Task UpdateAsync(BookingModel bookingModel);

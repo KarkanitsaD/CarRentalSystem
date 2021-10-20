@@ -7,7 +7,7 @@ namespace Business.Interfaces
 {
     public interface ICarService
     {
-        Task<CarModel> GetAsync(Guid id);
+        CarModel Get(Guid id);
         Task<IList<CarModel>> GetListAsync();
         Task CreateAsync(CarModel carModel);
         Task UpdateAsync(CarModel carModel);

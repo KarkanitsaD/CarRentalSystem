@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
-using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
@@ -31,15 +30,12 @@ namespace Business.Services
         {
             var entity = _mapper.Map<RoleModel, RoleEntity>(roleModel);
 
-            _roleRepository.Update(entity);
+            await _roleRepository.UpdateAsync(entity);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _roleRepository.DeleteAsync(id);
-
-            if (entity == null)
-                throw new NotFoundException("Entity not found.");
+            await _roleRepository.DeleteAsync(id);
         }
     }
 }

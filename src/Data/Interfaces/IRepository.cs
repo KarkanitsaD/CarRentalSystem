@@ -5,7 +5,7 @@ namespace Data.Interfaces
 {
     public interface IRepository<TEntity, TKey> where TEntity : class, IEntity<TKey>
     {
-        Task<TEntity> GetAsync(TKey id);
+        TEntity Get(TKey id);
         Task<IList<TEntity>> GetListAsync();
         Task<TEntity> CreateAsync(TEntity entity);
         Task<TEntity> UpdateAsync(TEntity entity);

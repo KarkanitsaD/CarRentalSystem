@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
@@ -38,15 +37,12 @@ namespace Business.Services
         {
             var entity = _mapper.Map<AdditionalFacilityModel, AdditionalFacilityEntity>(additionalFacilityModel);
 
-            _additionalFacilityRepository.Update(entity);
+            await _additionalFacilityRepository.UpdateAsync(entity);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _additionalFacilityRepository.DeleteAsync(id);
-
-            if (entity == null)
-                throw new NotFoundException("Entity not found.");
+            await _additionalFacilityRepository.DeleteAsync(id);
         }
     }
 }

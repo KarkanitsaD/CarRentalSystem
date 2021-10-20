@@ -16,21 +16,21 @@ namespace Data.Repositories
 
         public async Task<IList<string>> GetRentalPointsCountriesAsync()
         {
-            var query = Set.AsQueryable();
+            var query = DbSet.AsQueryable();
 
             return await query.Select(rp => rp.Location.Country).ToListAsync();
         }
 
         public async Task<IList<string>> GetRentalPointsCitiesAsync()
         {
-            var query = Set.AsQueryable();
+            var query = DbSet.AsQueryable();
 
             return await query.Select(rp => rp.Location.City).ToListAsync();
         }
 
         public async Task<IList<string>> GetRentalPointTitlesAsync()
         {
-            var query = Set.AsQueryable();
+            var query = DbSet.AsQueryable();
 
             return await query.Select(rp => rp.Title).ToListAsync();
         }

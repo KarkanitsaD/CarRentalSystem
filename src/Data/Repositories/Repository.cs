@@ -19,19 +19,19 @@ namespace Data.Repositories
 
         protected readonly DbSet<TEntity> DbSet;
 
-        public async Task<TEntity> GetAsync(TKey id)
+        public TEntity Get(TKey id)
         {
-            return await DbSet.AsQueryable().FirstOrDefaultAsync(entity => entity.Id.Equals(id));
+            return DbSet.Find(id);
         }
 
         public async Task<IList<TEntity>> GetListAsync()
         {
-            return await DbSet.AsQueryable().ToListAsync();
+            return await DbSet.ToListAsync();
         }
 
         public async Task<TEntity> CreateAsync(TEntity entity)
         {
-            var createdEntity = await DbSet.AddAsync(entity);
+            var createdEntity = DbSet.Add(entity);
 
             await ApplicationContext.SaveChangesAsync();
 
@@ -49,17 +49,16 @@ namespace Data.Repositories
 
         public async Task<TEntity> DeleteAsync(TKey id)
         {
-            var entityToDelete = await DbSet.FindAsync(id);
+            var entityToDelete = DbSet.Find(id);
 
-            if (entityToDelete != null)
-            {
-                var deletedEntity = DbSet.Remove(entityToDelete).Entity;
-                await ApplicationContext.SaveChangesAsync();
+            if (entityToDelete == null)
+                throw new KeyNotFoundException($"{nameof(TEntity)} with Id = {id} was not found.");
 
-                return deletedEntity;
-            }
+            var deletedEntity = DbSet.Remove(entityToDelete).Entity;
 
-            return null;
+            await ApplicationContext.SaveChangesAsync();
+
+            return deletedEntity;
         }
     }
 }

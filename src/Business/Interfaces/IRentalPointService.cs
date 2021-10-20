@@ -6,7 +6,7 @@ namespace Business.Interfaces
 {
     public interface IRentalPointService
     {
-        Task<RentalPointModel> GetAsync(int id);
+        RentalPointModel Get(int id);
         Task<IList<RentalPointModel>> GetListAsync();
         Task CreateAsync(RentalPointModel rentalPointModel);
         Task UpdateAsync(RentalPointModel rentalPointModel);
