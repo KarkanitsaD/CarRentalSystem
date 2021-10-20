@@ -1,4 +1,5 @@
 ﻿using Business.Interfaces;
+using Business.MappingProfiles;
 using Business.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,13 @@ namespace Business.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IOrderService, OrderService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddAutoMapperBusinessProfiles(this IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(UserProfile));
 
             return services;
         }

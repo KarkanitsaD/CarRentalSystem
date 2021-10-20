@@ -7,8 +7,8 @@ namespace Business.Interfaces
     public interface IAdditionalServiceService
     {
         Task<IList<AdditionalServiceModel>> GetListAsync();
-        Task CreateAsync(AdditionalServiceModel businessModel);
-        Task UpdateAsync(AdditionalServiceModel businessModel);
+        Task CreateAsync(AdditionalServiceModel additionalServiceModel);
+        Task UpdateAsync(AdditionalServiceModel additionalServiceModel);
         Task DeleteAsync(int id);
     }
 }

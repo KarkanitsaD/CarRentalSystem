@@ -27,6 +27,8 @@ namespace API
 
             services.AddRepositories();
             services.AddServices();
+
+            services.AddAutoMapperBusinessProfiles();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
