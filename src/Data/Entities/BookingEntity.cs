@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Data.Entities
 {
-    public class OrderEntity : Entity<Guid>
+    public class BookingEntity : Entity<Guid>
     {
         public Guid UserId { get; set; }
         public virtual UserEntity User { get; set; }
@@ -13,8 +13,8 @@ namespace Data.Entities
         public virtual CarEntity Car { get; set; }
         public DateTime KeyReceivingTime { get; set; }
         public DateTime KeyHandOverTime { get; set; }
-        public DateTime OrderTime { get; set; }
+        public DateTime BookingTime { get; set; }
 
-        public virtual ICollection<AdditionalServiceEntity> AdditionalServices { get; set; }
+        public virtual ICollection<AdditionalFacilityEntity> AdditionalFacilities { get; set; }
     }
 }

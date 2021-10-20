@@ -1,6 +1,6 @@
 ﻿namespace Business.Models
 {
-    public class AdditionalServiceModel
+    public class AdditionalFacilityModel
     {
         public int Id { get; set; }
         public string Title { get; set; }

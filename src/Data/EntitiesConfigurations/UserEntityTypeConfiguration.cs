@@ -29,7 +29,7 @@ namespace Data.EntitiesConfigurations
             builder.HasMany(u => u.Roles)
                 .WithMany(r => r.Users);
 
-            builder.HasMany(u => u.Orders)
+            builder.HasMany(u => u.Bookings)
                 .WithOne(o => o.User)
                 .HasForeignKey(o => o.UserId)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -2,7 +2,7 @@
 
 namespace Business.MappingProfiles
 {
-    public class OrderProfile : Profile
+    public class BookingProfile : Profile
     {
         
     }

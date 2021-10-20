@@ -4,9 +4,9 @@ using Data.Interfaces;
 
 namespace Data.Repositories
 {
-    public class OrderRepository : Repository<OrderEntity, Guid>, IOrderRepository
+    public class BookingRepository : Repository<BookingEntity, Guid>, IBookingRepository
     {
-        public OrderRepository(ApplicationContext context)
+        public BookingRepository(ApplicationContext context)
             : base(context)
         {
 

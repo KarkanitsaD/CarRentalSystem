@@ -8,7 +8,7 @@ namespace Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AdditionalServices",
+                name: "AdditionalFacilities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -139,7 +139,7 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "Bookings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -186,13 +186,13 @@ namespace Data.Migrations
                     table.ForeignKey(
                         name: "FK_AdditionalServiceEntityOrderEntity_AdditionalServices_AdditionalServicesId",
                         column: x => x.AdditionalServicesId,
-                        principalTable: "AdditionalServices",
+                        principalTable: "AdditionalFacilities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AdditionalServiceEntityOrderEntity_Orders_OrdersId",
                         column: x => x.OrdersId,
-                        principalTable: "Orders",
+                        principalTable: "Bookings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -216,17 +216,17 @@ namespace Data.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CarId",
-                table: "Orders",
+                table: "Bookings",
                 column: "CarId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_RentalPointId",
-                table: "Orders",
+                table: "Bookings",
                 column: "RentalPointId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
-                table: "Orders",
+                table: "Bookings",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -247,10 +247,10 @@ namespace Data.Migrations
                 name: "RoleEntityUserEntity");
 
             migrationBuilder.DropTable(
-                name: "AdditionalServices");
+                name: "AdditionalFacilities");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Bookings");
 
             migrationBuilder.DropTable(
                 name: "Roles");

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20211019211213_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20211020111018_NamingRefactor")]
+    partial class NamingRefactor
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,22 +21,22 @@ namespace Data.Migrations
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("AdditionalServiceEntityOrderEntity", b =>
+            modelBuilder.Entity("AdditionalFacilityEntityBookingEntity", b =>
                 {
-                    b.Property<int>("AdditionalServicesId")
+                    b.Property<int>("AdditionalFacilitiesId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("OrdersId")
+                    b.Property<Guid>("BookingsId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("AdditionalServicesId", "OrdersId");
+                    b.HasKey("AdditionalFacilitiesId", "BookingsId");
 
-                    b.HasIndex("OrdersId");
+                    b.HasIndex("BookingsId");
 
-                    b.ToTable("AdditionalServiceEntityOrderEntity");
+                    b.ToTable("AdditionalFacilityEntityBookingEntity");
                 });
 
-            modelBuilder.Entity("Data.Models.AdditionalServiceEntity", b =>
+            modelBuilder.Entity("Data.Entities.AdditionalFacilityEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,42 @@ namespace Data.Migrations
                     b.ToTable("AdditionalFacilities");
                 });
 
-            modelBuilder.Entity("Data.Models.CarEntity", b =>
+            modelBuilder.Entity("Data.Entities.BookingEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("BookingTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CarId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("KeyHandOverTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("KeyReceivingTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RentalPointId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("RentalPointId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("Data.Entities.CarEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,7 +142,7 @@ namespace Data.Migrations
                     b.ToTable("Cars");
                 });
 
-            modelBuilder.Entity("Data.Models.LocationEntity", b =>
+            modelBuilder.Entity("Data.Entities.LocationEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -141,42 +176,7 @@ namespace Data.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("Data.Models.OrderEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CarId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("KeyHandOverTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("KeyReceivingTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("BookingTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RentalPointId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarId");
-
-                    b.HasIndex("RentalPointId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("Data.Models.RentalPointEntity", b =>
+            modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -196,7 +196,7 @@ namespace Data.Migrations
                     b.ToTable("RentalPoints");
                 });
 
-            modelBuilder.Entity("Data.Models.RoleEntity", b =>
+            modelBuilder.Entity("Data.Entities.RoleEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -213,7 +213,7 @@ namespace Data.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Data.Models.UserEntity", b =>
+            modelBuilder.Entity("Data.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -258,55 +258,35 @@ namespace Data.Migrations
                     b.ToTable("RoleEntityUserEntity");
                 });
 
-            modelBuilder.Entity("AdditionalServiceEntityOrderEntity", b =>
+            modelBuilder.Entity("AdditionalFacilityEntityBookingEntity", b =>
                 {
-                    b.HasOne("Data.Models.AdditionalServiceEntity", null)
+                    b.HasOne("Data.Entities.AdditionalFacilityEntity", null)
                         .WithMany()
-                        .HasForeignKey("AdditionalServicesId")
+                        .HasForeignKey("AdditionalFacilitiesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.OrderEntity", null)
+                    b.HasOne("Data.Entities.BookingEntity", null)
                         .WithMany()
-                        .HasForeignKey("OrdersId")
+                        .HasForeignKey("BookingsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.Models.CarEntity", b =>
+            modelBuilder.Entity("Data.Entities.BookingEntity", b =>
                 {
-                    b.HasOne("Data.Models.RentalPointEntity", "RentalPoint")
-                        .WithMany("Cars")
-                        .HasForeignKey("RentalPointId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("RentalPoint");
-                });
-
-            modelBuilder.Entity("Data.Models.LocationEntity", b =>
-                {
-                    b.HasOne("Data.Models.RentalPointEntity", "RentalPoint")
-                        .WithOne("Location")
-                        .HasForeignKey("Data.Models.LocationEntity", "RentalPointId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("RentalPoint");
-                });
-
-            modelBuilder.Entity("Data.Models.OrderEntity", b =>
-                {
-                    b.HasOne("Data.Models.CarEntity", "Car")
+                    b.HasOne("Data.Entities.CarEntity", "Car")
                         .WithMany("Bookings")
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.RentalPointEntity", "RentalPoint")
+                    b.HasOne("Data.Entities.RentalPointEntity", "RentalPoint")
                         .WithMany("Bookings")
                         .HasForeignKey("RentalPointId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Data.Models.UserEntity", "User")
+                    b.HasOne("Data.Entities.UserEntity", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -319,36 +299,56 @@ namespace Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Data.Entities.CarEntity", b =>
+                {
+                    b.HasOne("Data.Entities.RentalPointEntity", "RentalPoint")
+                        .WithMany("Cars")
+                        .HasForeignKey("RentalPointId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("RentalPoint");
+                });
+
+            modelBuilder.Entity("Data.Entities.LocationEntity", b =>
+                {
+                    b.HasOne("Data.Entities.RentalPointEntity", "RentalPoint")
+                        .WithOne("Location")
+                        .HasForeignKey("Data.Entities.LocationEntity", "RentalPointId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("RentalPoint");
+                });
+
             modelBuilder.Entity("RoleEntityUserEntity", b =>
                 {
-                    b.HasOne("Data.Models.RoleEntity", null)
+                    b.HasOne("Data.Entities.RoleEntity", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.UserEntity", null)
+                    b.HasOne("Data.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.Models.CarEntity", b =>
+            modelBuilder.Entity("Data.Entities.CarEntity", b =>
                 {
                     b.Navigation("Bookings");
                 });
 
-            modelBuilder.Entity("Data.Models.RentalPointEntity", b =>
+            modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
                 {
+                    b.Navigation("Bookings");
+
                     b.Navigation("Cars");
 
                     b.Navigation("Location");
-
-                    b.Navigation("Bookings");
                 });
 
-            modelBuilder.Entity("Data.Models.UserEntity", b =>
+            modelBuilder.Entity("Data.Entities.UserEntity", b =>
                 {
                     b.Navigation("Bookings");
                 });

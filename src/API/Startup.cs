@@ -24,6 +24,7 @@ namespace API
             services.AddDbContext<ApplicationContext>(options => options.UseLazyLoadingProxies().
                 UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddRepositories();
             services.AddServices();
         }

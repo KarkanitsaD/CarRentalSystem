@@ -4,7 +4,7 @@ using Data.Entities;
 
 namespace Business.Models
 {
-    public class OrderModel
+    public class BookingModel
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
@@ -15,8 +15,8 @@ namespace Business.Models
         public virtual CarEntity Car { get; set; }
         public DateTime KeyReceivingTime { get; set; }
         public DateTime KeyHandOverTime { get; set; }
-        public DateTime OrderTime { get; set; }
+        public DateTime BookingTime { get; set; }
 
-        public virtual ICollection<AdditionalServiceEntity> AdditionalServices { get; set; }
+        public virtual ICollection<AdditionalFacilityEntity> AdditionalFacilities { get; set; }
     }
 }

@@ -8,8 +8,8 @@ using Business.Interfaces;
 using Business.Models;
 using Data;
 using Data.Entities;
+using Data.Interfaces;
 using Data.Query;
-using Data.Repositories;
 
 namespace Business.Services
 {
@@ -17,9 +17,9 @@ namespace Business.Services
     {
         private readonly IMapper _mapper;
         private readonly ApplicationContext _context;
-        private readonly RentalPointRepository _rentalPointRepository;
+        private readonly IRentalPointRepository _rentalPointRepository;
 
-        public RentalPointService(IMapper mapper, ApplicationContext context, RentalPointRepository rentalPointRepository)
+        public RentalPointService(IMapper mapper, ApplicationContext context, IRentalPointRepository rentalPointRepository)
         {
             _mapper = mapper;
             _context = context;

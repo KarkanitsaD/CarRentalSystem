@@ -11,6 +11,6 @@ namespace Data.Entities
         public string Surname { get; set; }
 
         public virtual ICollection<RoleEntity> Roles { get; set; }
-        public virtual ICollection<OrderEntity> Orders { get; set; }
+        public virtual ICollection<BookingEntity> Bookings { get; set; }
     }
 }

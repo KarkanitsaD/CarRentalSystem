@@ -19,6 +19,6 @@ namespace Business.Models
         public DateTime LastViewTime { get; set; }
         public decimal PricePerDay { get; set; }
 
-        public virtual ICollection<OrderEntity> Orders { get; set; }
+        public virtual ICollection<BookingEntity> Bookings { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Data.EntitiesConfigurations
                 .HasForeignKey<RentalPointEntity>(rp => rp.LocationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(l => l.Orders)
+            builder.HasMany(l => l.Bookings)
                 .WithOne(o => o.RentalPoint)
                 .HasForeignKey(o => o.RentalPointId)
                 .OnDelete(DeleteBehavior.SetNull);

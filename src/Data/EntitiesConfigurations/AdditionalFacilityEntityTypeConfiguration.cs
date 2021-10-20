@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.EntitiesConfigurations
 {
-    public class AdditionalServiceEntityTypeConfiguration : IEntityTypeConfiguration<AdditionalServiceEntity>
+    public class AdditionalFacilityEntityTypeConfiguration : IEntityTypeConfiguration<AdditionalFacilityEntity>
     {
-        public void Configure(EntityTypeBuilder<AdditionalServiceEntity> builder)
+        public void Configure(EntityTypeBuilder<AdditionalFacilityEntity> builder)
         {
             builder.HasKey(s => s.Id);
             builder.Property(s => s.Id)
@@ -22,8 +22,8 @@ namespace Data.EntitiesConfigurations
             builder.Property(s => s.Description)
                 .HasMaxLength(500);
 
-            builder.HasMany(s => s.Orders)
-                .WithMany(o => o.AdditionalServices);
+            builder.HasMany(s => s.Bookings)
+                .WithMany(o => o.AdditionalFacilities);
         }
     }
 }

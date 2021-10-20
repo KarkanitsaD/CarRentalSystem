@@ -113,7 +113,7 @@ namespace Business.Services
                     (!string.IsNullOrEmpty(userFilterModel.Email) && user.Email == userFilterModel.Email || string.IsNullOrEmpty(userFilterModel.Email)) &&
                     (!string.IsNullOrEmpty(userFilterModel.Name) && user.Name == userFilterModel.Name || string.IsNullOrEmpty(userFilterModel.Name)) &&
                     (!string.IsNullOrEmpty(userFilterModel.Surname) && user.Surname == userFilterModel.Surname || string.IsNullOrEmpty(userFilterModel.Surname)) &&
-                    (userFilterModel.NumberOfOrders != null && user.Orders.Count == userFilterModel.NumberOfOrders || userFilterModel.NumberOfOrders == null)
+                    (userFilterModel.NumberOfBookings != null && user.Bookings.Count == userFilterModel.NumberOfBookings || userFilterModel.NumberOfBookings == null)
             };
 
             return filterRule;

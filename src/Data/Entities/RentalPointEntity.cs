@@ -8,7 +8,7 @@ namespace Data.Entities
         public int? LocationId { get; set; }
         public virtual LocationEntity Location { get; set; }
 
-        public virtual ICollection<OrderEntity> Orders { get; set; }
+        public virtual ICollection<BookingEntity> Bookings { get; set; }
         public virtual ICollection<CarEntity> Cars { get; set; }
     }
 }
