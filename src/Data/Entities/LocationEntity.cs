@@ -6,6 +6,6 @@
         public string City { get; set; }
         public string Address { get; set; }
         public int? RentalPointId { get; set; }
-        public virtual RentalPointEntity RentalPoint { get; set; }
+        public RentalPointEntity RentalPoint { get; set; }
     }
 }

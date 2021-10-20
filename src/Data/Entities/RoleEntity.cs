@@ -6,6 +6,6 @@ namespace Data.Entities
     {
         public string Title { get; set; }
 
-        public virtual ICollection<UserEntity> Users { get; set; }
+        public ICollection<UserEntity> Users { get; set; }
     }
 }

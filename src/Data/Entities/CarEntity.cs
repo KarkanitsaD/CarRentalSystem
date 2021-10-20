@@ -17,6 +17,6 @@ namespace Data.Entities
         public DateTime LastViewTime { get; set; }
         public decimal PricePerDay { get; set; }
 
-        public virtual ICollection<BookingEntity> Bookings { get; set; }
+        public ICollection<BookingEntity> Bookings { get; set; }
     }
 }

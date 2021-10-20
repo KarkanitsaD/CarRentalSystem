@@ -8,6 +8,6 @@ namespace Data.Entities
         public decimal Price { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<BookingEntity> Bookings { get; set; }
+        public ICollection<BookingEntity> Bookings { get; set; }
     }
 }

@@ -6,9 +6,9 @@ namespace Data.Entities
     {
         public string Title { get; set; }
         public int? LocationId { get; set; }
-        public virtual LocationEntity Location { get; set; }
+        public LocationEntity Location { get; set; }
 
-        public virtual ICollection<BookingEntity> Bookings { get; set; }
-        public virtual ICollection<CarEntity> Cars { get; set; }
+        public ICollection<BookingEntity> Bookings { get; set; }
+        public ICollection<CarEntity> Cars { get; set; }
     }
 }

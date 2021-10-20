@@ -15,6 +15,6 @@ namespace Data.Entities
         public DateTime KeyHandOverTime { get; set; }
         public DateTime BookingTime { get; set; }
 
-        public virtual ICollection<AdditionalFacilityEntity> AdditionalFacilities { get; set; }
+        public ICollection<AdditionalFacilityEntity> AdditionalFacilities { get; set; }
     }
 }
