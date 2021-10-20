@@ -9,7 +9,7 @@ namespace Business.Interfaces
     public interface IOrderService
     {
         Task<int> Count(OrderFilterModel orderFilterModel);
-        Task<OrderModel> GetAsync(int id);
+        Task<OrderModel> GetAsync(Guid id);
         Task<IList<OrderModel>> GetListAsync(OrderFilterModel orderFilterModel);
         Task<IList<OrderModel>> GetPageListAsync(OrderFilterModel orderFilterModel);
         Task CreateAsync(OrderModel orderModel);
