@@ -26,52 +26,16 @@ namespace Business.Services
             _bookingRepository = bookingRepository;
         }
 
-        public async Task<int> Count(BookingFilterModel bookingFilterModel)
-        {
-            var filterRule = DefineFilterRule(bookingFilterModel);
-            return await _bookingRepository.Count(filterRule);
-        }
-
         public async Task<BookingModel> GetAsync(Guid id)
         {
-            var filterRule = new FilterRule<BookingEntity, Guid>
-            {
-                FilterExpression = booking =>
-                    booking.Id == id
-            };
-
-            var entity = await _bookingRepository.GetAsync(filterRule);
+            var entity = await _bookingRepository.GetAsync(id);
 
             return _mapper.Map<BookingEntity, BookingModel>(entity);
         }
 
-        public async Task<IList<BookingModel>> GetListAsync(BookingFilterModel bookingFilterModel)
+        public async Task<IList<BookingModel>> GetListAsync()
         {
-            var queryParameters = new QueryParameters<BookingEntity, Guid>
-            {
-                FilterRule = DefineFilterRule(bookingFilterModel),
-                SortRule = DefineSortRule(bookingFilterModel)
-            };
-
-            var entities = await _bookingRepository.GetListAsync(queryParameters);
-
-            return _mapper.Map<IList<BookingEntity>, IList<BookingModel>>(entities);
-        }
-
-        public async Task<IList<BookingModel>> GetPageListAsync(BookingFilterModel bookingFilterModel)
-        {
-            var queryParameters = new QueryParameters<BookingEntity, Guid>
-            {
-                FilterRule = DefineFilterRule(bookingFilterModel),
-                SortRule = DefineSortRule(bookingFilterModel),
-                PaginationRule = new PaginationRule
-                {
-                    Index = bookingFilterModel.PageIndex,
-                    Size = bookingFilterModel.PageSize
-                }
-            };
-
-            var entities = await _bookingRepository.GetListAsync(queryParameters);
+            var entities = await _bookingRepository.GetListAsync();
 
             return _mapper.Map<IList<BookingEntity>, IList<BookingModel>>(entities);
         }
@@ -102,25 +66,6 @@ namespace Business.Services
                 throw new NotFoundException("Entity not found.");
 
             await _context.SaveChangesAsync();
-        }
-
-        private FilterRule<BookingEntity, Guid> DefineFilterRule(BookingFilterModel bookingFilterModel)
-        {
-            throw new NotImplementedException();
-            //TODO: write logic to filter bookings
-        }
-
-        private SortRule<BookingEntity, Guid> DefineSortRule(BookingFilterModel bookingFilterModel)
-        {
-            var sortRule = new SortRule<BookingEntity, Guid>();
-
-            if (bookingFilterModel.InAscendingOrder != null)
-            {
-                sortRule.InAscendingOrder = (bool)bookingFilterModel.InAscendingOrder;
-                sortRule.SortExpression = car => car.Id;
-            }
-
-            return sortRule;
         }
     }
 }
