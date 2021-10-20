@@ -13,6 +13,6 @@ namespace Business.Models
         public DateTime KeyHandOverTime { get; set; }
         public DateTime BookingTime { get; set; }
 
-        public virtual ICollection<AdditionalFacilityModel> AdditionalFacilities { get; set; }
+        public ICollection<AdditionalFacilityModel> AdditionalFacilities { get; set; }
     }
 }

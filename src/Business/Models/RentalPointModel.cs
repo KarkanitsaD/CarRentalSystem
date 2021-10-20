@@ -11,7 +11,7 @@ namespace Business.Models
         public string City { get; set; }
         public string Address { get; set; }
 
-        public virtual ICollection<BookingModel> Bookings { get; set; }
-        public virtual ICollection<CarModel> Cars { get; set; }
+        public ICollection<BookingModel> Bookings { get; set; }
+        public ICollection<CarModel> Cars { get; set; }
     }
 }

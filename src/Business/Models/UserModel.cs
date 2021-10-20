@@ -12,7 +12,7 @@ namespace Business.Models
         public string Name { get; set; }
         public string Surname { get; set; }
 
-        public virtual ICollection<RoleModel> Roles { get; set; }
-        public virtual ICollection<BookingEntity> Bookings { get; set; }
+        public ICollection<RoleModel> Roles { get; set; }
+        public ICollection<BookingEntity> Bookings { get; set; }
     }
 }
