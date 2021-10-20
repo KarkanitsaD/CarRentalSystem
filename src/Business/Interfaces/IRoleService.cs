@@ -5,8 +5,8 @@ namespace Business.Interfaces
 {
     public interface IRoleService
     {
-        Task CreateAsync(RoleModel roleBusinessModel);
-        Task UpdateAsync(RoleModel roleBusinessModel);
+        Task CreateAsync(RoleModel roleModel);
+        Task UpdateAsync(RoleModel roleModel);
         Task DeleteAsync(int id);
     }
 }
