@@ -11,25 +11,23 @@ namespace Data.Migrations
                 name: "AdditionalFacilities",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AdditionalServices", x => x.Id);
+                    table.PrimaryKey("PK_AdditionalFacilities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "RentalPoints",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LocationId = table.Column<int>(type: "int", nullable: true)
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -40,8 +38,7 @@ namespace Data.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
@@ -76,7 +73,7 @@ namespace Data.Migrations
                     NumberOfSeats = table.Column<int>(type: "int", nullable: false),
                     Color = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     VehicleNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RentalPointId = table.Column<int>(type: "int", nullable: true),
+                    RentalPointId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsBooked = table.Column<bool>(type: "bit", nullable: false),
                     LastViewTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PricePerDay = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
@@ -96,12 +93,11 @@ namespace Data.Migrations
                 name: "Locations",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    RentalPointId = table.Column<int>(type: "int", nullable: true)
+                    RentalPointId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -118,7 +114,7 @@ namespace Data.Migrations
                 name: "RoleEntityUserEntity",
                 columns: table => new
                 {
-                    RolesId = table.Column<int>(type: "int", nullable: false),
+                    RolesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UsersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -144,29 +140,29 @@ namespace Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RentalPointId = table.Column<int>(type: "int", nullable: true),
+                    RentalPointId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CarId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     KeyReceivingTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     KeyHandOverTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrderTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    BookingTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Cars_CarId",
+                        name: "FK_Bookings_Cars_CarId",
                         column: x => x.CarId,
                         principalTable: "Cars",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_RentalPoints_RentalPointId",
+                        name: "FK_Bookings_RentalPoints_RentalPointId",
                         column: x => x.RentalPointId,
                         principalTable: "RentalPoints",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Orders_Users_UserId",
+                        name: "FK_Bookings_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -174,33 +170,48 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AdditionalServiceEntityOrderEntity",
+                name: "AdditionalFacilityEntityBookingEntity",
                 columns: table => new
                 {
-                    AdditionalServicesId = table.Column<int>(type: "int", nullable: false),
-                    OrdersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    AdditionalFacilitiesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BookingsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AdditionalServiceEntityOrderEntity", x => new { x.AdditionalServicesId, x.OrdersId });
+                    table.PrimaryKey("PK_AdditionalFacilityEntityBookingEntity", x => new { x.AdditionalFacilitiesId, x.BookingsId });
                     table.ForeignKey(
-                        name: "FK_AdditionalServiceEntityOrderEntity_AdditionalServices_AdditionalServicesId",
-                        column: x => x.AdditionalServicesId,
+                        name: "FK_AdditionalFacilityEntityBookingEntity_AdditionalFacilities_AdditionalFacilitiesId",
+                        column: x => x.AdditionalFacilitiesId,
                         principalTable: "AdditionalFacilities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AdditionalServiceEntityOrderEntity_Orders_OrdersId",
-                        column: x => x.OrdersId,
+                        name: "FK_AdditionalFacilityEntityBookingEntity_Bookings_BookingsId",
+                        column: x => x.BookingsId,
                         principalTable: "Bookings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AdditionalServiceEntityOrderEntity_OrdersId",
-                table: "AdditionalServiceEntityOrderEntity",
-                column: "OrdersId");
+                name: "IX_AdditionalFacilityEntityBookingEntity_BookingsId",
+                table: "AdditionalFacilityEntityBookingEntity",
+                column: "BookingsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_CarId",
+                table: "Bookings",
+                column: "CarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_RentalPointId",
+                table: "Bookings",
+                column: "RentalPointId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_UserId",
+                table: "Bookings",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cars_RentalPointId",
@@ -215,21 +226,6 @@ namespace Data.Migrations
                 filter: "[RentalPointId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CarId",
-                table: "Bookings",
-                column: "CarId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_RentalPointId",
-                table: "Bookings",
-                column: "RentalPointId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_UserId",
-                table: "Bookings",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RoleEntityUserEntity_UsersId",
                 table: "RoleEntityUserEntity",
                 column: "UsersId");
@@ -238,7 +234,7 @@ namespace Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AdditionalServiceEntityOrderEntity");
+                name: "AdditionalFacilityEntityBookingEntity");
 
             migrationBuilder.DropTable(
                 name: "Locations");
