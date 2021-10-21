@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Interfaces;
+using Data.Entities;
 using Data.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
-    public abstract class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
-        where TEntity : class, IEntity<TKey>
+    public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
+        where TEntity : Entity
     {
 
         protected ApplicationContext ApplicationContext;
@@ -21,7 +22,7 @@ namespace Data.Repositories
 
         protected readonly DbSet<TEntity> DbSet;
 
-        public TEntity Get(TKey id)
+        public TEntity Get(Guid id)
         {
             return DbSet.Find(id);
         }
@@ -49,7 +50,7 @@ namespace Data.Repositories
             return updatedEntity.Entity;
         }
 
-        public async Task<TEntity> DeleteAsync(TKey id)
+        public async Task<TEntity> DeleteAsync(Guid id)
         {
             var entityToDelete = DbSet.Find(id);
 

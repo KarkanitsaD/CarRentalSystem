@@ -2,7 +2,7 @@
 
 namespace Data.Entities
 {
-    public class AdditionalFacilityEntity : Entity<int>
+    public class AdditionalFacilityEntity : Entity
     {
         public string Title { get; set; }
         public decimal Price { get; set; }

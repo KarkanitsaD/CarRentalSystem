@@ -1,9 +1,8 @@
-﻿using System;
-using Data.Entities;
+﻿using Data.Entities;
 
 namespace Data.IRepositories
 {
-    public interface ICarRepository : IBaseRepository<CarEntity, Guid>
+    public interface ICarRepository : IBaseRepository<CarEntity>
     {
 
     }

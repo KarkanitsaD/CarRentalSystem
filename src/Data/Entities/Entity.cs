@@ -1,9 +1,9 @@
-﻿using Data.Interfaces;
+﻿using System;
 
 namespace Data.Entities
 {
-    public abstract class Entity<TKey> : IEntity<TKey>
+    public abstract class Entity
     {
-        public TKey Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Data.Interfaces;
+using Data.Entities;
 
 namespace Data.IRepositories
 {
-    public interface IBaseRepository<TEntity, TKey> where TEntity : class, IEntity<TKey>
+    public interface IBaseRepository<TEntity>
+        where TEntity : Entity
     {
-        TEntity Get(TKey id);
+        TEntity Get(Guid id);
         IEnumerable<TEntity> GetList();
         Task<TEntity> CreateAsync(TEntity entity);
         Task<TEntity> UpdateAsync(TEntity entity);
-        Task<TEntity> DeleteAsync(TKey id);
+        Task<TEntity> DeleteAsync(Guid id);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Data.IRepositories
 {
-    public interface ILocationRepository : IBaseRepository<LocationEntity, int>
+    public interface ILocationRepository : IBaseRepository<LocationEntity>
     {
 
     }

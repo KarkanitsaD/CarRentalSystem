@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Data.Entities
 {
-    public class UserEntity : Entity<Guid>
+    public class UserEntity : Entity
     {
         public string Email { get; set; }
         public string PasswordHash { get; set; }

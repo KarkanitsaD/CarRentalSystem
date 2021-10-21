@@ -2,7 +2,7 @@
 
 namespace Data.IRepositories
 {
-    public interface IRoleRepository : IBaseRepository<RoleEntity, int>
+    public interface IRoleRepository : IBaseRepository<RoleEntity>
     {
     }
 }
