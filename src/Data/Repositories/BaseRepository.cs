@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
-    public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
+    public abstract class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
         where TEntity : class, IEntity<TKey>
     {
 
         protected ApplicationContext ApplicationContext;
 
-        protected Repository(ApplicationContext applicationContext)
+        protected BaseRepository(ApplicationContext applicationContext)
         {
             ApplicationContext = applicationContext;
             DbSet = ApplicationContext.Set<TEntity>();

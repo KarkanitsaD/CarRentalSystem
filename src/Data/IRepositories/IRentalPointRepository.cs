@@ -4,7 +4,7 @@ using Data.Entities;
 
 namespace Data.IRepositories
 {
-    public interface IRentalPointRepository : IRepository<RentalPointEntity, int>
+    public interface IRentalPointRepository : IBaseRepository<RentalPointEntity, int>
     {
         Task<IList<string>> GetRentalPointsCountriesAsync();
         Task<IList<string>> GetRentalPointsCitiesAsync();

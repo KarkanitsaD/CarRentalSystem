@@ -5,7 +5,7 @@ using Data.IRepositories;
 
 namespace Data.Repositories
 {
-    public class UserRepository : Repository<UserEntity, Guid>, IUserRepository
+    public class UserRepository : BaseRepository<UserEntity, Guid>, IUserRepository
     {
         public UserRepository(ApplicationContext context)
             : base(context)

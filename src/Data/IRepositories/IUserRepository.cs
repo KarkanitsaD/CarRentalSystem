@@ -3,7 +3,7 @@ using Data.Entities;
 
 namespace Data.IRepositories
 {
-    public interface IUserRepository : IRepository<UserEntity, Guid>
+    public interface IUserRepository : IBaseRepository<UserEntity, Guid>
     {
     }
 }

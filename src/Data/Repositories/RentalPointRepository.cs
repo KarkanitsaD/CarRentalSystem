@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
-    public class RentalPointRepository : Repository<RentalPointEntity, int>, IRentalPointRepository
+    public class RentalPointRepository : BaseRepository<RentalPointEntity, int>, IRentalPointRepository
     {
         public RentalPointRepository(ApplicationContext context)
             : base(context)

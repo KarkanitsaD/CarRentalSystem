@@ -2,7 +2,7 @@
 
 namespace Data.IRepositories
 {
-    public interface IAdditionalFacilityRepository : IRepository<AdditionalFacilityEntity, int>
+    public interface IAdditionalFacilityRepository : IBaseRepository<AdditionalFacilityEntity, int>
     {
     }
 }

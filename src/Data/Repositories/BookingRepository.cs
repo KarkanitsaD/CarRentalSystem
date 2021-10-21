@@ -5,7 +5,7 @@ using Data.IRepositories;
 
 namespace Data.Repositories
 {
-    public class BookingRepository : Repository<BookingEntity, Guid>, IBookingRepository
+    public class BookingRepository : BaseRepository<BookingEntity, Guid>, IBookingRepository
     {
         public BookingRepository(ApplicationContext context)
             : base(context)
