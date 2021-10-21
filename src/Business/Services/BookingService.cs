@@ -25,6 +25,9 @@ namespace Business.Services
         {
             var entity = await _bookingRepository.GetAsync(id);
 
+            if (entity == null)
+                throw new NotFoundException($"{nameof(entity)} with id = {id} not found.");
+
             return _mapper.Map<BookingEntity, BookingModel>(entity);
         }
 

@@ -25,6 +25,9 @@ namespace Business.Services
         {
             var entity = await _carRepository.GetAsync(id);
 
+            if (entity == null)
+                throw new NotFoundException($"{nameof(entity)} with id = {id} not found.");
+
             return _mapper.Map<CarEntity, CarModel>(entity);
         }
 

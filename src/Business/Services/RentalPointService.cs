@@ -25,6 +25,9 @@ namespace Business.Services
         {
             var entity = await _rentalPointRepository.GetAsync(id);
 
+            if (entity == null)
+                throw new NotFoundException($"{nameof(entity)} with id = {id} not found.");
+
             return _mapper.Map<RentalPointEntity, RentalPointModel>(entity);
         }
 
