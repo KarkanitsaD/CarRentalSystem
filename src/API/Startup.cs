@@ -37,7 +37,7 @@ namespace API
             }
             else
             {
-                app.UseErrornHandler();
+                app.UseErrorHandler();
             }
 
             app.UseRouting();

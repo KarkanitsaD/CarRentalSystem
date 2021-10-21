@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace API.Middleware
 {
-    public class ErrorHandler
+    public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public ErrorHandler(RequestDelegate next)
+        public ErrorHandlingMiddleware(RequestDelegate next)
         {
             _next = next;
         }

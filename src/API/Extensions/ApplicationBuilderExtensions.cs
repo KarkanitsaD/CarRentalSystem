@@ -5,9 +5,9 @@ namespace API.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseErrornHandler(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseErrorHandler(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<ErrorHandler>();
+            return builder.UseMiddleware<ErrorHandlingMiddleware>();
         }
     }
 }
