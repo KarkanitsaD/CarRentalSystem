@@ -45,7 +45,15 @@ namespace Business.Services
 
         public async Task UpdateAsync(Guid id, UserModel userModel)
         {
-            var entityToUpdate = _mapper.Map<UserModel, UserEntity>(userModel);
+            if (id != userModel.Id)
+                throw new BadRequestException("Check data.");
+
+            var entityToUpdate = await _userRepository.GetAsync(id);
+
+            if (entityToUpdate == null)
+                throw new NotFoundException($"{nameof(userModel)} with id = {id} not found.");
+
+            entityToUpdate = _mapper.Map<UserModel, UserEntity>(userModel);
 
             await _userRepository.UpdateAsync(entityToUpdate);
         }

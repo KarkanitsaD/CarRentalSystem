@@ -44,9 +44,17 @@ namespace Business.Services
 
         public async Task UpdateAsync(Guid id, BookingModel bookingModel)
         {
-            var entity = _mapper.Map<BookingModel, BookingEntity>(bookingModel);
+            if (id != bookingModel.Id)
+                throw new BadRequestException("Check data.");
 
-            await _bookingRepository.UpdateAsync(entity);
+            var entityToUpdate = await _bookingRepository.GetAsync(id);
+
+            if (entityToUpdate == null)
+                throw new NotFoundException($"{nameof(bookingModel)} with id = {id} not found.");
+
+            entityToUpdate = _mapper.Map<BookingModel, BookingEntity>(bookingModel);
+
+            await _bookingRepository.UpdateAsync(entityToUpdate);
         }
 
         public async Task DeleteAsync(Guid id)

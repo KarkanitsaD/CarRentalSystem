@@ -30,9 +30,17 @@ namespace Business.Services
 
         public async Task UpdateAsync(Guid id, RoleModel roleModel)
         {
-            var entity = _mapper.Map<RoleModel, RoleEntity>(roleModel);
+            if (id != roleModel.Id)
+                throw new BadRequestException("Check data.");
 
-            await _roleRepository.UpdateAsync(entity);
+            var entityToUpdate = await _roleRepository.GetAsync(id);
+
+            if (entityToUpdate == null)
+                throw new NotFoundException($"{nameof(roleModel)} with id = {id} not found.");
+
+            entityToUpdate = _mapper.Map<RoleModel, RoleEntity>(roleModel);
+
+            await _roleRepository.UpdateAsync(entityToUpdate);
         }
 
         public async Task DeleteAsync(Guid id)

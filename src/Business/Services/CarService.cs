@@ -44,9 +44,17 @@ namespace Business.Services
 
         public async Task UpdateAsync(Guid id, CarModel carModel)
         {
-            var entity = _mapper.Map<CarModel, CarEntity>(carModel);
+            if (id != carModel.Id)
+                throw new BadRequestException("Check data.");
 
-            await _carRepository.UpdateAsync(entity);
+            var entityToUpdate = await _carRepository.GetAsync(id);
+
+            if (entityToUpdate == null)
+                throw new NotFoundException($"{nameof(carModel)} with id = {id} not found.");
+
+            entityToUpdate = _mapper.Map<CarModel, CarEntity>(carModel);
+
+            await _carRepository.UpdateAsync(entityToUpdate);
         }
 
         public async  Task DeleteAsync(Guid id)

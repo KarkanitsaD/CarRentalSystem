@@ -37,9 +37,17 @@ namespace Business.Services
 
         public async Task UpdateAsync(Guid id, AdditionalFacilityModel additionalFacilityModel)
         {
-            var entity = _mapper.Map<AdditionalFacilityModel, AdditionalFacilityEntity>(additionalFacilityModel);
+            if (id != additionalFacilityModel.Id)
+                throw new BadRequestException("Check data.");
 
-            await _additionalFacilityRepository.UpdateAsync(entity);
+            var entityToUpdate = await _additionalFacilityRepository.GetAsync(id);
+
+            if (entityToUpdate == null)
+                throw new NotFoundException($"{nameof(additionalFacilityModel)} with id = {id} not found.");
+
+            entityToUpdate = _mapper.Map<AdditionalFacilityModel, AdditionalFacilityEntity>(additionalFacilityModel);
+
+            await _additionalFacilityRepository.UpdateAsync(entityToUpdate);
         }
 
         public async Task DeleteAsync(Guid id)

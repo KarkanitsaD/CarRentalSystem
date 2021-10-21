@@ -44,9 +44,17 @@ namespace Business.Services
 
         public async Task UpdateAsync(Guid id, RentalPointModel rentalPointModel)
         {
-            var entity = _mapper.Map<RentalPointModel, RentalPointEntity>(rentalPointModel);
+            if (id != rentalPointModel.Id)
+                throw new BadRequestException("Check data.");
 
-            await _rentalPointRepository.UpdateAsync(entity);
+            var entityToUpdate = await _rentalPointRepository.GetAsync(id);
+
+            if (entityToUpdate == null)
+                throw new NotFoundException($"{nameof(rentalPointModel)} with id = {id} not found.");
+
+            entityToUpdate = _mapper.Map<RentalPointModel, RentalPointEntity>(rentalPointModel);
+
+            await _rentalPointRepository.UpdateAsync(entityToUpdate);
         }
 
         public async Task DeleteAsync(Guid id)
