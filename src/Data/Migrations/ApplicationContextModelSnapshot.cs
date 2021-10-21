@@ -21,8 +21,8 @@ namespace Data.Migrations
 
             modelBuilder.Entity("AdditionalFacilityEntityBookingEntity", b =>
                 {
-                    b.Property<int>("AdditionalFacilitiesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AdditionalFacilitiesId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("BookingsId")
                         .HasColumnType("uniqueidentifier");
@@ -36,10 +36,9 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.AdditionalFacilityEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
@@ -56,26 +55,6 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AdditionalFacilities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Price = 3.6m,
-                            Title = "Moika mashiny"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Price = 2.5m,
-                            Title = "Water to car"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Price = 3.6m,
-                            Title = "Vacuum cleaning"
-                        });
                 });
 
             modelBuilder.Entity("Data.Entities.BookingEntity", b =>
@@ -96,8 +75,8 @@ namespace Data.Migrations
                     b.Property<DateTime>("KeyReceivingTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("RentalPointId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("RentalPointId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -143,8 +122,8 @@ namespace Data.Migrations
                     b.Property<decimal>("PricePerDay")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("RentalPointId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("RentalPointId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TransmissionType")
                         .HasMaxLength(50)
@@ -158,142 +137,13 @@ namespace Data.Migrations
                     b.HasIndex("RentalPointId");
 
                     b.ToTable("Cars");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            CarBrand = "Audi A4",
-                            Color = "Green",
-                            FuelConsumptionPerHundredKilometers = 7.44m,
-                            IsBooked = false,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NumberOfSeats = 5,
-                            PricePerDay = 20.5m,
-                            RentalPointId = 1,
-                            TransmissionType = "Automate",
-                            VehicleNumber = "7300EK-4"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                            CarBrand = "Car 2",
-                            Color = "Green",
-                            FuelConsumptionPerHundredKilometers = 7.44m,
-                            IsBooked = false,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NumberOfSeats = 5,
-                            PricePerDay = 20.5m,
-                            RentalPointId = 1,
-                            TransmissionType = "Automate",
-                            VehicleNumber = "7300EK-4"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
-                            CarBrand = "Car 3",
-                            Color = "Green",
-                            FuelConsumptionPerHundredKilometers = 7.44m,
-                            IsBooked = false,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NumberOfSeats = 5,
-                            PricePerDay = 20.5m,
-                            RentalPointId = 1,
-                            TransmissionType = "Automate",
-                            VehicleNumber = "7300EK-4"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
-                            CarBrand = "Car 4",
-                            Color = "Green",
-                            FuelConsumptionPerHundredKilometers = 7.44m,
-                            IsBooked = false,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NumberOfSeats = 5,
-                            PricePerDay = 20.5m,
-                            RentalPointId = 1,
-                            TransmissionType = "Automate",
-                            VehicleNumber = "7300EK-4"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000005"),
-                            CarBrand = "Car 5",
-                            Color = "Green",
-                            FuelConsumptionPerHundredKilometers = 7.44m,
-                            IsBooked = false,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NumberOfSeats = 5,
-                            PricePerDay = 20.5m,
-                            RentalPointId = 1,
-                            TransmissionType = "Automate",
-                            VehicleNumber = "7300EK-4"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000006"),
-                            CarBrand = "Car 2",
-                            Color = "Green",
-                            FuelConsumptionPerHundredKilometers = 7.44m,
-                            IsBooked = false,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NumberOfSeats = 5,
-                            PricePerDay = 20.5m,
-                            RentalPointId = 2,
-                            TransmissionType = "Automate",
-                            VehicleNumber = "7300EK-4"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000007"),
-                            CarBrand = "Car 3",
-                            Color = "Green",
-                            FuelConsumptionPerHundredKilometers = 7.44m,
-                            IsBooked = false,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NumberOfSeats = 5,
-                            PricePerDay = 20.5m,
-                            RentalPointId = 2,
-                            TransmissionType = "Automate",
-                            VehicleNumber = "7300EK-4"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                            CarBrand = "Car 4",
-                            Color = "Green",
-                            FuelConsumptionPerHundredKilometers = 7.44m,
-                            IsBooked = false,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NumberOfSeats = 5,
-                            PricePerDay = 20.5m,
-                            RentalPointId = 3,
-                            TransmissionType = "Automate",
-                            VehicleNumber = "7300EK-4"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000009"),
-                            CarBrand = "Car 5",
-                            Color = "Green",
-                            FuelConsumptionPerHundredKilometers = 7.44m,
-                            IsBooked = false,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NumberOfSeats = 5,
-                            PricePerDay = 20.5m,
-                            RentalPointId = 4,
-                            TransmissionType = "Automate",
-                            VehicleNumber = "7300EK-4"
-                        });
                 });
 
             modelBuilder.Entity("Data.Entities.LocationEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -310,8 +160,8 @@ namespace Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("RentalPointId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("RentalPointId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -320,47 +170,16 @@ namespace Data.Migrations
                         .HasFilter("[RentalPointId] IS NOT NULL");
 
                     b.ToTable("Locations");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "Lenina 1",
-                            City = "Grodno",
-                            Country = "Belarus"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "Real 1",
-                            City = "Madrid",
-                            Country = "Spain"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Address = "Sun 33a",
-                            City = "Barcelona",
-                            Country = "Spain"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Address = "Red Square 56",
-                            City = "Moscow",
-                            Country = "Russia"
-                        });
                 });
 
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("LocationId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -370,40 +189,13 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RentalPoints");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            LocationId = 1,
-                            Title = "Best cars"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            LocationId = 2,
-                            Title = "Best cars2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            LocationId = 3,
-                            Title = "Best cars3"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            LocationId = 4,
-                            Title = "Best cars4"
-                        });
                 });
 
             modelBuilder.Entity("Data.Entities.RoleEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -413,18 +205,6 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Title = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Title = "User"
-                        });
                 });
 
             modelBuilder.Entity("Data.Entities.UserEntity", b =>
@@ -455,46 +235,12 @@ namespace Data.Migrations
                     b.HasAlternateKey("Email");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            Email = "aakarkanica@gmail.com",
-                            Name = "Dima",
-                            PasswordHash = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
-                            Surname = "Karkanitsa"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                            Email = "mail1@gmail.com",
-                            Name = "User 1",
-                            PasswordHash = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
-                            Surname = "Karkanitsa"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
-                            Email = "mail2@gmail.com",
-                            Name = "User 2",
-                            PasswordHash = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
-                            Surname = "Karkanitsa"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
-                            Email = "mail3@gmail.com",
-                            Name = "User 3",
-                            PasswordHash = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
-                            Surname = "Karkanitsa"
-                        });
                 });
 
             modelBuilder.Entity("RoleEntityUserEntity", b =>
                 {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UsersId")
                         .HasColumnType("uniqueidentifier");
