@@ -1,5 +1,5 @@
+using API.Extensions;
 using Data;
-using Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,10 +21,12 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>(options => options.UseLazyLoadingProxies().
-                UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
+            services.AddDbContext<ApplicationContext>(options => options
+                .UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddRepositories();
+            services.AddServices();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -32,6 +34,10 @@ namespace API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseErrorHandler();
             }
 
             app.UseRouting();

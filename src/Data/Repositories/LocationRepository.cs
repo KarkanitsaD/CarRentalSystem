@@ -1,14 +1,13 @@
-﻿using Data.Interfaces;
-using Data.Models;
+﻿using Data.Entities;
+using Data.IRepositories;
 
 namespace Data.Repositories
 {
-    public class LocationRepository : Repository<LocationEntity, int>, ILocationRepository
+    public class LocationRepository : BaseRepository<LocationEntity>, ILocationRepository
     {
         public LocationRepository(ApplicationContext context)
             : base(context)
         {
-
         }
     }
 }

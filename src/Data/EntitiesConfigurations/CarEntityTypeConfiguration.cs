@@ -1,4 +1,4 @@
-﻿using Data.Models;
+﻿using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -44,7 +44,7 @@ namespace Data.EntitiesConfigurations
             builder.Property(c => c.LastViewTime)
                 .IsRequired();
 
-            builder.HasMany(c => c.Orders)
+            builder.HasMany(c => c.Bookings)
                 .WithOne(o => o.Car)
                 .HasForeignKey(c => c.CarId);
         }

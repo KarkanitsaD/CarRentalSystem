@@ -1,15 +1,13 @@
-﻿using System;
-using Data.Interfaces;
-using Data.Models;
+﻿using Data.Entities;
+using Data.IRepositories;
 
 namespace Data.Repositories
 {
-    public class UserRepository : Repository<UserEntity, Guid>, IUserRepository
+    public class UserRepository : BaseRepository<UserEntity>, IUserRepository
     {
         public UserRepository(ApplicationContext context)
             : base(context)
         {
-
         }
     }
 }

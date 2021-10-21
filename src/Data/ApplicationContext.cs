@@ -1,5 +1,5 @@
-﻿using Data.EntitiesConfigurations;
-using Data.Models;
+﻿using Data.Entities;
+using Data.EntitiesConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
@@ -22,18 +22,18 @@ namespace Data
         public DbSet<CarEntity> Cars { get; set; }
         public DbSet<LocationEntity> Locations { get; set; }
         public DbSet<RentalPointEntity> RentalPoints { get; set; }
-        public DbSet<OrderEntity> Orders { get; set; }
-        public DbSet<AdditionalServiceEntity> AdditionalServices { get; set; }
+        public DbSet<BookingEntity> Bookings { get; set; }
+        public DbSet<AdditionalFacilityEntity> AdditionalFacilities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration())
                 .ApplyConfiguration(new RoleEntityTypeConfiguration())
                 .ApplyConfiguration(new RentalPointEntityTypeConfiguration())
-                .ApplyConfiguration(new OrderEntityTypeConfiguration())
+                .ApplyConfiguration(new BookingEntityTypeConfiguration())
                 .ApplyConfiguration(new LocationEntityTypeConfiguration())
                 .ApplyConfiguration(new CarEntityTypeConfiguration())
-                .ApplyConfiguration(new AdditionalServiceEntityTypeConfiguration());
+                .ApplyConfiguration(new AdditionalFacilityEntityTypeConfiguration());
         }
     }
 }
