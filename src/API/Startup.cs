@@ -35,6 +35,10 @@ namespace API
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseErrornHandler();
+            }
 
             app.UseRouting();
 
