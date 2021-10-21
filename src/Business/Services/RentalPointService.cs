@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
 using Data.Entities;
-using Data.Interfaces;
 using Data.IRepositories;
 
 namespace Business.Services
@@ -20,7 +20,7 @@ namespace Business.Services
             _rentalPointRepository = rentalPointRepository;
         }
 
-        public RentalPointModel Get(int id)
+        public RentalPointModel Get(Guid id)
         {
             var entity = _rentalPointRepository.Get(id);
 
@@ -48,7 +48,7 @@ namespace Business.Services
             await _rentalPointRepository.UpdateAsync(entity);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             await _rentalPointRepository.DeleteAsync(id);
         }

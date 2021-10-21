@@ -5,7 +5,6 @@ using AutoMapper;
 using Business.IServices;
 using Business.Models;
 using Data.Entities;
-using Data.Interfaces;
 using Data.IRepositories;
 
 namespace Business.Services

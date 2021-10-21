@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.IServices;
@@ -40,7 +41,7 @@ namespace Business.Services
             await _additionalFacilityRepository.UpdateAsync(entity);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             await _additionalFacilityRepository.DeleteAsync(id);
         }

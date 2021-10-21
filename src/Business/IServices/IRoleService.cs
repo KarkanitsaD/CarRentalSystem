@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Business.Models;
 
 namespace Business.IServices
@@ -7,6 +8,6 @@ namespace Business.IServices
     {
         Task CreateAsync(RoleModel roleModel);
         Task UpdateAsync(RoleModel roleModel);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(Guid id);
     }
 }

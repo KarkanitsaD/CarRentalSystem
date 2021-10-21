@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
 using Data.Entities;
-using Data.Interfaces;
 using Data.IRepositories;
 
 namespace Business.Services
@@ -34,7 +34,7 @@ namespace Business.Services
             await _roleRepository.UpdateAsync(entity);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             await _roleRepository.DeleteAsync(id);
         }
