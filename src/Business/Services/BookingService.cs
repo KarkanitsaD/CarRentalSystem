@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Business.Interfaces;
+using Business.IServices;
 using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
+using Data.IRepositories;
 
 namespace Business.Services
 {
