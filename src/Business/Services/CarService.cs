@@ -22,7 +22,7 @@ namespace Business.Services
 
         public CarModel Get(Guid id)
         {
-            var entity = _carRepository.Get(id);
+            var entity = _carRepository.GetAsync(id);
 
             return _mapper.Map<CarEntity, CarModel>(entity);
         }

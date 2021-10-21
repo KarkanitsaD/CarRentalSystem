@@ -22,7 +22,7 @@ namespace Business.Services
 
         public BookingModel Get(Guid id)
         {
-            var entity = _bookingRepository.Get(id);
+            var entity = _bookingRepository.GetAsync(id);
 
             return _mapper.Map<BookingEntity, BookingModel>(entity);
         }

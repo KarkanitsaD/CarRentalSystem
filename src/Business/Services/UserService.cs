@@ -22,7 +22,7 @@ namespace Business.Services
 
         public UserModel Get(Guid id)
         {
-            var entity = _userRepository.Get(id);
+            var entity = _userRepository.GetAsync(id);
 
             return _mapper.Map<UserEntity, UserModel>(entity);
         }

@@ -22,7 +22,7 @@ namespace Business.Services
 
         public RentalPointModel Get(Guid id)
         {
-            var entity = _rentalPointRepository.Get(id);
+            var entity = _rentalPointRepository.GetAsync(id);
 
             return _mapper.Map<RentalPointEntity, RentalPointModel>(entity);
         }

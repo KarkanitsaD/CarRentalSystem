@@ -22,9 +22,9 @@ namespace Data.Repositories
 
         protected readonly DbSet<TEntity> DbSet;
 
-        public TEntity Get(Guid id)
+        public async Task<TEntity> GetAsync(Guid id)
         {
-            return DbSet.Find(id);
+            return await DbSet.FindAsync(id);
         }
 
         public IEnumerable<TEntity> GetList()
@@ -41,27 +41,17 @@ namespace Data.Repositories
             return createdEntity.Entity;
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
-            var updatedEntity = DbSet.Update(entity);
+            DbSet.Update(entity);
 
             await ApplicationContext.SaveChangesAsync();
-
-            return updatedEntity.Entity;
         }
 
-        public async Task<TEntity> DeleteAsync(Guid id)
+        public async Task DeleteAsync(TEntity entityToDelete)
         {
-            var entityToDelete = DbSet.Find(id);
-
-            if (entityToDelete == null)
-                throw new KeyNotFoundException($"{nameof(TEntity)} with Id = {id} was not found.");
-
-            var deletedEntity = DbSet.Remove(entityToDelete).Entity;
-
+            DbSet.Remove(entityToDelete);
             await ApplicationContext.SaveChangesAsync();
-
-            return deletedEntity;
         }
     }
 }

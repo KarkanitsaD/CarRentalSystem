@@ -8,10 +8,10 @@ namespace Data.IRepositories
     public interface IBaseRepository<TEntity>
         where TEntity : Entity
     {
-        TEntity Get(Guid id);
+        Task<TEntity> GetAsync(Guid id);
         IEnumerable<TEntity> GetList();
         Task<TEntity> CreateAsync(TEntity entity);
-        Task<TEntity> UpdateAsync(TEntity entity);
-        Task<TEntity> DeleteAsync(Guid id);
+        Task UpdateAsync(TEntity entity);
+        Task DeleteAsync(TEntity id);
     }
 }
