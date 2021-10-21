@@ -8,7 +8,7 @@ namespace Business.Interfaces
     public interface IUserService
     {
         UserModel Get(Guid id);
-        Task<IList<UserModel>> GetListAsync();
+        IEnumerable<UserModel> GetList();
         Task CreateAsync(UserModel userModel);
         Task UpdateAsync(UserModel userModel);
         Task DeleteAsync(Guid id);

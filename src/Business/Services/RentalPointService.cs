@@ -26,11 +26,11 @@ namespace Business.Services
             return _mapper.Map<RentalPointEntity, RentalPointModel>(entity);
         }
 
-        public async Task<IList<RentalPointModel>> GetListAsync()
+        public IEnumerable<RentalPointModel> GetList()
         {
-            var entities = await _rentalPointRepository.GetListAsync();
+            var entities = _rentalPointRepository.GetList();
 
-            return _mapper.Map<IList<RentalPointEntity>, IList<RentalPointModel>>(entities);
+            return _mapper.Map<IEnumerable<RentalPointEntity>, IEnumerable<RentalPointModel>>(entities);
         }
 
         public async Task CreateAsync(RentalPointModel rentalPointModel)

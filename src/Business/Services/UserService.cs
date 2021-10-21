@@ -27,11 +27,11 @@ namespace Business.Services
             return _mapper.Map<UserEntity, UserModel>(entity);
         }
 
-        public async Task<IList<UserModel>> GetListAsync()
+        public IEnumerable<UserModel> GetList()
         {
-            var userEntities = await _userRepository.GetListAsync();
+            var userEntities = _userRepository.GetList();
 
-            return _mapper.Map<IList<UserEntity>, IList<UserModel>>(userEntities);
+            return _mapper.Map<IEnumerable<UserEntity>, IEnumerable<UserModel>>(userEntities);
         }
 
 

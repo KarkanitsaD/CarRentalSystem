@@ -6,7 +6,7 @@ namespace Business.Interfaces
 {
     public interface IAdditionalFacilityService
     {
-        Task<IList<AdditionalFacilityModel>> GetListAsync();
+        IEnumerable<AdditionalFacilityModel> GetList();
         Task CreateAsync(AdditionalFacilityModel additionalFacilityModel);
         Task UpdateAsync(AdditionalFacilityModel additionalFacilityModel);
         Task DeleteAsync(int id);

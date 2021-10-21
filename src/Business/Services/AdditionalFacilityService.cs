@@ -19,11 +19,11 @@ namespace Business.Services
             _additionalFacilityRepository = additionalFacilityRepository;
         }
 
-        public async Task<IList<AdditionalFacilityModel>> GetListAsync()
+        public IEnumerable<AdditionalFacilityModel> GetList()
         {
-            var entities = await _additionalFacilityRepository.GetListAsync();
+            var entities = _additionalFacilityRepository.GetList();
 
-            return _mapper.Map<IList<AdditionalFacilityEntity>, IList<AdditionalFacilityModel>>(entities);
+            return _mapper.Map<IEnumerable<AdditionalFacilityEntity>, IEnumerable<AdditionalFacilityModel>>(entities);
         }
 
         public async Task CreateAsync(AdditionalFacilityModel additionalFacilityModel)

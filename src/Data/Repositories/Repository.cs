@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +25,9 @@ namespace Data.Repositories
             return DbSet.Find(id);
         }
 
-        public async Task<IList<TEntity>> GetListAsync()
+        public IEnumerable<TEntity> GetList()
         {
-            return await DbSet.ToListAsync();
+            return DbSet.AsEnumerable();
         }
 
         public async Task<TEntity> CreateAsync(TEntity entity)

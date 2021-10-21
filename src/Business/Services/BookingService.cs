@@ -27,11 +27,11 @@ namespace Business.Services
             return _mapper.Map<BookingEntity, BookingModel>(entity);
         }
 
-        public async Task<IList<BookingModel>> GetListAsync()
+        public IEnumerable<BookingModel> GetList()
         {
-            var entities = await _bookingRepository.GetListAsync();
+            var entities = _bookingRepository.GetList();
 
-            return _mapper.Map<IList<BookingEntity>, IList<BookingModel>>(entities);
+            return _mapper.Map<IEnumerable<BookingEntity>, IEnumerable<BookingModel>>(entities);
         }
 
         public async Task CreateAsync(BookingModel bookingModel)

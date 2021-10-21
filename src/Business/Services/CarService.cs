@@ -27,11 +27,11 @@ namespace Business.Services
             return _mapper.Map<CarEntity, CarModel>(entity);
         }
 
-        public async Task<IList<CarModel>> GetListAsync()
+        public IEnumerable<CarModel> GetList()
         {
-            var entities = await _carRepository.GetListAsync();
+            var entities = _carRepository.GetList();
 
-            return _mapper.Map<IList<CarEntity>, IList<CarModel>>(entities);
+            return _mapper.Map<IEnumerable<CarEntity>, IEnumerable<CarModel>>(entities);
         }
 
         public async Task CreateAsync(CarModel carModel)
