@@ -7,10 +7,10 @@ namespace Business.IServices
 {
     public interface IBookingService
     {
-        BookingModel Get(Guid id);
+        Task<BookingModel> GetAsync(Guid id);
         IEnumerable<BookingModel> GetList();
         Task CreateAsync(BookingModel bookingModel);
-        Task UpdateAsync(BookingModel bookingModel);
+        Task UpdateAsync(Guid id, BookingModel bookingModel);
         Task DeleteAsync(Guid id);
     }
 }

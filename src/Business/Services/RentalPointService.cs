@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
 using Data.Entities;
@@ -20,9 +21,9 @@ namespace Business.Services
             _rentalPointRepository = rentalPointRepository;
         }
 
-        public RentalPointModel Get(Guid id)
+        public async Task<RentalPointModel> GetAsync(Guid id)
         {
-            var entity = _rentalPointRepository.GetAsync(id);
+            var entity = await _rentalPointRepository.GetAsync(id);
 
             return _mapper.Map<RentalPointEntity, RentalPointModel>(entity);
         }
@@ -41,7 +42,7 @@ namespace Business.Services
             await _rentalPointRepository.CreateAsync(entity);
         }
 
-        public async Task UpdateAsync(RentalPointModel rentalPointModel)
+        public async Task UpdateAsync(Guid id, RentalPointModel rentalPointModel)
         {
             var entity = _mapper.Map<RentalPointModel, RentalPointEntity>(rentalPointModel);
 
@@ -50,7 +51,12 @@ namespace Business.Services
 
         public async Task DeleteAsync(Guid id)
         {
-            await _rentalPointRepository.DeleteAsync(id);
+            var entityToDelete = await _rentalPointRepository.GetAsync(id);
+
+            if (entityToDelete == null)
+                throw new NotFoundException($"{nameof(entityToDelete)} with id = {id} not found.");
+
+            await _rentalPointRepository.DeleteAsync(entityToDelete);
         }
     }
 }

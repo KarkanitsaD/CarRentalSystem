@@ -7,10 +7,10 @@ namespace Business.IServices
 {
     public interface ICarService
     {
-        CarModel Get(Guid id);
+        Task<CarModel> GetAsync(Guid id);
         IEnumerable<CarModel> GetList();
         Task CreateAsync(CarModel carModel);
-        Task UpdateAsync(CarModel carModel);
+        Task UpdateAsync(Guid id, CarModel carModel);
         Task DeleteAsync(Guid id);
     }
 }

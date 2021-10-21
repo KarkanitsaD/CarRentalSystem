@@ -9,7 +9,7 @@ namespace Business.IServices
     {
         IEnumerable<AdditionalFacilityModel> GetList();
         Task CreateAsync(AdditionalFacilityModel additionalFacilityModel);
-        Task UpdateAsync(AdditionalFacilityModel additionalFacilityModel);
+        Task UpdateAsync(Guid id, AdditionalFacilityModel additionalFacilityModel);
         Task DeleteAsync(Guid id);
     }
 }

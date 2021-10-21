@@ -1,6 +1,5 @@
 ﻿using Data.Entities;
 using Data.EntitiesConfigurations;
-using Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
@@ -35,8 +34,6 @@ namespace Data
                 .ApplyConfiguration(new LocationEntityTypeConfiguration())
                 .ApplyConfiguration(new CarEntityTypeConfiguration())
                 .ApplyConfiguration(new AdditionalFacilityEntityTypeConfiguration());
-
-            modelBuilder.Seed();
         }
     }
 }

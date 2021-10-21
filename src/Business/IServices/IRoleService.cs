@@ -7,7 +7,7 @@ namespace Business.IServices
     public interface IRoleService
     {
         Task CreateAsync(RoleModel roleModel);
-        Task UpdateAsync(RoleModel roleModel);
+        Task UpdateAsync(Guid id, RoleModel roleModel);
         Task DeleteAsync(Guid id);
     }
 }

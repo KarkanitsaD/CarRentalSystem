@@ -7,10 +7,10 @@ namespace Business.IServices
 {
     public interface IUserService
     {
-        UserModel Get(Guid id);
+        Task<UserModel> GetAsync(Guid id);
         IEnumerable<UserModel> GetList();
         Task CreateAsync(UserModel userModel);
-        Task UpdateAsync(UserModel userModel);
+        Task UpdateAsync(Guid id, UserModel userModel);
         Task DeleteAsync(Guid id);
     }
 }
