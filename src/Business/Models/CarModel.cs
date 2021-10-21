@@ -11,7 +11,7 @@ namespace Business.Models
         public int NumberOfSeats { get; set; }
         public string Color { get; set; }
         public string VehicleNumber { get; set; }
-        public int? RentalPointId { get; set; }
+        public Guid? RentalPointId { get; set; }
         public DateTime LastViewTime { get; set; }
         public decimal PricePerDay { get; set; }
     }
