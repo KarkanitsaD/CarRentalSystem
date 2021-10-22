@@ -1,5 +1,5 @@
 {
-  "JwtOptions": {
+  "Jwt": {
     "SecretKey": "MySecretKeyCsGoIsTheBestGame_ThisFileShouldBeHideButIPushedItBecauseItPetProjectAndMentorShouldSeeMyWork",
     "Issuer": "KarkanitsaDima",
     "Audience": "PeopleWhoUseBestApi",

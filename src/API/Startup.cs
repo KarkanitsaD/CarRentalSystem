@@ -21,6 +21,9 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddJwtOptions()
+                .AddJwtTokenHandler();
+
             services.AddDbContext<ApplicationContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
 

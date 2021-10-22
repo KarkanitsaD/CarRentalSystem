@@ -1,7 +1,10 @@
-﻿using Business.IServices;
+﻿using Business;
+using Business.Helpers;
+using Business.IServices;
 using Business.Services;
 using Data.IRepositories;
 using Data.Repositories;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace API.Extensions
@@ -33,6 +36,13 @@ namespace API.Extensions
             return services;
         }
 
-
+        public static IServiceCollection AddJwtOptions(this IServiceCollection services)
+        {
+            return services.Configure<JwtOptions>(new ConfigurationBuilder().AddJsonFile("jwtsettings.json").Build());
+        }
+        public static IServiceCollection AddJwtTokenHandler(this IServiceCollection services)
+        {
+            return services.AddScoped<JwtTokenHandler>();
+        }
     }
 }
