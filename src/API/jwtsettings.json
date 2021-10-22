@@ -1,0 +1,7 @@
+{
+  "SecretKey": "MySecretKeyCsGoIsTheBestGame_ThisFileShouldBeHideButIPushedItBecauseItPetProjectAndMentorShouldSeeMyWork",
+  "Issuer": "KarkanitsaDima",
+  "Audience": "PeopleWhoUseBestApi",
+  "TokenLifeTimeInSeconds": "900",
+  "RefreshTokenLifeTimeInSeconds": "86400"
+}
