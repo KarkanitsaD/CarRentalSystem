@@ -1,7 +1,9 @@
 {
-  "SecretKey": "MySecretKeyCsGoIsTheBestGame_ThisFileShouldBeHideButIPushedItBecauseItPetProjectAndMentorShouldSeeMyWork",
-  "Issuer": "KarkanitsaDima",
-  "Audience": "PeopleWhoUseBestApi",
-  "TokenLifeTimeInSeconds": "900",
-  "RefreshTokenLifeTimeInSeconds": "86400"
+  "JwtOptions": {
+    "SecretKey": "MySecretKeyCsGoIsTheBestGame_ThisFileShouldBeHideButIPushedItBecauseItPetProjectAndMentorShouldSeeMyWork",
+    "Issuer": "KarkanitsaDima",
+    "Audience": "PeopleWhoUseBestApi",
+    "TokenLifeTimeInSeconds": "900",
+    "RefreshTokenLifeTimeInSeconds": "86400"
+  }
 }
