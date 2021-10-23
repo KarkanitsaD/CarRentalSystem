@@ -3,7 +3,7 @@ using Business.Models;
 
 namespace Business.IServices
 {
-    public interface IAuthorizationService
+    public interface IAuthenticationService
     {
         Task<AuthenticateResponseModel> Authenticate(AuthenticateRequestModel requestModel);
     }
