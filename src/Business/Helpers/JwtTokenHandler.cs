@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -13,6 +14,7 @@ namespace Business.Helpers
     {
         private readonly JwtOptions _jwtOptions;
         private readonly JwtSecurityTokenHandler _tokenHandler = new JwtSecurityTokenHandler();
+        private SymmetricSecurityKey SymmetricSecurityKey => new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtOptions.SecretKey));
 
         public JwtTokenHandler(IOptions<JwtOptions> options)
         {
@@ -21,21 +23,25 @@ namespace Business.Helpers
 
         public string GenerateToken(UserEntity userEntity)
         {
-            var claims = userEntity.Roles.Select(role => new Claim(role.Title, "true"))
-                .Append(new Claim("UserId", userEntity.Id.ToString()));
-
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var roleClaims = userEntity.Roles.Select(role => new Claim(ClaimTypes.Role, role.Title)).ToList();
+            var claims = new List<Claim>
             {
-                Expires = DateTime.Now.AddSeconds(int.Parse(_jwtOptions.TokenLifeTimeInSeconds)),
-                Issuer = _jwtOptions.Issuer,
-                Audience = _jwtOptions.Audience,
-                SigningCredentials = new SigningCredentials(GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256Signature),
-                Subject = new ClaimsIdentity(claims)
+                new Claim(ClaimTypes.NameIdentifier, userEntity.Id.ToString()),
+                new Claim(ClaimTypes.Email, userEntity.Email),
+                new Claim(ClaimTypes.Name, userEntity.Name),
             };
+            claims.AddRange(roleClaims);
 
-            var token = _tokenHandler.CreateToken(tokenDescriptor);
+            var credentials = new SigningCredentials(SymmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature);
 
-            return _tokenHandler.WriteToken(token);
+            var jwt = new JwtSecurityToken(
+                issuer: _jwtOptions.Issuer,
+                audience: _jwtOptions.Audience,
+                claims: claims,
+                expires: DateTime.Now.AddSeconds(_jwtOptions.TokenLifeTimeInSeconds),
+                signingCredentials: credentials);
+
+            return _tokenHandler.WriteToken(jwt);
         }
 
         public bool ValidateToken(string token)
@@ -49,7 +55,7 @@ namespace Business.Helpers
                     ValidateAudience = true,
                     ValidIssuer = _jwtOptions.Issuer,
                     ValidAudience = _jwtOptions.Audience,
-                    IssuerSigningKey = GetSymmetricSecurityKey()
+                    IssuerSigningKey = SymmetricSecurityKey
                 }, out _);
             }
             catch
@@ -66,11 +72,6 @@ namespace Business.Helpers
             var claimValue = securityToken.Claims.Select(claim => claim.Type == claimType);
 
             return claimValue;
-        }
-
-        private SymmetricSecurityKey GetSymmetricSecurityKey()
-        {
-            return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtOptions.SecretKey));
         }
     }
 }

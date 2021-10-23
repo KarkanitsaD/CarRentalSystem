@@ -16,7 +16,13 @@ namespace Data.Repositories
 
         public override async Task<UserEntity> GetAsync(Guid id)
         {
-            return await DbSet.Include(u => u.Roles).FirstAsync(u => u.Id == id);
+            return await DbSet.Include(user => user.Roles).FirstAsync(user => user.Id == id);
+        }
+
+        public async Task<UserEntity> GetByEmailAndPassword(string email, string password)
+        {
+            return await DbSet.Include(user => user.Roles)
+                .FirstOrDefaultAsync(user => user.Email == email && user.PasswordHash == password);
         }
     }
 }
