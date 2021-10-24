@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace API.Helpers
 {
-
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
         private readonly string[] _roles;
@@ -22,7 +22,7 @@ namespace API.Helpers
             {
                 var userRoles = (IEnumerable<string>) context.HttpContext.Items["UserRoles"];
 
-                if (userRoles.Intersect(_roles).Count() != _roles.Length)
+                if (!userRoles.Intersect(_roles).Any())
                 {
                     throw new NotAuthorizedException("The user does not have access rights to this functionality.");
                 }
