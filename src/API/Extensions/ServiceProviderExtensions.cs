@@ -43,7 +43,7 @@ namespace API.Extensions
         }
         public static IServiceCollection AddJwtTokenHandler(this IServiceCollection services)
         {
-            return services.AddScoped<JwtTokenHandler>();
+            return services.AddSingleton<JwtTokenHandler>();
         }
     }
 }

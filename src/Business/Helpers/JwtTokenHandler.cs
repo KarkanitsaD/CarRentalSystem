@@ -13,12 +13,15 @@ namespace Business.Helpers
     public class JwtTokenHandler
     {
         private readonly JwtOptions _jwtOptions;
-        private readonly JwtSecurityTokenHandler _tokenHandler = new JwtSecurityTokenHandler();
-        private SymmetricSecurityKey SymmetricSecurityKey => new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtOptions.SecretKey));
+        private readonly JwtSecurityTokenHandler _tokenHandler;
+        private readonly SymmetricSecurityKey _symmetricSecurityKey;
 
         public JwtTokenHandler(IOptions<JwtOptions> options)
         {
             _jwtOptions = options.Value;
+            _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtOptions.SecretKey));
+
+            _tokenHandler = new JwtSecurityTokenHandler();
         }
 
         public string GenerateToken(UserEntity userEntity)
@@ -32,7 +35,7 @@ namespace Business.Helpers
             };
             claims.AddRange(roleClaims);
 
-            var credentials = new SigningCredentials(SymmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature);
+            var credentials = new SigningCredentials(_symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature);
 
             var jwt = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
@@ -50,12 +53,17 @@ namespace Business.Helpers
             {
                 _tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = _jwtOptions.ValidateIssuerSigningKey,
+                    IssuerSigningKey = _symmetricSecurityKey,
+
+                    ValidateIssuer = _jwtOptions.ValidateIssuer,
                     ValidIssuer = _jwtOptions.Issuer,
+
+                    ValidateAudience = _jwtOptions.ValidateAudience,
                     ValidAudience = _jwtOptions.Audience,
-                    IssuerSigningKey = SymmetricSecurityKey
+
+                    ValidateLifetime = _jwtOptions.ValidateLifetime,
+                    ClockSkew = TimeSpan.Zero
                 }, out _);
             }
             catch
@@ -64,14 +72,24 @@ namespace Business.Helpers
             }
             return true;
         }
-
-        public object GetClaim(string token, string claimType)
+            
+        public string GetClaimValue(string token, string claimType)
         {
             var securityToken = _tokenHandler.ReadJwtToken(token);
 
-            var claimValue = securityToken.Claims.Select(claim => claim.Type == claimType);
+            var claimValue = securityToken.Claims.First(claim => claim.Type == claimType).Value;
 
             return claimValue;
+        }
+
+        public IEnumerable<string> GetClaimValues(string token, string claimType)
+        {
+            var securityToken = _tokenHandler.ReadJwtToken(token);
+
+            var claimValues = securityToken.Claims.Where(claim => claim.Type == claimType)
+                    .Select(claim => claim.Value);
+
+            return claimValues;
         }
     }
 }

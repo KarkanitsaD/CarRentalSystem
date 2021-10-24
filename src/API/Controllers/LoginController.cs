@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using API.Helpers;
+using Business.Contracts;
 using Business.IServices;
 using Business.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +23,14 @@ namespace API.Controllers
         public async Task<IActionResult> Authenticate(AuthenticateRequestModel requestModel)
         {
             return Ok(await _authenticationService.Authenticate(requestModel));
+        }
+
+        [HttpGet]
+        [Authorize(Policies.UserPolicy)]
+        [Route("word")]
+        public string GetWord()
+        {
+            return "word";
         }
     }
 }
