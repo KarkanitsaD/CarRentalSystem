@@ -1,4 +1,5 @@
 using API.Extensions;
+using Business;
 using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,17 +11,22 @@ namespace API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup()
         {
-            Configuration = configuration;
+            Configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Development.json")
+                .AddJsonFile("jwtsettings.json")
+                .Build();
         }
 
         public IConfiguration Configuration { get; set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddJwtOptions()
-                .AddJwtTokenHandler();
+            services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt))
+                .AddJwtTokenHandler()
+                .AddJwtAuthentication(Configuration.GetSection(JwtOptions.Jwt).Get<JwtOptions>());
 
             services.AddDbContext<ApplicationContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
@@ -36,7 +42,8 @@ namespace API
             app.UseErrorHandler();
 
             app.UseRouting();
-            app.UseJwtAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

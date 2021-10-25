@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using API.Helpers;
 using Business.Contracts;
 using Business.IServices;
 using Business.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -26,7 +26,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policies.UserPolicy)]
+        [Authorize (Roles = Policies.UserPolicy)]
         [Route("word")]
         public string GetWord()
         {

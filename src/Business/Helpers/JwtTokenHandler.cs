@@ -46,50 +46,5 @@ namespace Business.Helpers
 
             return _tokenHandler.WriteToken(jwt);
         }
-
-        public bool ValidateToken(string token)
-        {
-            try
-            {
-                _tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = _jwtOptions.ValidateIssuerSigningKey,
-                    IssuerSigningKey = _symmetricSecurityKey,
-
-                    ValidateIssuer = _jwtOptions.ValidateIssuer,
-                    ValidIssuer = _jwtOptions.Issuer,
-
-                    ValidateAudience = _jwtOptions.ValidateAudience,
-                    ValidAudience = _jwtOptions.Audience,
-
-                    ValidateLifetime = _jwtOptions.ValidateLifetime,
-                    ClockSkew = TimeSpan.Zero
-                }, out _);
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
-            
-        public string GetClaimValue(string token, string claimType)
-        {
-            var securityToken = _tokenHandler.ReadJwtToken(token);
-
-            var claimValue = securityToken.Claims.First(claim => claim.Type == claimType).Value;
-
-            return claimValue;
-        }
-
-        public IEnumerable<string> GetClaimValues(string token, string claimType)
-        {
-            var securityToken = _tokenHandler.ReadJwtToken(token);
-
-            var claimValues = securityToken.Claims.Where(claim => claim.Type == claimType)
-                    .Select(claim => claim.Value);
-
-            return claimValues;
-        }
     }
 }
