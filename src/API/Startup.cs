@@ -24,9 +24,7 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt))
-                .AddJwtTokenHandler()
-                .AddJwtAuthentication(Configuration.GetSection(JwtOptions.Jwt).Get<JwtOptions>());
+            services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));
 
             services.AddDbContext<ApplicationContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
@@ -40,10 +38,8 @@ namespace API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseErrorHandler();
-
+            app.UseJwtMiddleware();
             app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

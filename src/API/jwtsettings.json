@@ -6,7 +6,7 @@
     "ValidateIssuer": true,
     "Audience": "PeopleWhoUseBestApi",
     "ValidateAudience": true,
-    "TokenLifeTimeInSeconds": 60,
+    "TokenLifeTimeInSeconds": 20,
     "ValidateLifetime": true
   }
 }

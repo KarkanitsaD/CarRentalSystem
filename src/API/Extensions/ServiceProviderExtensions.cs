@@ -1,14 +1,9 @@
-﻿using System;
-using System.Text;
-using Business;
-using Business.Helpers;
+﻿using Business.Helpers;
 using Business.IServices;
 using Business.Services;
 using Data.IRepositories;
 using Data.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 
 namespace API.Extensions
 {
@@ -35,7 +30,7 @@ namespace API.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IBookingService, BookingService>();
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<ITokenService, TokenServices>();
 
             return services;
         }
@@ -45,32 +40,32 @@ namespace API.Extensions
             return services.AddSingleton<JwtTokenHandler>();
         }
 
-        public static void AddJwtAuthentication(this IServiceCollection services, JwtOptions jwtOptions)
-        {
-            services.AddAuthentication(settings =>
-            {
-                settings.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                settings.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(settings =>
-            {
-                settings.RequireHttpsMetadata = false;
-                settings.SaveToken = true;
-                settings.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = jwtOptions.ValidateIssuerSigningKey,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.SecretKey)),
+        //public static void AddJwtAuthentication(this IServiceCollection services, JwtOptions jwtOptions)
+        //{
+        //    services.AddAuthentication(settings =>
+        //    {
+        //        settings.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //        settings.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    })
+        //    .AddJwtBearer(settings =>
+        //    {
+        //        settings.RequireHttpsMetadata = false;
+        //        settings.SaveToken = true;
+        //        settings.TokenValidationParameters = new TokenValidationParameters
+        //        {
+        //            ValidateIssuerSigningKey = jwtOptions.ValidateIssuerSigningKey,
+        //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.SecretKey)),
 
-                    ValidateIssuer = jwtOptions.ValidateIssuer,
-                    ValidIssuer = jwtOptions.Issuer,
+        //            ValidateIssuer = jwtOptions.ValidateIssuer,
+        //            ValidIssuer = jwtOptions.Issuer,
 
-                    ValidateAudience = jwtOptions.ValidateAudience,
-                    ValidAudience = jwtOptions.Audience,
+        //            ValidateAudience = jwtOptions.ValidateAudience,
+        //            ValidAudience = jwtOptions.Audience,
 
-                    ValidateLifetime = jwtOptions.ValidateLifetime,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
-        }
+        //            ValidateLifetime = jwtOptions.ValidateLifetime,
+        //            ClockSkew = TimeSpan.Zero
+        //        };
+        //    });
+        //}
     }
 }

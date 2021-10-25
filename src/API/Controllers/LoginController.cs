@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Business.Contracts;
 using Business.IServices;
 using Business.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -11,22 +9,21 @@ namespace API.Controllers
     [Route("api/login")]
     public class LoginController : ControllerBase
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly ITokenService _tokenService;
 
-        public LoginController(IAuthenticationService authenticationService)
+        public LoginController(ITokenService tokenService)
         {
-            _authenticationService = authenticationService;
+            _tokenService = tokenService;
         }
 
         [HttpPost]
         [Route("authenticate")]
         public async Task<IActionResult> Authenticate(AuthenticateRequestModel requestModel)
         {
-            return Ok(await _authenticationService.Authenticate(requestModel));
+            return Ok(await _tokenService.GenerateToken(requestModel));
         }
 
         [HttpGet]
-        [Authorize (Roles = Policies.UserPolicy)]
         [Route("word")]
         public string GetWord()
         {
