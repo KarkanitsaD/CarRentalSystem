@@ -1,6 +1,8 @@
-﻿namespace Business
+﻿using Microsoft.AspNetCore.Authentication;
+
+namespace Business
 {
-    public class JwtOptions
+    public class JwtOptions : AuthenticationSchemeOptions
     {
         public const string Jwt = "Jwt";
         public string SecretKey { get; set; }

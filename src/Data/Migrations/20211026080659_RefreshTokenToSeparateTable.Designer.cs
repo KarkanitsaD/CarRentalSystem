@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20211026080659_RefreshTokenToSeparateTable")]
+    partial class RefreshTokenToSeparateTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,7 +189,13 @@ namespace Data.Migrations
                     b.Property<string>("Token")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("RefreshTokenEntity");
                 });
@@ -246,9 +254,6 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RefreshTokenId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Surname")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -256,10 +261,6 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.HasAlternateKey("Email");
-
-                    b.HasIndex("RefreshTokenId")
-                        .IsUnique()
-                        .HasFilter("[RefreshTokenId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -340,13 +341,15 @@ namespace Data.Migrations
                     b.Navigation("RentalPoint");
                 });
 
-            modelBuilder.Entity("Data.Entities.UserEntity", b =>
+            modelBuilder.Entity("Data.Entities.RefreshTokenEntity", b =>
                 {
-                    b.HasOne("Data.Entities.RefreshTokenEntity", "RefreshToken")
-                        .WithOne("User")
-                        .HasForeignKey("Data.Entities.UserEntity", "RefreshTokenId");
+                    b.HasOne("Data.Entities.UserEntity", "User")
+                        .WithOne("RefreshToken")
+                        .HasForeignKey("Data.Entities.RefreshTokenEntity", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("RefreshToken");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RoleEntityUserEntity", b =>
@@ -369,11 +372,6 @@ namespace Data.Migrations
                     b.Navigation("Bookings");
                 });
 
-            modelBuilder.Entity("Data.Entities.RefreshTokenEntity", b =>
-                {
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
                 {
                     b.Navigation("Bookings");
@@ -386,6 +384,8 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.UserEntity", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("RefreshToken");
                 });
 #pragma warning restore 612, 618
         }

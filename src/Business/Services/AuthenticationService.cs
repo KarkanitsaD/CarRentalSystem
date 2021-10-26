@@ -9,11 +9,13 @@ namespace Business.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly ITokenService _tokenService;
 
-        public AuthenticationService(IUserRepository userRepository, ITokenService tokenService)
+        public AuthenticationService(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
         {
             _userRepository = userRepository;
+            _refreshTokenRepository = refreshTokenRepository;
             _tokenService = tokenService;
         }
 
@@ -25,8 +27,16 @@ namespace Business.Services
                 throw new NotAuthorizedException("User with this credentials not found.");
 
             string token = _tokenService.GenerateToken(user);
+            var refreshToken = _tokenService.GenerateRefreshToken();
 
-            return new AuthenticateResponseModel(user, token);
+            if (user.RefreshToken != null)
+            {
+                await _refreshTokenRepository.DeleteAsync(user.RefreshToken);
+            }
+
+            await _refreshTokenRepository.UpdateAsync(user.RefreshToken = refreshToken);
+
+            return new AuthenticateResponseModel(user, token, refreshToken.Token);
         }
     }
 }

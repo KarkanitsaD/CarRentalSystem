@@ -1,4 +1,6 @@
+using API.Contracts;
 using API.Extensions;
+using API.Helpers;
 using Business;
 using Data;
 using Microsoft.AspNetCore.Builder;
@@ -33,15 +35,21 @@ namespace API
             services.AddRepositories();
             services.AddServices();
             services.AddControllers();
+            services.AddAuthentication(o => {
+                    o.DefaultScheme = SchemesNamesConst.TokenAuthenticationDefaultScheme;
+                })
+                .AddScheme<JwtOptions, TokenAuthenticationHandler>(SchemesNamesConst.TokenAuthenticationDefaultScheme, o => { });
+            services.AddAuthorizationWithPolicy();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseErrorHandler();
-            app.UseJwtMiddleware();
-            app.UseAuthorization();
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Business.Exceptions;
@@ -40,6 +41,11 @@ namespace API.Middleware
             {
                 context.Response.StatusCode = (int) HttpStatusCode.Forbidden;
                 await context.Response.WriteAsync(JsonSerializer.Serialize(e.Message));
+            }
+            catch (Exception e)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                await context.Response.WriteAsync(JsonSerializer.Serialize(e.ToString()));
             }
         }
     }

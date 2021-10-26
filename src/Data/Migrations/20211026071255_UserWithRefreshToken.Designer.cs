@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20211026071255_UserWithRefreshToken")]
+    partial class UserWithRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,26 +174,6 @@ namespace Data.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("Data.Entities.RefreshTokenEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRevoked")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RefreshTokenEntity");
-                });
-
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -246,8 +228,9 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RefreshTokenId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
                         .HasMaxLength(50)
@@ -256,10 +239,6 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.HasAlternateKey("Email");
-
-                    b.HasIndex("RefreshTokenId")
-                        .IsUnique()
-                        .HasFilter("[RefreshTokenId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -340,15 +319,6 @@ namespace Data.Migrations
                     b.Navigation("RentalPoint");
                 });
 
-            modelBuilder.Entity("Data.Entities.UserEntity", b =>
-                {
-                    b.HasOne("Data.Entities.RefreshTokenEntity", "RefreshToken")
-                        .WithOne("User")
-                        .HasForeignKey("Data.Entities.UserEntity", "RefreshTokenId");
-
-                    b.Navigation("RefreshToken");
-                });
-
             modelBuilder.Entity("RoleEntityUserEntity", b =>
                 {
                     b.HasOne("Data.Entities.RoleEntity", null)
@@ -367,11 +337,6 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.CarEntity", b =>
                 {
                     b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("Data.Entities.RefreshTokenEntity", b =>
-                {
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>

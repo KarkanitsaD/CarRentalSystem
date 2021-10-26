@@ -9,10 +9,5 @@ namespace API.Extensions
         {
             return builder.UseMiddleware<ErrorHandlingMiddleware>();
         }
-        
-        public static IApplicationBuilder UseJwtMiddleware(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<JwtAuthorizationMiddleware>();
-        }
     }
 }
