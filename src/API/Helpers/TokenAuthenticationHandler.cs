@@ -14,6 +14,10 @@ namespace API.Helpers
     {
         private readonly ITokenService _tokenService;
 
+        //бесполезные 4 аргумента, которые я вообще не использую. Они требуются для базового конструктора.
+        //я до этого вместо этого класса делал свой middleware аутентификации в старых коммитах есть, но я не знаю как клеймсы засунуть в контекст, чтобы атрибут [Authorize] их считывал
+        //поэтому я нашел этот класс и методы AuthenticateResult.Success, AuthenticateResult.Fail
+        //еще в каждом атрибуте [Authorize] в контроллерах нужно будет указывать кастомное имя схемы
         public TokenAuthenticationHandler(IOptionsMonitor<JwtOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, ITokenService tokenService) : base(options, logger, encoder, clock)
         {
             _tokenService = tokenService;

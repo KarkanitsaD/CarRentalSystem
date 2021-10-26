@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Data.Entities
 {
@@ -9,8 +8,6 @@ namespace Data.Entities
         public string PasswordHash { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public Guid? RefreshTokenId { get; set; }
-        public RefreshTokenEntity RefreshToken { get; set; }
         public ICollection<RoleEntity> Roles { get; set; }
         public ICollection<BookingEntity> Bookings { get; set; }
     }

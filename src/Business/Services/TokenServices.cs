@@ -46,23 +46,6 @@ namespace Business.Services
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        public RefreshTokenEntity GenerateRefreshToken()
-        {
-            var randomNumber = new byte[64];
-            using var rng = new RNGCryptoServiceProvider();
-            rng.GetBytes(randomNumber);
-            var token = Convert.ToBase64String(randomNumber);
-
-            var refreshToken = new RefreshTokenEntity
-            {
-                CreationTime = DateTime.Now,
-                Token = token,
-                IsRevoked = false
-            };
-
-            return refreshToken;
-        }
-
         public bool ValidateToken(string token)
         {
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtOptions.SecretKey));
