@@ -9,18 +9,18 @@ namespace API.Controllers
     [Route("api/login")]
     public class LoginController : ControllerBase
     {
-        private readonly ITokenService _tokenService;
+        private readonly IAuthenticationService _authenticationService;
 
-        public LoginController(ITokenService tokenService)
+        public LoginController(IAuthenticationService authenticationService)
         {
-            _tokenService = tokenService;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost]
         [Route("authenticate")]
         public async Task<IActionResult> Authenticate(AuthenticateRequestModel requestModel)
         {
-            return Ok(await _tokenService.GenerateToken(requestModel));
+            return Ok(await _authenticationService.Authenticate(requestModel));
         }
 
         [HttpGet]

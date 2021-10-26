@@ -39,6 +39,7 @@ namespace API
         {
             app.UseErrorHandler();
             app.UseJwtMiddleware();
+            app.UseAuthorization();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

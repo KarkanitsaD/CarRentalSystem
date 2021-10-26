@@ -11,7 +11,6 @@ namespace Business.Services
 {
     public class RoleService : IRoleService
     {
-
         private readonly IMapper _mapper;
         private readonly IRoleRepository _roleRepository;
 

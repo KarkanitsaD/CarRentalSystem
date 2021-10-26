@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Business.IServices;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +20,11 @@ namespace API.Middleware
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
             if (token != null && tokenService.ValidateToken(token))
-                throw new Exception("Validated.");
+            {
+                var claims = tokenService.GetClaims(token);
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims);
+                context.User = new ClaimsPrincipal(claimsIdentity);
+            }
 
             await _next(context);
         }

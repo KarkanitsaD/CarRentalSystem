@@ -31,6 +31,7 @@ namespace API.Extensions
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<ITokenService, TokenServices>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
         }
