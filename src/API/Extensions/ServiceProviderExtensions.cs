@@ -19,7 +19,6 @@ namespace API.Extensions
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IRentalPointRepository, RentalPointRepository>();
             services.AddScoped<IAdditionalFacilityRepository, AdditionalFacilityRepository>();
-            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             return services;
         }

@@ -15,7 +15,7 @@ namespace Data.Repositories
 
         public override async Task<UserEntity> GetAsync(Guid id)
         {
-            return await DbSet.Include(user => user.Roles).Include(user => user.RefreshToken).FirstAsync(user => user.Id == id);
+            return await DbSet.Include(user => user.Roles).FirstAsync(user => user.Id == id);
         }
 
         public async Task<UserEntity> GetBy(string email, string password)
