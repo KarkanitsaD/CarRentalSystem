@@ -18,10 +18,16 @@ namespace Data.Repositories
             return await DbSet.Include(user => user.Roles).Include(user => user.RefreshToken).FirstAsync(user => user.Id == id);
         }
 
-        public async Task<UserEntity> GetByEmailAndPassword(string email, string password)
+        public async Task<UserEntity> GetBy(string email, string password)
         {
             return await DbSet.Include(user => user.Roles)
                 .FirstOrDefaultAsync(user => user.Email == email && user.PasswordHash == password);
+        }
+
+        public async Task<UserEntity> GetBy(string email)
+        {
+            return await DbSet.Include(user => user.Roles)
+                .FirstOrDefaultAsync(user => user.Email == email);
         }
     }
 }

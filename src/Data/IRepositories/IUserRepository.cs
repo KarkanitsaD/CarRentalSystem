@@ -5,6 +5,7 @@ namespace Data.IRepositories
 {
     public interface IUserRepository : IBaseRepository<UserEntity>
     {
-        Task<UserEntity> GetByEmailAndPassword(string email, string password);
+        Task<UserEntity> GetBy(string email);
+        Task<UserEntity> GetBy(string email, string password);
     }
 }

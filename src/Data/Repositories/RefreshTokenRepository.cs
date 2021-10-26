@@ -1,5 +1,7 @@
-﻿using Data.Entities;
+﻿using System.Threading.Tasks;
+using Data.Entities;
 using Data.IRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
@@ -8,6 +10,11 @@ namespace Data.Repositories
         public RefreshTokenRepository(ApplicationContext context)
             : base(context)
         {
+        }
+
+        public async Task<RefreshTokenEntity> Get(string token)
+        {
+            return await DbSet.Include(t => t.User).FirstOrDefaultAsync(t => t.Token == token);
         }
     }
 }

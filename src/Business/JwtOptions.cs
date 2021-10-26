@@ -13,5 +13,6 @@ namespace Business
         public bool ValidateAudience { get; set; }
         public int TokenLifeTimeInSeconds { get; set; }
         public bool ValidateLifetime { get; set; }
+        public int RefreshTokenLifeTimeInSeconds { get; set; }
     }
 }

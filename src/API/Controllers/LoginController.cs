@@ -25,12 +25,27 @@ namespace API.Controllers
             return Ok(await _authenticationService.Authenticate(requestModel));
         }
 
+        [HttpPost]
+        [Route("revoke-token")]
+        public async Task<IActionResult> RevokeToken(RefreshTokenRequestModel refreshToken)
+        {
+            await _authenticationService.RevokeToken(refreshToken);
+            return Ok();
+        }
+
         [HttpGet]
         [Route("word")]
         [Authorize(AuthenticationSchemes = SchemesNamesConst.TokenAuthenticationDefaultScheme, Roles = "User")]
         public string GetWord()
         {
             return "word";
+        }
+
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> RegisterUser(UserRegistrationModel registrationModel)
+        {
+            return Ok(await _authenticationService.RegisterUser(registrationModel));
         }
     }
 }
