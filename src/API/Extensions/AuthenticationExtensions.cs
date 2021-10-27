@@ -28,7 +28,7 @@ namespace API.Extensions
 
                         ValidateLifetime = true,
 
-                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(jwtOptions.SecretKey)),
+                        IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
                         ValidateIssuerSigningKey = true
                     };
                 });

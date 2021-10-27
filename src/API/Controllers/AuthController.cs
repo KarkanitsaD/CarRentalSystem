@@ -17,9 +17,17 @@ namespace API.Controllers
         }
 
         [Route("login")]
-        public async Task<IActionResult> LoginAsync(LoginRequestModel request)
+        public async Task<IActionResult> LoginAsync(LoginRequestModel loginRequest)
         {
-            return Ok(await _authService.LoginAsync(request));
+            return Ok(await _authService.LoginAsync(loginRequest));
+        }
+
+        [Route("register")]
+        public async Task<IActionResult> RegisterAsync(LoginRequestModel loginRequest)
+        {
+            await _authService.RegisterUserAsync(loginRequest);
+
+            return Ok();
         }
 
         [Authorize(Policy = "Vova")]

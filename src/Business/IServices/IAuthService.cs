@@ -6,5 +6,6 @@ namespace Business.IServices
     public interface IAuthService
     {
         Task<LoginResponseModel> LoginAsync(LoginRequestModel loginRequest);
+        Task RegisterUserAsync(LoginRequestModel loginRequest);
     }
 }

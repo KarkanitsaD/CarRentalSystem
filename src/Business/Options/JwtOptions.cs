@@ -1,4 +1,6 @@
-﻿namespace Business.Options
+﻿using Microsoft.IdentityModel.Tokens;
+
+namespace Business.Options
 {
     public class JwtOptions
     {
@@ -8,5 +10,7 @@
         public string Audience { get; set; }
         public int TokenLifeTimeInSeconds { get; set; }
         public int RefreshTokenLifeTimeInSeconds { get; set; }
+        public SymmetricSecurityKey SymmetricSecurityKey =>
+            new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(SecretKey));
     }
 }
