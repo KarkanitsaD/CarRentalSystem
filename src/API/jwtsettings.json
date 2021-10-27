@@ -1,0 +1,9 @@
+{
+  "Jwt": {
+    "SecretKey": "MySecretKeyCsGoIsTheBestGame_ThisFileShouldBeHideButIPushedItBecauseItPetProjectAndMentorShouldSeeMyWork",
+    "Issuer": "KarkanitsaDima",
+    "Audience": "PeopleWhoUseBestApi",
+    "TokenLifeTimeInSeconds": 20,
+    "RefreshTokenLifeTimeInSeconds": 120
+  }
+}

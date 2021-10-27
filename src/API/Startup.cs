@@ -1,8 +1,8 @@
 using API.Extensions;
+using Business.Options;
 using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,9 +12,13 @@ namespace API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup()
         {
-            Configuration = configuration;
+            Configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Development.json")
+                .AddJsonFile("jwtsettings.json")
+                .Build();
         }
 
         public IConfiguration Configuration { get; set; }
@@ -24,9 +28,15 @@ namespace API
             services.AddDbContext<ApplicationContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
 
+            services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));
+
             services.AddAutoMapper(typeof(Startup));
             services.AddRepositories();
             services.AddServices();
+            services.AddJwtBearerAuthentication(Configuration.GetSection(JwtOptions.Jwt).Get<JwtOptions>());
+            services.AddAuthorizationService();
+
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -42,12 +52,12 @@ namespace API
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllers();
             });
         }
     }
