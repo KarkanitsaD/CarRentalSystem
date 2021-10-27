@@ -43,5 +43,10 @@ namespace Business.Services
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
+
+        public string GenerateRefreshToken(UserEntity user)
+        {
+            return null;
+        }
     }
 }
