@@ -1,0 +1,13 @@
+{
+  "Jwt": {
+    "SecretKey": "MySecretKeyCsGoIsTheBestGame_ThisFileShouldBeHideButIPushedItBecauseItPetProjectAndMentorShouldSeeMyWork",
+    "ValidateIssuerSigningKey": true,
+    "Issuer": "KarkanitsaDima",
+    "ValidateIssuer": true,
+    "Audience": "PeopleWhoUseBestApi",
+    "ValidateAudience": true,
+    "TokenLifeTimeInSeconds": 20,
+    "ValidateLifetime": true,
+    "RefreshTokenLifeTimeInSeconds": 120
+  }
+}
