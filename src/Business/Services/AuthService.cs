@@ -15,12 +15,14 @@ namespace Business.Services
         private readonly ITokenService _tokenService;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public AuthService(ITokenService tokenService, IUserRepository userRepository, IRoleRepository roleRepository)
+        public AuthService(ITokenService tokenService, IUserRepository userRepository, IRoleRepository roleRepository, IRefreshTokenRepository refreshTokenRepository)
         {
             _tokenService = tokenService;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _refreshTokenRepository = refreshTokenRepository;
         }
 
         public async Task<LoginResponseModel> LoginAsync(LoginRequestModel loginRequest)
@@ -28,11 +30,17 @@ namespace Business.Services
             var user = await _userRepository.GetByAsync(loginRequest.Email, loginRequest.Password);
 
             if (user == null)
+            {
                 throw new NotAuthorizedException("User with this credentials not found.");
+            }
 
             string token = _tokenService.GenerateToken(user);
 
-            return new LoginResponseModel(user, token);
+            var refreshToken = _tokenService.GenerateRefreshToken(user.Id);
+            user.RefreshToken = refreshToken;
+            await _userRepository.UpdateAsync(user);
+
+            return new LoginResponseModel(user, token, refreshToken.Token);
         }
 
         public async Task RegisterUserAsync(LoginRequestModel loginRequest)
@@ -54,6 +62,31 @@ namespace Business.Services
             };
 
             await _userRepository.CreateAsync(user);
+        }
+
+        public async Task<RefreshTokenResponseModel> RefreshTokenAsync(RefreshTokenRequestModel refreshTokenRequest)
+        {
+            var refreshToken = await _refreshTokenRepository.GetByAsync(refreshTokenRequest.Token);
+
+            if (refreshToken == null)
+            {
+                throw new BadRequestException("Invalid refresh token.");
+            }
+
+            if (!refreshToken.IsActive)
+            {
+                throw new BadRequestException("Refresh token is not active.");
+            }
+
+            var user = refreshToken.User;
+
+            string token = _tokenService.GenerateToken(user);
+
+            refreshToken = _tokenService.GenerateRefreshToken(user.Id);
+            user.RefreshToken = refreshToken;
+            await _userRepository.UpdateAsync(user);
+
+            return new RefreshTokenResponseModel(token, refreshToken.Token);
         }
     }
 }

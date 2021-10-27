@@ -30,6 +30,12 @@ namespace API.Controllers
             return Ok();
         }
 
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenRequestModel refreshRequestModel)
+        {
+            return Ok(await _authService.RefreshTokenAsync(refreshRequestModel));
+        }
+
         [Authorize(Policy = "Vova")]
         [Route("test")]
         public string TetsAsync()

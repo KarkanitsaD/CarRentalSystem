@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Business.IServices;
 using Business.Options;
@@ -44,9 +45,22 @@ namespace Business.Services
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        public string GenerateRefreshToken(UserEntity user)
+        public RefreshTokenEntity GenerateRefreshToken(Guid userId)
         {
-            return null;
+            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            var randomBytes = new byte[64];
+            rngCryptoServiceProvider.GetBytes(randomBytes);
+            var token =  Convert.ToBase64String(randomBytes);
+
+            var refreshToken = new RefreshTokenEntity
+            {
+                UserId = userId,
+                Token = token,
+                ExpirationTime = DateTime.Now.AddSeconds(_jwtOptions.RefreshTokenLifeTimeInSeconds),
+                IsRevoked = false
+            };
+
+            return refreshToken;
         }
     }
 }

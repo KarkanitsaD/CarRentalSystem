@@ -1,10 +1,11 @@
-﻿using Data.Entities;
+﻿using System;
+using Data.Entities;
 
 namespace Business.IServices
 {
     public interface ITokenService
     {
         string GenerateToken(UserEntity user);
-        string GenerateRefreshToken(UserEntity user);
+        RefreshTokenEntity GenerateRefreshToken(Guid userId);
     }
 }
