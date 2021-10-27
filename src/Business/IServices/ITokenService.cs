@@ -8,6 +8,8 @@ namespace Business.IServices
     {
         string GenerateToken(UserEntity user);
         bool ValidateToken(string token);
+        bool IsTokenValid(string token);
+        string GetToken(UserEntity user);
         IEnumerable<Claim> GetClaims(string token);
     }
 }

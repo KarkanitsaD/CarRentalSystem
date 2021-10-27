@@ -11,7 +11,6 @@ namespace Business.Services
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
 
-
         public AuthenticationService(IUserRepository userRepository, ITokenService tokenService)
         {
             _userRepository = userRepository;
@@ -25,7 +24,7 @@ namespace Business.Services
             if (user == null)
                 throw new NotAuthorizedException("User with this credentials not found.");
 
-            string token = _tokenService.GenerateToken(user);
+            string token = _tokenService.GetToken(user);
 
             return new AuthenticateResponseModel(user, token);
         }

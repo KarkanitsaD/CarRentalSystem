@@ -10,7 +10,11 @@ using Microsoft.Extensions.Options;
 
 namespace API.Helpers
 {
-    public class TokenAuthenticationHandler : AuthenticationHandler<JwtOptions>
+    public class AuthenticationOptions : AuthenticationSchemeOptions
+    {
+    }
+
+    public class TokenAuthenticationHandler : AuthenticationHandler<AuthenticationOptions>
     {
         private readonly ITokenService _tokenService;
 
@@ -18,7 +22,7 @@ namespace API.Helpers
         //я до этого вместо этого класса делал свой middleware аутентификации в старых коммитах есть, но я не знаю как клеймсы засунуть в контекст, чтобы атрибут [Authorize] их считывал
         //поэтому я нашел этот класс и методы AuthenticateResult.Success, AuthenticateResult.Fail
         //еще в каждом атрибуте [Authorize] в контроллерах нужно будет указывать кастомное имя схемы
-        public TokenAuthenticationHandler(IOptionsMonitor<JwtOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, ITokenService tokenService) : base(options, logger, encoder, clock)
+        public TokenAuthenticationHandler(IOptionsMonitor<AuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, ITokenService tokenService) : base(options, logger, encoder, clock)
         {
             _tokenService = tokenService;
         }
@@ -27,7 +31,7 @@ namespace API.Helpers
         {
             var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-            if (token != null && _tokenService.ValidateToken(token))
+            if (token != null && _tokenService.IsTokenValid(token))
             {
                 var claims = _tokenService.GetClaims(token);
                 var claimsIdentity = new ClaimsIdentity(claims);

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using API.Contracts;
+using Business.Contracts;
 using Business.IServices;
 using Business.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +27,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("word")]
-        [Authorize(AuthenticationSchemes = SchemesNamesConst.TokenAuthenticationDefaultScheme, Roles = "User")]
+        [Authorize(Policies.UserPolicy)]
         public string GetWord()
         {
             return "word";

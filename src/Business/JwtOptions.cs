@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-
-namespace Business
+﻿namespace Business
 {
-    public class JwtOptions : AuthenticationSchemeOptions
+    public class JwtOptions
     {
         public const string Jwt = "Jwt";
         public string SecretKey { get; set; }

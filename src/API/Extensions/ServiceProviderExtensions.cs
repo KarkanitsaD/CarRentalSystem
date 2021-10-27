@@ -1,9 +1,11 @@
-﻿using Business.Contracts;
+﻿using API.Middleware;
+using Business.Contracts;
 using Business.IServices;
 using Business.Services;
 using Data.IRepositories;
 using Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace API.Extensions
@@ -31,7 +33,7 @@ namespace API.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IBookingService, BookingService>();
-            services.AddScoped<ITokenService, TokenServices>();
+            services.AddTransient<ITokenService, TokenService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
@@ -43,6 +45,11 @@ namespace API.Extensions
                 options.AddPolicy(Policies.UserPolicy, policy => policy.Combine(new AuthorizationPolicyBuilder().RequireAuthenticatedUser()
                     .RequireRole(Policies.UserPolicy)
                     .Build())));
+        }
+
+        public static IApplicationBuilder UseJwtAuthorization(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<JwtAuthorizationMiddleware>();
         }
     }
 }

@@ -38,7 +38,7 @@ namespace API
             services.AddAuthentication(o => {
                     o.DefaultScheme = SchemesNamesConst.TokenAuthenticationDefaultScheme;
                 })
-                .AddScheme<JwtOptions, TokenAuthenticationHandler>(SchemesNamesConst.TokenAuthenticationDefaultScheme, o => { });
+                .AddScheme<AuthenticationOptions, TokenAuthenticationHandler>(SchemesNamesConst.TokenAuthenticationDefaultScheme, o => { });
             services.AddAuthorizationWithPolicy();
         }
 
