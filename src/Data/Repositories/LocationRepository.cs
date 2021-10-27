@@ -5,7 +5,7 @@ namespace Data.Repositories
 {
     public class LocationRepository : BaseRepository<LocationEntity>, ILocationRepository
     {
-        public LocationRepository(ApplicationContext context)
+        public LocationRepository(CarRentalSystemContext context)
             : base(context)
         {
         }

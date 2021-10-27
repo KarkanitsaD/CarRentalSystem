@@ -7,7 +7,7 @@ namespace Data.Repositories
 {
     public class UserRepository : BaseRepository<UserEntity>, IUserRepository
     {
-        public UserRepository(ApplicationContext context)
+        public UserRepository(CarRentalSystemContext context)
             : base(context)
         {
         }

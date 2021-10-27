@@ -16,14 +16,12 @@ namespace API.Extensions
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IRentalPointRepository, RentalPointRepository>();
-            services.AddScoped<IAdditionalFacilityRepository, AdditionalFacilityRepository>();
 
             return services;
         }
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IAdditionalFacilityService, AdditionalFacilityService>();
             services.AddScoped<IRentalPointService, RentalPointService>();
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<IUserService, UserService>();

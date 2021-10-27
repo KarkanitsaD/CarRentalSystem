@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
-    public class ApplicationContext : DbContext
+    public class CarRentalSystemContext : DbContext
     {
-        public ApplicationContext(DbContextOptions options)
+        public CarRentalSystemContext(DbContextOptions options)
             : base(options)
         {
 
         }
 
-        public ApplicationContext()
+        public CarRentalSystemContext()
         {
 
         }
@@ -23,7 +23,6 @@ namespace Data
         public DbSet<LocationEntity> Locations { get; set; }
         public DbSet<RentalPointEntity> RentalPoints { get; set; }
         public DbSet<BookingEntity> Bookings { get; set; }
-        public DbSet<AdditionalFacilityEntity> AdditionalFacilities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,8 +31,7 @@ namespace Data
                 .ApplyConfiguration(new RentalPointEntityTypeConfiguration())
                 .ApplyConfiguration(new BookingEntityTypeConfiguration())
                 .ApplyConfiguration(new LocationEntityTypeConfiguration())
-                .ApplyConfiguration(new CarEntityTypeConfiguration())
-                .ApplyConfiguration(new AdditionalFacilityEntityTypeConfiguration());
+                .ApplyConfiguration(new CarEntityTypeConfiguration());
         }
     }
 }

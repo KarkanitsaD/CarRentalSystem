@@ -3,6 +3,6 @@
     public class Policy
     {
         public const string ForUserOnly = "User";
-        public const string ForAdminOnly = "User";
+        public const string ForAdminOnly = "Admin";
     }
 }

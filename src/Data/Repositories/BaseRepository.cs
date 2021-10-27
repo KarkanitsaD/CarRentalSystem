@@ -12,12 +12,12 @@ namespace Data.Repositories
         where TEntity : Entity
     {
 
-        protected ApplicationContext ApplicationContext;
+        private readonly CarRentalSystemContext _carRentalSystemContext;
 
-        protected BaseRepository(ApplicationContext applicationContext)
+        protected BaseRepository(CarRentalSystemContext carRentalSystemContext)
         {
-            ApplicationContext = applicationContext;
-            DbSet = ApplicationContext.Set<TEntity>();
+            _carRentalSystemContext = carRentalSystemContext;
+            DbSet = _carRentalSystemContext.Set<TEntity>();
         }
 
         protected readonly DbSet<TEntity> DbSet;
@@ -36,7 +36,7 @@ namespace Data.Repositories
         {
             var createdEntity = DbSet.Add(entity);
 
-            await ApplicationContext.SaveChangesAsync();
+            await _carRentalSystemContext.SaveChangesAsync();
 
             return createdEntity.Entity;
         }
@@ -45,13 +45,13 @@ namespace Data.Repositories
         {
             DbSet.Update(entity);
 
-            await ApplicationContext.SaveChangesAsync();
+            await _carRentalSystemContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(TEntity entityToDelete)
         {
             DbSet.Remove(entityToDelete);
-            await ApplicationContext.SaveChangesAsync();
+            await _carRentalSystemContext.SaveChangesAsync();
         }
     }
 }

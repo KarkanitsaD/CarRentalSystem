@@ -5,7 +5,7 @@ namespace Data.Repositories
 {
     public class CarRepository : BaseRepository<CarEntity>, ICarRepository
     {
-        public CarRepository(ApplicationContext context)
+        public CarRepository(CarRentalSystemContext context)
             : base(context)
         {
         }
