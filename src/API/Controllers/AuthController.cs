@@ -19,8 +19,6 @@ namespace API.Controllers
             _authService = authService;
         }
 
-
-
         /// <summary>
         /// Authorizes user.
         /// </summary>
@@ -47,8 +45,27 @@ namespace API.Controllers
             return Ok(await _authService.LoginAsync(loginRequest));
         }
 
+        /// <summary>
+        /// Register user.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     POST /api/auth/register
+        ///     {
+        ///         "email": "email",
+        ///         "password": "password"
+        ///     }
+        /// 
+        /// </remarks>
+        /// <param name="loginRequest"></param>
+        /// <returns>LoginResponseModel</returns>
+        /// <response code="200">Returns LoginResponseModel</response>
+        /// <response code="404">If user not found</response>
         [HttpPost]
         [Route("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RegisterAsync([FromBody] LoginRequestModel loginRequest)
         {
             await _authService.RegisterUserAsync(loginRequest);

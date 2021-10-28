@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Business.Exceptions;
@@ -21,25 +22,28 @@ namespace API.Middleware
             {
                 await _next(context);
             }
-            catch (NotFoundException e)
+            catch (Exception error)
             {
-                context.Response.StatusCode = (int) HttpStatusCode.NotFound;
-                await context.Response.WriteAsync(JsonSerializer.Serialize(e.Message));
-            }
-            catch (BadRequestException e)
-            {
-                context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
-                await context.Response.WriteAsync(JsonSerializer.Serialize(e.Message));
-            }
-            catch (NotAuthorizedException e)
-            {
-                context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
-                await context.Response.WriteAsync(JsonSerializer.Serialize(e.Message));
-            }
-            catch (NotAuthenticatedException e)
-            {
-                context.Response.StatusCode = (int) HttpStatusCode.Forbidden;
-                await context.Response.WriteAsync(JsonSerializer.Serialize(e.Message));
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                context.Response.ContentType = "application/json";
+
+                switch (error)
+                {
+                    case NotFoundException _:
+                        context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                        break;
+                    case BadRequestException _:
+                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        break;
+                    case NotAuthorizedException _:
+                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        break;
+                    case NotAuthenticatedException _:
+                        context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        break;
+                }
+
+                await context.Response.WriteAsync(JsonSerializer.Serialize(error.Message));
             }
         }
     }
