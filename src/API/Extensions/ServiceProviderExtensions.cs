@@ -13,7 +13,6 @@ namespace API.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICarRepository, CarRepository>();
-            services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IRentalPointRepository, RentalPointRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();

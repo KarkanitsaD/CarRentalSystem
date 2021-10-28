@@ -101,37 +101,40 @@ namespace Data.Migrations
                     b.ToTable("Cars");
                 });
 
-            modelBuilder.Entity("Data.Entities.LocationEntity", b =>
+            modelBuilder.Entity("Data.Entities.CityEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("RentalPointId")
+                    b.Property<Guid>("CountryId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RentalPointId")
-                        .IsUnique()
-                        .HasFilter("[RentalPointId] IS NOT NULL");
+                    b.HasIndex("CountryId");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("Data.Entities.CountryEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Title");
+
+                    b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("Data.Entities.RefreshTokenEntity", b =>
@@ -166,7 +169,13 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("LocationId")
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CountryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
@@ -175,6 +184,10 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("RentalPoints");
                 });
@@ -276,14 +289,15 @@ namespace Data.Migrations
                     b.Navigation("RentalPoint");
                 });
 
-            modelBuilder.Entity("Data.Entities.LocationEntity", b =>
+            modelBuilder.Entity("Data.Entities.CityEntity", b =>
                 {
-                    b.HasOne("Data.Entities.RentalPointEntity", "RentalPoint")
-                        .WithOne("Location")
-                        .HasForeignKey("Data.Entities.LocationEntity", "RentalPointId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.HasOne("Data.Entities.CountryEntity", "Country")
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("RentalPoint");
+                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("Data.Entities.RefreshTokenEntity", b =>
@@ -295,6 +309,21 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
+                {
+                    b.HasOne("Data.Entities.CityEntity", "City")
+                        .WithMany("RentalPointEntities")
+                        .HasForeignKey("CityId");
+
+                    b.HasOne("Data.Entities.CountryEntity", "Country")
+                        .WithMany("RentalPointEntities")
+                        .HasForeignKey("CountryId");
+
+                    b.Navigation("City");
+
+                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("RoleEntityUserEntity", b =>
@@ -317,13 +346,23 @@ namespace Data.Migrations
                     b.Navigation("Bookings");
                 });
 
+            modelBuilder.Entity("Data.Entities.CityEntity", b =>
+                {
+                    b.Navigation("RentalPointEntities");
+                });
+
+            modelBuilder.Entity("Data.Entities.CountryEntity", b =>
+                {
+                    b.Navigation("Cities");
+
+                    b.Navigation("RentalPointEntities");
+                });
+
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
                 {
                     b.Navigation("Bookings");
 
                     b.Navigation("Cars");
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("Data.Entities.UserEntity", b =>
