@@ -36,6 +36,13 @@ namespace API.Controllers
             return Ok(await _authService.RefreshTokenAsync(refreshRequestModel));
         }
 
+        [Route("revoke-token")]
+        public async Task<IActionResult> RevokeToken(RevokeTokenRequestModel revokeTokenRequest)
+        {
+            await _authService.RevokeTokenAsync(revokeTokenRequest);
+            return Ok();
+        }
+
         [Authorize(Policy = "Vova")]
         [Route("test")]
         public string TetsAsync()

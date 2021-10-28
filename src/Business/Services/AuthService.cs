@@ -45,7 +45,7 @@ namespace Business.Services
 
         public async Task RegisterUserAsync(LoginRequestModel loginRequest)
         {
-            var user = await _userRepository.GetByAsync(loginRequest.Email, loginRequest.Password);
+            var user = await _userRepository.GetByAsync(loginRequest.Email);
 
             if (user != null)
             {
@@ -66,7 +66,7 @@ namespace Business.Services
 
         public async Task<RefreshTokenResponseModel> RefreshTokenAsync(RefreshTokenRequestModel refreshTokenRequest)
         {
-            var refreshToken = await _refreshTokenRepository.GetByAsync(refreshTokenRequest.Token);
+            var refreshToken = await _refreshTokenRepository.GetByAsync(refreshTokenRequest.RefreshToken);
 
             if (refreshToken == null)
             {
@@ -87,6 +87,24 @@ namespace Business.Services
             await _userRepository.UpdateAsync(user);
 
             return new RefreshTokenResponseModel(token, refreshToken.Token);
+        }
+
+        public async Task RevokeTokenAsync(RevokeTokenRequestModel revokeTokenRequest)
+        {
+            var refreshToken = await _refreshTokenRepository.GetByAsync(revokeTokenRequest.RefreshToken);
+
+            if (refreshToken == null)
+            {
+                throw new BadRequestException("Invalid refresh token.");
+            }
+
+            if (!refreshToken.IsActive)
+            {
+                throw new BadRequestException("Refresh token is not active.");
+            }
+
+            refreshToken.IsRevoked = true;
+            await _refreshTokenRepository.UpdateAsync(refreshToken);
         }
     }
 }

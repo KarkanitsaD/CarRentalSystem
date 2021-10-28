@@ -17,5 +17,11 @@ namespace Data.Repositories
             return await DbSet.Include(user => user.Roles).Include(user => user.RefreshToken)
                 .FirstOrDefaultAsync(user => user.Email == email && user.PasswordHash == password);
         }
+
+        public async Task<UserEntity> GetByAsync(string email)
+        {
+            return await DbSet
+                .FirstOrDefaultAsync(user => user.Email == email);
+        }
     }
 }

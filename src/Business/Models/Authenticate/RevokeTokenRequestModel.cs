@@ -1,6 +1,6 @@
 ﻿namespace Business.Models.Authenticate
 {
-    public class RefreshTokenRequestModel
+    public class RevokeTokenRequestModel
     {
         public string RefreshToken { get; set; }
     }
