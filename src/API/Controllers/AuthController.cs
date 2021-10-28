@@ -22,16 +22,6 @@ namespace API.Controllers
         /// <summary>
         /// Authorizes user.
         /// </summary>
-        /// <remarks>
-        /// Sample request:
-        /// 
-        ///     POST /api/auth/login
-        ///     {
-        ///         "email": "email",
-        ///         "password": "password"
-        ///     }
-        /// 
-        /// </remarks>
         /// <param name="loginRequest"></param>
         /// <returns>LoginResponseModel</returns>
         /// <response code="200">Returns LoginResponseModel</response>
@@ -48,16 +38,6 @@ namespace API.Controllers
         /// <summary>
         /// Register user.
         /// </summary>
-        /// <remarks>
-        /// Sample request:
-        /// 
-        ///     POST /api/auth/register
-        ///     {
-        ///         "email": "email",
-        ///         "password": "password"
-        ///     }
-        /// 
-        /// </remarks>
         /// <param name="loginRequest"></param>
         /// <returns>LoginResponseModel</returns>
         /// <response code="200">Returns LoginResponseModel</response>
