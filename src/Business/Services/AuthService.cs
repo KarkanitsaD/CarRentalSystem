@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Business.Exceptions;
 using Business.IServices;
@@ -15,37 +16,42 @@ namespace Business.Services
         private readonly ITokenService _tokenService;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public AuthService(ITokenService tokenService, IUserRepository userRepository, IRoleRepository roleRepository, IRefreshTokenRepository refreshTokenRepository)
+        public AuthService(ITokenService tokenService, IUserRepository userRepository, IRoleRepository roleRepository)
         {
             _tokenService = tokenService;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
-            _refreshTokenRepository = refreshTokenRepository;
         }
 
         public async Task<LoginResponseModel> LoginAsync(LoginRequestModel loginRequest)
         {
-            var user = await _userRepository.GetByAsync(loginRequest.Email, loginRequest.Password);
+            var user = await _userRepository.GetByCredentialsAsync(loginRequest.Email, loginRequest.Password);
 
             if (user == null)
             {
                 throw new NotAuthorizedException("User with this credentials not found.");
             }
 
-            string token = _tokenService.GenerateToken(user);
+            var userClaims = GetUserClaims(user);
+            var jwt = _tokenService.GenerateJwt(userClaims);
+            var refreshToken = _tokenService.GenerateRefreshToken();
 
-            var refreshToken = _tokenService.GenerateRefreshToken(user.Id);
-            user.RefreshToken = refreshToken;
-            await _userRepository.UpdateAsync(user);
+            if (user.RefreshToken == null)
+            {
+                await _tokenService.CreateRefreshTokenAsync(user.Id, refreshToken);
+            }
+            else
+            {
+                await _tokenService.UpdateRefreshTokenAsync(user.Id, refreshToken);
+            }
 
-            return new LoginResponseModel(user, token, refreshToken.Token);
+            return new LoginResponseModel(user, jwt, refreshToken);
         }
 
         public async Task RegisterUserAsync(LoginRequestModel loginRequest)
         {
-            var user = await _userRepository.GetByAsync(loginRequest.Email);
+            var user = await _userRepository.GetByEmailAsync(loginRequest.Email);
 
             if (user != null)
             {
@@ -64,47 +70,32 @@ namespace Business.Services
             await _userRepository.CreateAsync(user);
         }
 
-        public async Task<RefreshTokenResponseModel> RefreshTokenAsync(RefreshTokenRequestModel refreshTokenRequest)
+        public async Task<RefreshTokenResponseModel> RefreshTokenAsync(string refreshTokenRequest)
         {
-            var refreshToken = await _refreshTokenRepository.GetByAsync(refreshTokenRequest.RefreshToken);
+            await _tokenService.ValidateRefreshTokenAsync(refreshTokenRequest);
 
-            if (refreshToken == null)
-            {
-                throw new BadRequestException("Invalid refresh token.");
-            }
+            var user = await _userRepository.GetByRefreshTokenAsync(refreshTokenRequest);
+            var userClaims = GetUserClaims(user);
 
-            if (!refreshToken.IsActive)
-            {
-                throw new BadRequestException("Refresh token is not active.");
-            }
+            var jwt = _tokenService.GenerateJwt(userClaims);
+            var refreshToken = _tokenService.GenerateRefreshToken();
 
-            var user = refreshToken.User;
+            await _tokenService.UpdateRefreshTokenAsync(user.Id, refreshToken);
 
-            string token = _tokenService.GenerateToken(user);
-
-            refreshToken = _tokenService.GenerateRefreshToken(user.Id);
-            user.RefreshToken = refreshToken;
-            await _userRepository.UpdateAsync(user);
-
-            return new RefreshTokenResponseModel(token, refreshToken.Token);
+            return new RefreshTokenResponseModel(jwt, refreshToken);
         }
 
-        public async Task RevokeTokenAsync(RevokeTokenRequestModel revokeTokenRequest)
+        private IEnumerable<Claim> GetUserClaims(UserEntity user)
         {
-            var refreshToken = await _refreshTokenRepository.GetByAsync(revokeTokenRequest.RefreshToken);
-
-            if (refreshToken == null)
+            var roleClaims = user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Title));
+            var claims = new List<Claim>
             {
-                throw new BadRequestException("Invalid refresh token.");
-            }
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+            };
+            claims.AddRange(roleClaims);
 
-            if (!refreshToken.IsActive)
-            {
-                throw new BadRequestException("Refresh token is not active.");
-            }
-
-            refreshToken.IsRevoked = true;
-            await _refreshTokenRepository.UpdateAsync(refreshToken);
+            return claims;
         }
     }
 }

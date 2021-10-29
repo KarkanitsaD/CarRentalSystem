@@ -17,13 +17,13 @@ namespace API.Controllers
         }
 
         [Route("login")]
-        public async Task<IActionResult> LoginAsync(LoginRequestModel loginRequest)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel loginRequest)
         {
             return Ok(await _authService.LoginAsync(loginRequest));
         }
 
         [Route("register")]
-        public async Task<IActionResult> RegisterAsync(LoginRequestModel loginRequest)
+        public async Task<IActionResult> RegisterAsync([FromBody] LoginRequestModel loginRequest)
         {
             await _authService.RegisterUserAsync(loginRequest);
 
@@ -31,16 +31,9 @@ namespace API.Controllers
         }
 
         [Route("refresh-token")]
-        public async Task<IActionResult> RefreshToken(RefreshTokenRequestModel refreshRequestModel)
+        public async Task<IActionResult> RefreshToken([FromBody] string refreshRequestModel)
         {
             return Ok(await _authService.RefreshTokenAsync(refreshRequestModel));
-        }
-
-        [Route("revoke-token")]
-        public async Task<IActionResult> RevokeToken(RevokeTokenRequestModel revokeTokenRequest)
-        {
-            await _authService.RevokeTokenAsync(revokeTokenRequest);
-            return Ok();
         }
 
         [Authorize(Policy = "Vova")]

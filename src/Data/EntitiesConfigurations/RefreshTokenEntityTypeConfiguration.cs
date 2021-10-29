@@ -23,12 +23,6 @@ namespace Data.EntitiesConfigurations
 
             builder.Property(t => t.ExpirationTime)
                 .IsRequired();
-
-            builder.Property(t => t.IsRevoked)
-                .IsRequired();
-
-            builder.Ignore(t => t.IsExpired);
-            builder.Ignore(t => t.IsActive);
         }
     }
 }

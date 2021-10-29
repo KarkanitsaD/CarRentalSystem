@@ -8,8 +8,5 @@ namespace Data.Entities
         public UserEntity User { get; set; }
         public string Token { get; set; }
         public DateTime ExpirationTime { get; set; }
-        public bool IsExpired => DateTime.Now < ExpirationTime;
-        public bool IsRevoked { get; set; } = false;
-        public bool IsActive => !IsRevoked && IsExpired;
     }
 }

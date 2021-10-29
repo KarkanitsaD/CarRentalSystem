@@ -14,12 +14,12 @@ namespace Data.Repositories
 
         public async Task<RefreshTokenEntity> GetByAsync(Guid userId)
         {
-            return await DbSet.AsQueryable().FirstOrDefaultAsync(t => t.UserId == userId);
+            return await DbSet.FirstOrDefaultAsync(t => t.UserId == userId);
         }
 
         public async Task<RefreshTokenEntity> GetByAsync(string token)
         {
-            return await DbSet.AsQueryable().Include(t => t.User).ThenInclude(u => u.Roles).FirstOrDefaultAsync(t => t.Token == token);
+            return await DbSet.Include(t => t.User).FirstOrDefaultAsync(t => t.Token == token);
         }
     }
 }

@@ -12,16 +12,22 @@ namespace Data.Repositories
         {
         }
 
-        public async Task<UserEntity> GetByAsync(string email, string password)
+        public async Task<UserEntity> GetByCredentialsAsync(string email, string password)
         {
             return await DbSet.Include(user => user.Roles).Include(user => user.RefreshToken)
                 .FirstOrDefaultAsync(user => user.Email == email && user.PasswordHash == password);
         }
 
-        public async Task<UserEntity> GetByAsync(string email)
+        public async Task<UserEntity> GetByEmailAsync(string email)
         {
             return await DbSet
                 .FirstOrDefaultAsync(user => user.Email == email);
+        }
+
+        public async Task<UserEntity> GetByRefreshTokenAsync(string refreshToken)
+        {
+            return await DbSet.Include(u => u.RefreshToken).Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => u.RefreshToken.Token == refreshToken);
         }
     }
 }
