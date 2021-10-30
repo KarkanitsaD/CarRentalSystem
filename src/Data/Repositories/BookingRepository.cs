@@ -5,7 +5,7 @@ namespace Data.Repositories
 {
     public class BookingRepository : BaseRepository<BookingEntity>, IBookingRepository
     {
-        public BookingRepository(ApplicationContext context)
+        public BookingRepository(CarRentalSystemContext context)
             : base(context)
         {
         }

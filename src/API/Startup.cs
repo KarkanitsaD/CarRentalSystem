@@ -29,7 +29,7 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>(options => options
+            services.AddDbContext<CarRentalSystemContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
 
             services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Business.Exceptions;
 using Business.IServices;
@@ -25,19 +26,32 @@ namespace Business.Services
 
         public async Task<LoginResponseModel> LoginAsync(LoginRequestModel loginRequest)
         {
-            var user = await _userRepository.GetByAsync(loginRequest.Email, loginRequest.Password);
+            var user = await _userRepository.GetByCredentialsAsync(loginRequest.Email, loginRequest.Password);
 
             if (user == null)
+            {
                 throw new NotAuthorizedException("User with this credentials not found.");
+            }
 
-            string token = _tokenService.GenerateToken(user);
+            var userClaims = GetUserClaims(user);
+            var jwt = _tokenService.GenerateJwt(userClaims);
+            var refreshToken = _tokenService.GenerateRefreshToken();
 
-            return new LoginResponseModel(user, token);
+            if (user.RefreshToken == null)
+            {
+                await _tokenService.CreateRefreshTokenAsync(user.Id, refreshToken);
+            }
+            else
+            {
+                await _tokenService.UpdateRefreshTokenAsync(user.Id, refreshToken);
+            }
+
+            return new LoginResponseModel(user, jwt, refreshToken);
         }
 
         public async Task RegisterUserAsync(LoginRequestModel loginRequest)
         {
-            var user = await _userRepository.GetByAsync(loginRequest.Email, loginRequest.Password);
+            var user = await _userRepository.GetByEmailAsync(loginRequest.Email);
 
             if (user != null)
             {
@@ -54,6 +68,34 @@ namespace Business.Services
             };
 
             await _userRepository.CreateAsync(user);
+        }
+
+        public async Task<RefreshTokenResponseModel> RefreshTokenAsync(string refreshTokenRequest)
+        {
+            await _tokenService.ValidateRefreshTokenAsync(refreshTokenRequest);
+
+            var user = await _userRepository.GetByRefreshTokenAsync(refreshTokenRequest);
+            var userClaims = GetUserClaims(user);
+
+            var jwt = _tokenService.GenerateJwt(userClaims);
+            var refreshToken = _tokenService.GenerateRefreshToken();
+
+            await _tokenService.UpdateRefreshTokenAsync(user.Id, refreshToken);
+
+            return new RefreshTokenResponseModel(jwt, refreshToken);
+        }
+
+        private IEnumerable<Claim> GetUserClaims(UserEntity user)
+        {
+            var roleClaims = user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Title));
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+            };
+            claims.AddRange(roleClaims);
+
+            return claims;
         }
     }
 }

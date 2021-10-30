@@ -16,10 +16,16 @@ namespace Data.EntitiesConfigurations
                 .HasMaxLength(50)
                 .IsRequired();
 
-            builder.HasOne(rp => rp.Location)
-                .WithOne(l => l.RentalPoint)
-                .HasForeignKey<RentalPointEntity>(rp => rp.LocationId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(rp => rp.Address)
+                .IsRequired(false);
+
+            builder.HasOne(rp => rp.City)
+                .WithMany(c => c.RentalPointEntities)
+                .HasForeignKey(rp => rp.CityId);
+
+            builder.HasOne(rp => rp.Country)
+                .WithMany(c => c.RentalPointEntities)
+                .HasForeignKey(rp => rp.CountryId);
 
             builder.HasMany(l => l.Bookings)
                 .WithOne(o => o.RentalPoint)

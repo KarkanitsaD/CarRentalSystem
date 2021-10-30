@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
-    public class ApplicationContext : DbContext
+    public class CarRentalSystemContext : DbContext
     {
-        public ApplicationContext(DbContextOptions options)
+        public CarRentalSystemContext(DbContextOptions options)
             : base(options)
         {
 
         }
 
-        public ApplicationContext()
+        public CarRentalSystemContext()
         {
 
         }
@@ -20,10 +20,11 @@ namespace Data
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<RoleEntity> Roles { get; set; }
         public DbSet<CarEntity> Cars { get; set; }
-        public DbSet<LocationEntity> Locations { get; set; }
         public DbSet<RentalPointEntity> RentalPoints { get; set; }
+        public DbSet<CityEntity> Cities { get; set; }
+        public DbSet<CountryEntity> Countries { get; set; }
         public DbSet<BookingEntity> Bookings { get; set; }
-        public DbSet<AdditionalFacilityEntity> AdditionalFacilities { get; set; }
+        public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,9 +32,9 @@ namespace Data
                 .ApplyConfiguration(new RoleEntityTypeConfiguration())
                 .ApplyConfiguration(new RentalPointEntityTypeConfiguration())
                 .ApplyConfiguration(new BookingEntityTypeConfiguration())
-                .ApplyConfiguration(new LocationEntityTypeConfiguration())
                 .ApplyConfiguration(new CarEntityTypeConfiguration())
-                .ApplyConfiguration(new AdditionalFacilityEntityTypeConfiguration());
+                .ApplyConfiguration(new CityEntityTypeConfiguration())
+                .ApplyConfiguration(new CountryEntityTypeConfiguration());
         }
     }
 }

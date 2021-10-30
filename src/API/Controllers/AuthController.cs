@@ -14,6 +14,7 @@ namespace API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        
         public AuthController(IAuthService authService)
         {
             _authService = authService;
@@ -28,6 +29,7 @@ namespace API.Controllers
         /// <response code="404">If user not found</response>   
         [HttpPost]
         [Route("login")]
+        feature-6-swagger
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel loginRequest)
@@ -44,6 +46,7 @@ namespace API.Controllers
         /// <response code="404">If user not found</response>
         [HttpPost]
         [Route("register")]
+        feature-6-swagger
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RegisterAsync([FromBody] LoginRequestModel loginRequest)
@@ -55,6 +58,13 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize(Policy = Policy.ForUserOnly)]
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] string refreshRequestModel)
+        {
+            return Ok(await _authService.RefreshTokenAsync(refreshRequestModel));
+        }
+
+        [Authorize(Policy = "Vova")]
         [Route("test")]
         public string TetsAsync()
         {
