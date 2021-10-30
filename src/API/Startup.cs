@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Reflection;
 using API.Extensions;
 using Business.Options;
 using Data;
@@ -7,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -37,6 +41,7 @@ namespace API
             services.AddAuthorizationService();
 
             services.AddControllers();
+            services.AddSwaggerGenerator();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -49,6 +54,12 @@ namespace API
             {
                 app.UseErrorHandler();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseRouting();
 
