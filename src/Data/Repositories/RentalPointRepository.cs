@@ -5,7 +5,7 @@ namespace Data.Repositories
 {
     public class RentalPointRepository : BaseRepository<RentalPointEntity>, IRentalPointRepository
     {
-        public RentalPointRepository(ApplicationContext context)
+        public RentalPointRepository(CarRentalSystemContext context)
             : base(context)
         {
         }

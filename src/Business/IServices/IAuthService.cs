@@ -7,5 +7,6 @@ namespace Business.IServices
     {
         Task<LoginResponseModel> LoginAsync(LoginRequestModel loginRequest);
         Task RegisterUserAsync(LoginRequestModel loginRequest);
+        Task<RefreshTokenResponseModel> RefreshTokenAsync(string refreshTokenRequest);
     }
 }

@@ -13,17 +13,15 @@ namespace API.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICarRepository, CarRepository>();
-            services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IRentalPointRepository, RentalPointRepository>();
-            services.AddScoped<IAdditionalFacilityRepository, AdditionalFacilityRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             return services;
         }
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IAdditionalFacilityService, AdditionalFacilityService>();
             services.AddScoped<IRentalPointService, RentalPointService>();
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<IUserService, UserService>();

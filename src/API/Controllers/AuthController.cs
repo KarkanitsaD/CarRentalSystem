@@ -17,17 +17,23 @@ namespace API.Controllers
         }
 
         [Route("login")]
-        public async Task<IActionResult> LoginAsync(LoginRequestModel loginRequest)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel loginRequest)
         {
             return Ok(await _authService.LoginAsync(loginRequest));
         }
 
         [Route("register")]
-        public async Task<IActionResult> RegisterAsync(LoginRequestModel loginRequest)
+        public async Task<IActionResult> RegisterAsync([FromBody] LoginRequestModel loginRequest)
         {
             await _authService.RegisterUserAsync(loginRequest);
 
             return Ok();
+        }
+
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] string refreshRequestModel)
+        {
+            return Ok(await _authService.RefreshTokenAsync(refreshRequestModel));
         }
 
         [Authorize(Policy = "Vova")]

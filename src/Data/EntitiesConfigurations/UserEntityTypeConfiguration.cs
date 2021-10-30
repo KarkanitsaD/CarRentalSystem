@@ -26,6 +26,10 @@ namespace Data.EntitiesConfigurations
             builder.Property(u => u.Surname)
                 .HasMaxLength(50);
 
+            builder.HasOne(u => u.RefreshToken)
+                .WithOne(t => t.User)
+                .HasForeignKey<RefreshTokenEntity>(t => t.UserId);
+
             builder.HasMany(u => u.Roles)
                 .WithMany(r => r.Users);
 

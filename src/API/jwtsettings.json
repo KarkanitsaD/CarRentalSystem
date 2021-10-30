@@ -4,6 +4,6 @@
     "Issuer": "KarkanitsaDima",
     "Audience": "PeopleWhoUseBestApi",
     "TokenLifeTimeInSeconds": 20,
-    "RefreshTokenLifeTimeInSeconds": 120
+    "RefreshTokenLifeTimeInSeconds": 1200
   }
 }

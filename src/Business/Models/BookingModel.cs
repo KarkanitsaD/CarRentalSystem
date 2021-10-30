@@ -12,7 +12,5 @@ namespace Business.Models
         public DateTime KeyReceivingTime { get; set; }
         public DateTime KeyHandOverTime { get; set; }
         public DateTime BookingTime { get; set; }
-
-        public ICollection<AdditionalFacilityModel> AdditionalFacilities { get; set; }
     }
 }
