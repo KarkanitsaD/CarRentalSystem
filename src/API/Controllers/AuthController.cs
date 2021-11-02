@@ -29,7 +29,6 @@ namespace API.Controllers
         /// <response code="404">If user not found</response>   
         [HttpPost]
         [Route("login")]
-        feature-6-swagger
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel loginRequest)
@@ -46,7 +45,6 @@ namespace API.Controllers
         /// <response code="404">If user not found</response>
         [HttpPost]
         [Route("register")]
-        feature-6-swagger
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RegisterAsync([FromBody] LoginRequestModel loginRequest)
@@ -64,6 +62,7 @@ namespace API.Controllers
             return Ok(await _authService.RefreshTokenAsync(refreshRequestModel));
         }
 
+        [HttpGet]
         [Authorize(Policy = "Vova")]
         [Route("test")]
         public string TetsAsync()
