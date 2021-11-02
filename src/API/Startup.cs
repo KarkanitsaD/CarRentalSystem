@@ -63,6 +63,11 @@ namespace API
 
             app.UseCors(CorsOptions.CorsOptions.WebApp);
 
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
             app.UseAuthentication();
             app.UseAuthorization();
 
