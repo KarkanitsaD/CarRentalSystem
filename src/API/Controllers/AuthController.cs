@@ -54,7 +54,7 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize(Policy = Policy.ForUserOnly)]
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] string refreshRequestModel)
