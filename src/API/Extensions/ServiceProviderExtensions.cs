@@ -32,5 +32,21 @@ namespace API.Extensions
 
             return services;
         }
+
+        public static IServiceCollection AddCorsPolicy(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: CorsOptions.CorsOptions.ApiCorsName,
+                    builder =>
+                    {
+                        builder.WithOrigins(CorsOptions.CorsOptions.WebApp)
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
+            return services;
+        }
     }
 }

@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Reflection;
 using API.Extensions;
 using Business.Options;
 using Data;
@@ -10,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -29,6 +25,8 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCorsPolicy();
+
             services.AddDbContext<CarRentalSystemContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
 
@@ -62,6 +60,13 @@ namespace API
             });
 
             app.UseRouting();
+
+            app.UseCors(CorsOptions.CorsOptions.WebApp);
+
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseAuthentication();
             app.UseAuthorization();
