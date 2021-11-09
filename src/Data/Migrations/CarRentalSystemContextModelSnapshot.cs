@@ -4,60 +4,20 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(CarRentalSystemContext))]
-    [Migration("20211021140122_InitialMigration")]
-    partial class InitialMigration
+    partial class CarRentalSystemContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("AdditionalFacilityEntityBookingEntity", b =>
-                {
-                    b.Property<Guid>("AdditionalFacilitiesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BookingsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("AdditionalFacilitiesId", "BookingsId");
-
-                    b.HasIndex("BookingsId");
-
-                    b.ToTable("AdditionalFacilityEntityBookingEntity");
-                });
-
-            modelBuilder.Entity("Data.Entities.AdditionalFacilityEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AdditionalFacilities");
-                });
 
             modelBuilder.Entity("Data.Entities.BookingEntity", b =>
                 {
@@ -141,37 +101,63 @@ namespace Data.Migrations
                     b.ToTable("Cars");
                 });
 
-            modelBuilder.Entity("Data.Entities.LocationEntity", b =>
+            modelBuilder.Entity("Data.Entities.CityEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<Guid>("CountryId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CountryEntity")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.HasKey("Id");
 
-                    b.Property<Guid?>("RentalPointId")
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("Data.Entities.CountryEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Title");
+
+                    b.ToTable("Countries");
+                });
+
+            modelBuilder.Entity("Data.Entities.RefreshTokenEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RentalPointId")
-                        .IsUnique()
-                        .HasFilter("[RentalPointId] IS NOT NULL");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
-                    b.ToTable("Locations");
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
@@ -180,8 +166,20 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("LocationId")
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CityId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CountryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<float?>("LocationX")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("LocationY")
+                        .HasColumnType("real");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -189,6 +187,10 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("RentalPoints");
                 });
@@ -254,21 +256,6 @@ namespace Data.Migrations
                     b.ToTable("RoleEntityUserEntity");
                 });
 
-            modelBuilder.Entity("AdditionalFacilityEntityBookingEntity", b =>
-                {
-                    b.HasOne("Data.Entities.AdditionalFacilityEntity", null)
-                        .WithMany()
-                        .HasForeignKey("AdditionalFacilitiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Entities.BookingEntity", null)
-                        .WithMany()
-                        .HasForeignKey("BookingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Data.Entities.BookingEntity", b =>
                 {
                     b.HasOne("Data.Entities.CarEntity", "Car")
@@ -305,14 +292,41 @@ namespace Data.Migrations
                     b.Navigation("RentalPoint");
                 });
 
-            modelBuilder.Entity("Data.Entities.LocationEntity", b =>
+            modelBuilder.Entity("Data.Entities.CityEntity", b =>
                 {
-                    b.HasOne("Data.Entities.RentalPointEntity", "RentalPoint")
-                        .WithOne("Location")
-                        .HasForeignKey("Data.Entities.LocationEntity", "RentalPointId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.HasOne("Data.Entities.CountryEntity", "Country")
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("RentalPoint");
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Data.Entities.RefreshTokenEntity", b =>
+                {
+                    b.HasOne("Data.Entities.UserEntity", "User")
+                        .WithOne("RefreshToken")
+                        .HasForeignKey("Data.Entities.RefreshTokenEntity", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
+                {
+                    b.HasOne("Data.Entities.CityEntity", "City")
+                        .WithMany("RentalPointEntities")
+                        .HasForeignKey("CityId");
+
+                    b.HasOne("Data.Entities.CountryEntity", "Country")
+                        .WithMany("RentalPointEntities")
+                        .HasForeignKey("CountryId");
+
+                    b.Navigation("City");
+
+                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("RoleEntityUserEntity", b =>
@@ -335,18 +349,30 @@ namespace Data.Migrations
                     b.Navigation("Bookings");
                 });
 
+            modelBuilder.Entity("Data.Entities.CityEntity", b =>
+                {
+                    b.Navigation("RentalPointEntities");
+                });
+
+            modelBuilder.Entity("Data.Entities.CountryEntity", b =>
+                {
+                    b.Navigation("Cities");
+
+                    b.Navigation("RentalPointEntities");
+                });
+
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
                 {
                     b.Navigation("Bookings");
 
                     b.Navigation("Cars");
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("Data.Entities.UserEntity", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("RefreshToken");
                 });
 #pragma warning restore 612, 618
         }

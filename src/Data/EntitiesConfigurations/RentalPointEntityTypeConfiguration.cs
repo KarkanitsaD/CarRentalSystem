@@ -19,6 +19,11 @@ namespace Data.EntitiesConfigurations
             builder.Property(rp => rp.Address)
                 .IsRequired(false);
 
+            builder.Property(rp => rp.LocationX)
+                .IsRequired(false);
+            builder.Property(rp => rp.LocationY)
+                .IsRequired(false);
+
             builder.HasOne(rp => rp.City)
                 .WithMany(c => c.RentalPointEntities)
                 .HasForeignKey(rp => rp.CityId);

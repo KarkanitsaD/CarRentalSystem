@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(CarRentalSystemContext))]
-    [Migration("20211028093431_CountyCity")]
-    partial class CountyCity
+    [Migration("20211109105738_RentalPointWithLocation")]
+    partial class RentalPointWithLocation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -148,9 +148,6 @@ namespace Data.Migrations
                     b.Property<DateTime>("ExpirationTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsRevoked")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Token")
                         .HasColumnType("nvarchar(max)");
 
@@ -162,7 +159,7 @@ namespace Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("RefreshTokenEntity");
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
@@ -179,6 +176,12 @@ namespace Data.Migrations
 
                     b.Property<Guid?>("CountryId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<float?>("LocationX")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("LocationY")
+                        .HasColumnType("real");
 
                     b.Property<string>("Title")
                         .IsRequired()
