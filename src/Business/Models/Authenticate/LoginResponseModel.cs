@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Data.Entities;
 
 namespace Business.Models.Authenticate
@@ -10,14 +11,16 @@ namespace Business.Models.Authenticate
             Id = userEntity.Id;
             Email = userEntity.Email;
             Name = userEntity.Name;
-            Token = token;
+            Jwt = token;
             RefreshToken = refreshToken;
+            Roles = userEntity.Roles.Select(role => role.Title).ToArray();
         }
 
         public Guid Id { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
-        public string Token { get; set; }
+        public string Jwt { get; set; }
         public string RefreshToken { get; set; }
+        public string[] Roles { get; set; }
     }
 }

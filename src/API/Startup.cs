@@ -44,14 +44,7 @@ namespace API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseErrorHandler();
-            }
+            app.UseErrorHandler();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

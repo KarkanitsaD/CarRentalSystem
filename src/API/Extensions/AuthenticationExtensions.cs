@@ -1,4 +1,5 @@
-﻿using Business.Options;
+﻿using System;
+using Business.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -29,7 +30,9 @@ namespace API.Extensions
                         ValidateLifetime = true,
 
                         IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
-                        ValidateIssuerSigningKey = true
+                        ValidateIssuerSigningKey = true,
+
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
         }

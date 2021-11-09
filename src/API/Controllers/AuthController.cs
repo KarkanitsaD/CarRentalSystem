@@ -55,7 +55,6 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = Policy.ForUserOnly)]
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] string refreshRequestModel)
         {
@@ -63,7 +62,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "Vova")]
+        [Authorize(Policy = Policy.ForUserOnly)]
         [Route("test")]
         public string TetsAsync()
         {
