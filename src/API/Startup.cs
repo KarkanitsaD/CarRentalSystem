@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace API
 {
@@ -32,6 +31,7 @@ namespace API
 
             services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));
 
+            services.AddPasswordHasher();
             services.AddAutoMapper(typeof(Startup));
             services.AddRepositories();
             services.AddServices();

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Business.Exceptions;
+using Business.Helpers;
 using Business.IServices;
 using Business.Models.Authenticate;
 using Business.Policies;
@@ -16,17 +17,19 @@ namespace Business.Services
         private readonly ITokenService _tokenService;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly PasswordHasher _passwordHasher;
 
-        public AuthService(ITokenService tokenService, IUserRepository userRepository, IRoleRepository roleRepository)
+        public AuthService(ITokenService tokenService, IUserRepository userRepository, IRoleRepository roleRepository, PasswordHasher passwordHasher)
         {
             _tokenService = tokenService;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<LoginResponseModel> LoginAsync(LoginRequestModel loginRequest)
         {
-            var user = await _userRepository.GetByCredentialsAsync(loginRequest.Email, loginRequest.Password);
+            var user = await _userRepository.GetByCredentialsAsync(loginRequest.Email, _passwordHasher.GeneratePasswordHash(loginRequest.Password));
 
             if (user == null)
             {
@@ -63,7 +66,7 @@ namespace Business.Services
             user = new UserEntity
             {
                 Email = loginRequest.Email,
-                PasswordHash = loginRequest.Password,
+                PasswordHash = _passwordHasher.GeneratePasswordHash(loginRequest.Password),
                 Roles = new List<RoleEntity>(userRoles)
             };
 

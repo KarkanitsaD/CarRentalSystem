@@ -1,4 +1,5 @@
-﻿using Business.IServices;
+﻿using Business.Helpers;
+using Business.IServices;
 using Business.Services;
 using Data.IRepositories;
 using Data.Repositories;
@@ -47,6 +48,11 @@ namespace API.Extensions
             });
 
             return services;
+        }
+
+        public static IServiceCollection AddPasswordHasher(this IServiceCollection services)
+        {
+            return services.AddScoped<PasswordHasher>();
         }
     }
 }
