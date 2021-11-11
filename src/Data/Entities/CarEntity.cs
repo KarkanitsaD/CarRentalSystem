@@ -16,6 +16,7 @@ namespace Data.Entities
         public bool IsBooked { get; set; }
         public DateTime LastViewTime { get; set; }
         public decimal PricePerDay { get; set; }
+        public CarPictureEntity Picture { get; set; }
 
         public ICollection<BookingEntity> Bookings { get; set; }
     }

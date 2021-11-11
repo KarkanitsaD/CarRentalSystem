@@ -26,6 +26,7 @@ namespace Data
         public DbSet<CountryEntity> Countries { get; set; }
         public DbSet<BookingEntity> Bookings { get; set; }
         public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
+        public DbSet<CarPictureEntity> CarPictureEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,7 +36,9 @@ namespace Data
                 .ApplyConfiguration(new BookingEntityTypeConfiguration())
                 .ApplyConfiguration(new CarEntityTypeConfiguration())
                 .ApplyConfiguration(new CityEntityTypeConfiguration())
-                .ApplyConfiguration(new CountryEntityTypeConfiguration());
+                .ApplyConfiguration(new CountryEntityTypeConfiguration())
+                .ApplyConfiguration(new RefreshTokenEntityTypeConfiguration())
+                .ApplyConfiguration(new CarPictureEntityTypeConfiguration());
 
             SeedData(modelBuilder);
         }

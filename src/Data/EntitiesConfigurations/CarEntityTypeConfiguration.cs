@@ -47,6 +47,10 @@ namespace Data.EntitiesConfigurations
             builder.HasMany(c => c.Bookings)
                 .WithOne(o => o.Car)
                 .HasForeignKey(c => c.CarId);
+
+            builder.HasOne(c => c.Picture)
+                .WithOne(p => p.Car)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
