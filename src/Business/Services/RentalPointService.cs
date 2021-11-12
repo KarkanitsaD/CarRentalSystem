@@ -5,6 +5,7 @@ using AutoMapper;
 using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
+using Business.Models.RentalPoint;
 using Data.Entities;
 using Data.IRepositories;
 
@@ -36,6 +37,11 @@ namespace Business.Services
             var entities = _rentalPointRepository.GetList();
 
             return _mapper.Map<IEnumerable<RentalPointEntity>, IEnumerable<RentalPointModel>>(entities);
+        }
+
+        public IEnumerable<RentalPointAddCarResponseModel> GetRentalPointAddCarModels()
+        {
+            return _mapper.Map<IEnumerable<RentalPointEntity>, IEnumerable<RentalPointAddCarResponseModel>>(_rentalPointRepository.GetList());
         }
 
         public async Task CreateAsync(RentalPointModel rentalPointModel)

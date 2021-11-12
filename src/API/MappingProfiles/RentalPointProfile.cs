@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Business.Models.RentalPoint;
+using Data.Entities;
 
 namespace API.MappingProfiles
 {
@@ -6,7 +8,12 @@ namespace API.MappingProfiles
     {
         public RentalPointProfile()
         {
-
+            CreateMap<RentalPointEntity, RentalPointAddCarResponseModel>()
+                .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Title, act => act.MapFrom(src => src.Title))
+                .ForMember(dest => dest.Address, act => act.MapFrom(src => src.Address))
+                .ForMember(dest => dest.CityId, act => act.MapFrom(src => src.CityId))
+                .ForMember(dest => dest.CountryId, act => act.MapFrom(src => src.CountryId));
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Business.IServices;
+﻿using System.Threading.Tasks;
+using Business.IServices;
+using Business.Models.Car;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +22,13 @@ namespace API.Controllers
         public IActionResult GetCars()
         {
             return Ok(_carService.GetList());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCar([FromBody] AddCarModel addCarModel)
+        {
+            await _carService.CreateAsync(addCarModel);
+            return Ok();
         }
     }
 }

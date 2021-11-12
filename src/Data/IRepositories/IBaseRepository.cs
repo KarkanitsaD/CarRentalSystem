@@ -13,5 +13,6 @@ namespace Data.IRepositories
         Task<TEntity> CreateAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity id);
+        Task<bool> ExistsAsync(Guid id);
     }
 }

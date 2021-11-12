@@ -5,6 +5,7 @@ using AutoMapper;
 using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
+using Business.Models.Car;
 using Data.Entities;
 using Data.IRepositories;
 
@@ -14,11 +15,13 @@ namespace Business.Services
     {
         private readonly IMapper _mapper;
         private readonly ICarRepository _carRepository;
+        private readonly IRentalPointRepository _rentalPointRepository;
 
-        public CarService(IMapper mapper, ICarRepository carRepository)
+        public CarService(IMapper mapper, ICarRepository carRepository, IRentalPointRepository rentalPointRepository)
         {
             _mapper = mapper;
             _carRepository = carRepository;
+            _rentalPointRepository = rentalPointRepository;
         }
 
         public async Task<CarModel> GetAsync(Guid id)
@@ -38,11 +41,19 @@ namespace Business.Services
             return _mapper.Map<IEnumerable<CarEntity>, IEnumerable<CarModel>>(entities);
         }
 
-        public async Task CreateAsync(CarModel carModel)
+        public async Task CreateAsync(AddCarModel addCarModel)
         {
-            var entity = _mapper.Map<CarModel, CarEntity>(carModel);
+            if (!await _rentalPointRepository.ExistsAsync(addCarModel.RentalPointId))
+            {
+                throw new BadRequestException("Invalid rental point Id");
+            }
 
-            await _carRepository.CreateAsync(entity);
+            var carEntity = _mapper.Map<AddCarModel, CarEntity>(addCarModel);
+            var carPicture = _mapper.Map<AddCarModel, CarPictureEntity>(addCarModel);
+
+            carEntity.Picture = carPicture;
+
+            await _carRepository.CreateAsync(carEntity);
         }
 
         public async Task UpdateAsync(Guid id, CarModel carModel)
