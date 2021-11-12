@@ -35,6 +35,7 @@ namespace API.Extensions
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
+            services.AddScoped<ICarPictureService, CarPictureService>();
 
             return services;
         }
