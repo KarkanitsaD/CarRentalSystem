@@ -10,6 +10,7 @@ namespace API.Controllers
     public class CarPicturesController : ControllerBase
     {
         private readonly ICarPictureService _carPictureService;
+
         public CarPicturesController(ICarPictureService carPictureService)
         {
             _carPictureService = carPictureService;
@@ -17,10 +18,9 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{carId}")]
-        public async Task<FileContentResult> GetAsync(Guid carId)
+        public async Task<IActionResult> GetAsync(Guid carId)
         {
-            var picture = await _carPictureService.GetAsync(carId);
-            return new FileContentResult(picture.Content, picture.Extension){FileDownloadName = picture.ShortName};
+            return Ok(await _carPictureService.GetAsync(carId));
         }
     }
 }

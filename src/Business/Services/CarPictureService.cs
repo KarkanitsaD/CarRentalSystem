@@ -27,7 +27,8 @@ namespace Business.Services
 
         public async Task<CarPictureModel> GetAsync(Guid carId)
         {
-            return _mapper.Map<CarPictureEntity, CarPictureModel>(await _carPictureRepository.GetByCarIdAsync(carId));
+            var entity = await _carPictureRepository.GetByCarIdAsync(carId);
+            return _mapper.Map<CarPictureEntity, CarPictureModel>(entity);
         }
     }
 }

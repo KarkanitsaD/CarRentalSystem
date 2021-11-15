@@ -6,5 +6,6 @@ namespace Business.Models.City
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
+        public Guid CountryId { get; set; }
     }
 }

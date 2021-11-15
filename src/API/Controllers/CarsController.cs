@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Business.IServices;
 using Business.Models.Car;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,14 @@ namespace API.Controllers
         public async Task<IActionResult> AddCar([FromBody] AddCarModel addCarModel)
         {
             await _carService.CreateAsync(addCarModel);
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{carId:guid}")]
+        public async Task<IActionResult> DeleteCar([FromRoute] Guid carId)
+        {
+            await _carService.DeleteAsync(carId);
             return Ok();
         }
     }
