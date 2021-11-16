@@ -12,7 +12,7 @@ namespace Data.Entities
         public string Color { get; set; }
         public string VehicleNumber { get; set; }
         public Guid? RentalPointId { get; set; }
-        public virtual RentalPointEntity RentalPoint { get; set; }
+        public RentalPointEntity RentalPoint { get; set; }
         public bool IsBooked { get; set; }
         public DateTime LastViewTime { get; set; }
         public decimal PricePerDay { get; set; }

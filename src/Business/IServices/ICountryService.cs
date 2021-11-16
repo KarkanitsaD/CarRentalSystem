@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Business.Models.Country;
+using Business.Models;
 
 namespace Business.IServices
 {

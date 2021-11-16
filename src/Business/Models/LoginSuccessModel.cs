@@ -2,18 +2,18 @@
 using System.Linq;
 using Data.Entities;
 
-namespace Business.Models.Authenticate
+namespace Business.Models
 {
-    public class LoginResponseModel
+    public class LoginSuccessModel
     {
-        public LoginResponseModel(UserEntity userEntity, string token, string refreshToken)
+        public LoginSuccessModel(UserEntity user, string jwt, string refreshToken)
         {
-            Id = userEntity.Id;
-            Email = userEntity.Email;
-            Name = userEntity.Name;
-            Jwt = token;
+            Id = user.Id;
+            Email = user.Email;
+            Name = user.Name;
+            Jwt = jwt;
             RefreshToken = refreshToken;
-            Roles = userEntity.Roles.Select(role => role.Title).ToArray();
+            Roles = user.Roles.Select(role => role.Title).ToArray();
         }
 
         public Guid Id { get; set; }

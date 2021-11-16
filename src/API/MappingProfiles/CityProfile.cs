@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Business.Models.City;
+using Business.Models;
 using Data.Entities;
 
 namespace API.MappingProfiles

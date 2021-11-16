@@ -7,11 +7,13 @@ namespace Business.Models
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public Guid? LocationId { get; set; }
-        public string Country { get; set; }
-        public string City { get; set; }
         public string Address { get; set; }
-
+        public float? LocationX { get; set; }
+        public float? LocationY { get; set; }
+        public Guid? CityId { get; set; }
+        public CityModel City { get; set; }
+        public Guid? CountryId { get; set; }
+        public CountryModel Country { get; set; }
         public ICollection<BookingModel> Bookings { get; set; }
         public ICollection<CarModel> Cars { get; set; }
     }

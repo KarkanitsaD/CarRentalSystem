@@ -1,8 +1,8 @@
-﻿namespace Business.Models.Authenticate
+﻿namespace Business.Models
 {
-    public class RefreshTokenResponseModel
+    public class RefreshTokenSuccessModel
     {
-        public RefreshTokenResponseModel(string token, string refreshToken)
+        public RefreshTokenSuccessModel(string token, string refreshToken)
         {
             Token = token;
             RefreshToken = refreshToken;

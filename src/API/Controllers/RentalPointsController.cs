@@ -18,7 +18,7 @@ namespace API.Controllers
         [Route("titles")]
         public IActionResult GetRentalPointsTitles()
         {
-            return Ok(_rentalPointService.GetRentalPointAddCarModels());
+            return Ok(_rentalPointService.GetAll());
         }
     }
 }

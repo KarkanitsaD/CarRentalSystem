@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using Business.IServices;
-using Business.Models.Country;
+using Business.Models;
 using Data.Entities;
 using Data.IRepositories;
 

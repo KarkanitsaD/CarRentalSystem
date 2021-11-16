@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Business.Models.Authenticate;
+using Business.Models;
 
 namespace Business.IServices
 {
     public interface IAuthService
     {
-        Task<LoginResponseModel> LoginAsync(LoginRequestModel loginRequest);
-        Task RegisterUserAsync(LoginRequestModel loginRequest);
-        Task<RefreshTokenResponseModel> RefreshTokenAsync(string refreshTokenRequest);
+        Task<LoginSuccessModel> LoginAsync(LoginModel loginModel);
+        Task RegisterUserAsync(LoginModel loginRequest);
+        Task<RefreshTokenSuccessModel> RefreshTokenAsync(string refreshTokenRequest);
     }
 }

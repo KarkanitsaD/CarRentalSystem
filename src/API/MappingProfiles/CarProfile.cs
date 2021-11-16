@@ -1,7 +1,6 @@
-﻿using System;
+﻿using API.Models.Request.Car;
 using AutoMapper;
 using Business.Models;
-using Business.Models.Car;
 using Data.Entities;
 
 namespace API.MappingProfiles
@@ -24,36 +23,16 @@ namespace API.MappingProfiles
                 .ForMember(dest => dest.PricePerDay, act => act.MapFrom(src => src.PricePerDay))
                 .ReverseMap();
 
-            CreateMap<AddCarModel, CarEntity>()
-                .ForMember(dest => dest.CarBrand, act => act.MapFrom(src => src.Brand + " " + src.Model))
+            CreateMap<AddCarRequestModel, CarModel>()
+                .ForMember(dest => dest.CarBrand, act => act.MapFrom(src => src.CarBrand))
+                .ForMember(dest => dest.CarBrand, act => act.MapFrom(src => src.Model))
+                .ForMember(dest => dest.PricePerDay, act => act.MapFrom(src => src.PricePerDay))
                 .ForMember(dest => dest.FuelConsumptionPerHundredKilometers,
                     act => act.MapFrom(src => src.FuelConsumptionPerHundredKilometers))
                 .ForMember(dest => dest.TransmissionType, act => act.MapFrom(src => src.TransmissionType))
                 .ForMember(dest => dest.NumberOfSeats, act => act.MapFrom(src => src.NumberOfSeats))
                 .ForMember(dest => dest.Color, act => act.MapFrom(src => src.Color))
-                .ForMember(dest => dest.RentalPointId, act => act.MapFrom(src => src.RentalPointId))
-                .ForMember(dest => dest.PricePerDay, act => act.MapFrom(src => src.PricePerDay));
-
-            CreateMap<AddCarModel, CarPictureEntity>()
-                .ForMember(dest => dest.Content, act => act.MapFrom(src => Convert.FromBase64String(src.PictureBase64Content)))
-                .ForMember(dest => dest.Extension, act => act.MapFrom(src => src.PictureExtension))
-                .ForMember(dest => dest.ShortName, act => act.MapFrom(src => src.PictureShortName));
-
-
-            CreateMap<UpdateCarModel, CarEntity>()
-                .ForMember(dest => dest.CarBrand, act => act.MapFrom(src => src.Brand + " " + src.Model))
-                .ForMember(dest => dest.FuelConsumptionPerHundredKilometers,
-                    act => act.MapFrom(src => src.FuelConsumptionPerHundredKilometers))
-                .ForMember(dest => dest.TransmissionType, act => act.MapFrom(src => src.TransmissionType))
-                .ForMember(dest => dest.NumberOfSeats, act => act.MapFrom(src => src.NumberOfSeats))
-                .ForMember(dest => dest.Color, act => act.MapFrom(src => src.Color))
-                .ForMember(dest => dest.RentalPointId, act => act.MapFrom(src => src.RentalPointId))
-                .ForMember(dest => dest.PricePerDay, act => act.MapFrom(src => src.PricePerDay));
-
-            CreateMap<UpdateCarModel, CarPictureEntity>()
-                .ForMember(dest => dest.Content, act => act.MapFrom(src => Convert.FromBase64String(src.PictureBase64Content)))
-                .ForMember(dest => dest.Extension, act => act.MapFrom(src => src.PictureExtension))
-                .ForMember(dest => dest.ShortName, act => act.MapFrom(src => src.PictureShortName));
+                .ForMember(dest => dest.RentalPointId, act => act.MapFrom(src => src.RentalPointId));
         }
     }
 }

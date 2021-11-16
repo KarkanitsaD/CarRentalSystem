@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using API.Models.Request.Car;
+using AutoMapper;
 using Business.IServices;
-using Business.Models.Car;
+using Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +15,12 @@ namespace API.Controllers
     public class CarsController : ControllerBase
     {
         private readonly ICarService _carService;
+        private readonly IMapper _mapper;
 
-        public CarsController(ICarService carService)
+        public CarsController(ICarService carService, IMapper mapper)
         {
             _carService = carService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -35,17 +39,19 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCar([FromBody] AddCarModel addCarModel)
+        public async Task<IActionResult> AddCar([FromBody] AddCarRequestModel addCarModel)
         {
-            await _carService.CreateAsync(addCarModel);
+            var car = _mapper.Map<AddCarRequestModel, CarModel>(addCarModel);
+            await _carService.CreateAsync(car);
             return Ok();
         }
 
         [HttpPut]
         [Route("{carId:guid}")]
-        public async Task<IActionResult> UpdateCar([FromRoute] Guid carId, [FromBody] UpdateCarModel addCarModel)
+        public async Task<IActionResult> UpdateCar([FromRoute] Guid carId, [FromBody] UpdateCarRequestModel updateCarModel)
         {
-            await _carService.UpdateAsync(carId, addCarModel);
+            var car = _mapper.Map<UpdateCarRequestModel, CarModel>(updateCarModel);
+            await _carService.UpdateAsync(carId, car);
             return Ok();
         }
 

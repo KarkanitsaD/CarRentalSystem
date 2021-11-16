@@ -5,7 +5,6 @@ using AutoMapper;
 using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
-using Business.Models.Car;
 using Data.Entities;
 using Data.IRepositories;
 
@@ -41,22 +40,22 @@ namespace Business.Services
             return _mapper.Map<IEnumerable<CarEntity>, IEnumerable<CarModel>>(entities);
         }
 
-        public async Task CreateAsync(AddCarModel addCarModel)
+        public async Task CreateAsync(CarModel addCarModel)
         {
             if (!await _rentalPointRepository.ExistsAsync(addCarModel.RentalPointId))
             {
                 throw new BadRequestException("Invalid rental point Id");
             }
 
-            var carEntity = _mapper.Map<AddCarModel, CarEntity>(addCarModel);
-            var carPicture = _mapper.Map<AddCarModel, CarPictureEntity>(addCarModel);
+            var carEntity = _mapper.Map<CarModel, CarEntity>(addCarModel);
+            var carPicture = _mapper.Map<CarModel, CarPictureEntity>(addCarModel);
 
             carEntity.Picture = carPicture;
 
             await _carRepository.CreateAsync(carEntity);
         }
 
-        public async Task UpdateAsync(Guid id, UpdateCarModel carModel)
+        public async Task UpdateAsync(Guid id, CarModel carModel)
         {
             if (id != carModel.Id)
                 throw new BadRequestException("Check data.");
@@ -66,8 +65,8 @@ namespace Business.Services
             if (entityToUpdate == null)
                 throw new NotFoundException($"{nameof(carModel)} with id = {id} not found.");
 
-            var updatedEntity = _mapper.Map<UpdateCarModel, CarEntity>(carModel);
-            var carPictureEntity = _mapper.Map<UpdateCarModel, CarPictureEntity>(carModel);
+            var updatedEntity = _mapper.Map<CarModel, CarEntity>(carModel);
+            var carPictureEntity = _mapper.Map<CarModel, CarPictureEntity>(carModel);
 
             entityToUpdate.RentalPointId = updatedEntity.RentalPointId;
             entityToUpdate.PricePerDay = updatedEntity.PricePerDay;

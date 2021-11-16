@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Business.Models
 {
@@ -11,8 +12,13 @@ namespace Business.Models
         public int NumberOfSeats { get; set; }
         public string Color { get; set; }
         public string VehicleNumber { get; set; }
-        public Guid? RentalPointId { get; set; }
+        public Guid RentalPointId { get; set; }
+        public RentalPointModel RentalPoint { get; set; }
+        public bool IsBooked { get; set; }
         public DateTime LastViewTime { get; set; }
         public decimal PricePerDay { get; set; }
+        public CarPictureModel Picture { get; set; }
+
+        public ICollection<BookingModel> Bookings { get; set; }
     }
 }

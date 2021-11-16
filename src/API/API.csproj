@@ -23,7 +23,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <Folder Include="Models\Request\Booking\" />
+    <Folder Include="Models\Request\RentalPoint\" />
+    <Folder Include="Models\Request\User\" />
+    <Folder Include="Models\Response\Booking\" />
+    <Folder Include="Models\Response\City\" />
+    <Folder Include="Models\Response\Country\" />
+    <Folder Include="Models\Response\User\" />
+    <Folder Include="Models\Response\RentalPoint\" />
   </ItemGroup>
 
 </Project>
