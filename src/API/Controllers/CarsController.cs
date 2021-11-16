@@ -20,6 +20,15 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("{carId:guid}")]
+        public async Task<IActionResult> GetCar([FromRoute] Guid carId)
+        {
+            var car = await _carService.GetAsync(carId);
+            return Ok(car);
+        }
+
+
+        [HttpGet]
         public IActionResult GetCars()
         {
             return Ok(_carService.GetList());
@@ -29,6 +38,14 @@ namespace API.Controllers
         public async Task<IActionResult> AddCar([FromBody] AddCarModel addCarModel)
         {
             await _carService.CreateAsync(addCarModel);
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("{carId:guid}")]
+        public async Task<IActionResult> UpdateCar([FromRoute] Guid carId, [FromBody] UpdateCarModel addCarModel)
+        {
+            await _carService.UpdateAsync(carId, addCarModel);
             return Ok();
         }
 

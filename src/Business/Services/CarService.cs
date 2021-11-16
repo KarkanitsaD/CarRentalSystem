@@ -56,7 +56,7 @@ namespace Business.Services
             await _carRepository.CreateAsync(carEntity);
         }
 
-        public async Task UpdateAsync(Guid id, CarModel carModel)
+        public async Task UpdateAsync(Guid id, UpdateCarModel carModel)
         {
             if (id != carModel.Id)
                 throw new BadRequestException("Check data.");
@@ -66,8 +66,17 @@ namespace Business.Services
             if (entityToUpdate == null)
                 throw new NotFoundException($"{nameof(carModel)} with id = {id} not found.");
 
-            entityToUpdate = _mapper.Map<CarModel, CarEntity>(carModel);
+            var updatedEntity = _mapper.Map<UpdateCarModel, CarEntity>(carModel);
+            var carPictureEntity = _mapper.Map<UpdateCarModel, CarPictureEntity>(carModel);
 
+            entityToUpdate.RentalPointId = updatedEntity.RentalPointId;
+            entityToUpdate.PricePerDay = updatedEntity.PricePerDay;
+            entityToUpdate.CarBrand = updatedEntity.CarBrand;
+            entityToUpdate.Color = updatedEntity.Color;
+            entityToUpdate.NumberOfSeats = updatedEntity.NumberOfSeats;
+            entityToUpdate.TransmissionType = updatedEntity.TransmissionType;
+            entityToUpdate.FuelConsumptionPerHundredKilometers = updatedEntity.FuelConsumptionPerHundredKilometers;
+            
             await _carRepository.UpdateAsync(entityToUpdate);
         }
 
