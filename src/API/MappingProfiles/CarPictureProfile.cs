@@ -1,5 +1,6 @@
 ﻿using System;
 using API.Models.Request.Car;
+using API.Models.Response.CarPicture;
 using AutoMapper;
 using Business.Models;
 using Data.Entities;
@@ -17,6 +18,8 @@ namespace API.MappingProfiles
                     act => act.MapFrom(src => Convert.FromBase64String(src.PictureBase64Content)))
                 .ForMember(dest => dest.ShortName, act => act.MapFrom(src => src.PictureShortName))
                 .ForMember(dest => dest.Extension, act => act.MapFrom(src => src.PictureExtension));
+
+            CreateMap<CarPictureModel, CarPictureResponseModel>();
         }
     }
 }

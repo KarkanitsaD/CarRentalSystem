@@ -18,7 +18,7 @@ namespace Data.IRepositories
         Task<int> CountAsync(FilterRule<TEntity> filterRule = null);
         Task<TEntity> GetAsync(FilterRule<TEntity> filterRule = null);
         Task<List<TEntity>> GetListAsync(QueryParameters<TEntity> queryParameters = null);
-        Task<List<TEntity>> GetPageListAsync(QueryParameters<TEntity> queryParameters = null);
+        Task<PageResult<TEntity>> GetPageListAsync(QueryParameters<TEntity> queryParameters);
         Task<TEntity> CreateAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task<bool> ExistsAsync(FilterRule<TEntity> filterRule);

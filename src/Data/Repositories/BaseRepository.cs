@@ -102,23 +102,22 @@ namespace Data.Repositories
             return await query.ToListAsync();
         }
 
-        public virtual async Task<List<TEntity>> GetPageListAsync(QueryParameters<TEntity> queryParameters = null)
+        public virtual async Task<PageResult<TEntity>> GetPageListAsync(QueryParameters<TEntity> queryParameters)
         {
             var query = DbSet.AsQueryable();
 
-            if (queryParameters == null)
-            {
-                return await query.ToListAsync();
-            }
-
             query = BaseQuery(query, queryParameters);
+
+            int totalItemsCount = await query.CountAsync();
 
             if (queryParameters.PaginationRule != null)
             {
                 query = PaginationQuery(query, queryParameters.PaginationRule);
             }
 
-            return await query.ToListAsync();
+            var items = await query.ToListAsync();
+
+            return new PageResult<TEntity>(items, totalItemsCount);
         }
 
         protected virtual IQueryable<TEntity> BaseQuery(IQueryable<TEntity> queryable,

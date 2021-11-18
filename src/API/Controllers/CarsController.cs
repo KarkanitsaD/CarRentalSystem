@@ -4,6 +4,7 @@ using API.Models.Request.Car;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
+using Business.Query;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,9 +34,16 @@ namespace API.Controllers
 
 
         [HttpGet]
-        public IActionResult GetCars()
+        //[ResponseCache(CacheProfileName = "PrivateCache")]
+        public async Task<IActionResult> GetCarsAsync([FromQuery] CarQueryModel queryModel)
         {
-            return Ok(_carService.GetList());
+            if (queryModel.IsValidPagination)
+            {
+                var (cars, itemsTotalCount) = await _carService.GetPageListAsync(queryModel);
+                return Ok(new { cars, itemsTotalCount});
+            }
+
+            return Ok(await _carService.GetListAsync(queryModel));
         }
 
         [HttpPost]

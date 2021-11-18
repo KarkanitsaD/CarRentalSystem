@@ -10,7 +10,6 @@ namespace Business.Models
         {
             Id = user.Id;
             Email = user.Email;
-            Name = user.Name;
             Jwt = jwt;
             RefreshToken = refreshToken;
             Roles = user.Roles.Select(role => role.Title).ToArray();
@@ -18,7 +17,6 @@ namespace Business.Models
 
         public Guid Id { get; set; }
         public string Email { get; set; }
-        public string Name { get; set; }
         public string Jwt { get; set; }
         public string RefreshToken { get; set; }
         public string[] Roles { get; set; }

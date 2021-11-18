@@ -20,12 +20,6 @@ namespace Data.EntitiesConfigurations
             builder.Property(u => u.PasswordHash)
                 .IsRequired();
 
-            builder.Property(u => u.Name)
-                .HasMaxLength(50);
-
-            builder.Property(u => u.Surname)
-                .HasMaxLength(50);
-
             builder.HasOne(u => u.RefreshToken)
                 .WithOne(t => t.User)
                 .HasForeignKey<RefreshTokenEntity>(t => t.UserId);

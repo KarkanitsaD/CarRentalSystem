@@ -4,6 +4,8 @@ using Business.Services;
 using Data.IRepositories;
 using Data.Repositories;
 using Microsoft.Extensions.DependencyInjection;
+using API.Cache;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Extensions
 {
@@ -59,6 +61,20 @@ namespace API.Extensions
         public static IServiceCollection AddPasswordHasher(this IServiceCollection services)
         {
             return services.AddScoped<PasswordHasher>();
+        }
+
+        public static IServiceCollection AddControllersWithCache(this IServiceCollection services)
+        {
+            services.AddControllers(options =>
+            {
+                options.CacheProfiles.Add("PrivateCache", new CacheProfile()
+                {
+                    Location = ResponseCacheLocation.Client,
+                    Duration = 60
+                });
+            });
+
+            return services;
         }
     }
 }

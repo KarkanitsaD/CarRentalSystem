@@ -4,8 +4,7 @@ namespace API.Models.Request.Car
 {
     public class AddCarRequestModel
     {
-        public Guid Id { get; set; }
-        public string CarBrand { get; set; }
+        public string Brand { get; set; }
         public string Model { get; set; }
         public decimal PricePerDay { get; set; }
         public decimal FuelConsumptionPerHundredKilometers { get; set; }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(CarRentalSystemContext))]
-    [Migration("20211111095104_CarPicture")]
-    partial class CarPicture
+    [Migration("20211117074912_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,7 +30,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("BookingTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CarId")
+                    b.Property<Guid?>("CarId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("KeyHandOverTime")
@@ -62,7 +62,7 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CarBrand")
+                    b.Property<string>("Brand")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -74,11 +74,11 @@ namespace Data.Migrations
                     b.Property<decimal>("FuelConsumptionPerHundredKilometers")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<bool>("IsBooked")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("LastViewTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Model")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfSeats")
                         .HasColumnType("int");
@@ -86,15 +86,12 @@ namespace Data.Migrations
                     b.Property<decimal>("PricePerDay")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("RentalPointId")
+                    b.Property<Guid>("RentalPointId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TransmissionType")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("VehicleNumber")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -105,54 +102,54 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5329b90f-4717-412a-833b-fd4eaa42df21"),
-                            CarBrand = "Porsche 911",
+                            Id = new Guid("0aba2fee-535d-4819-b6c3-53a114395ea1"),
+                            Brand = "Porsche",
                             Color = "Red",
                             FuelConsumptionPerHundredKilometers = 12m,
-                            IsBooked = false,
                             LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Model = "911",
                             NumberOfSeats = 4,
                             PricePerDay = 150m,
-                            RentalPointId = new Guid("949694b8-0204-4796-999c-5afb4c58d4bf"),
+                            RentalPointId = new Guid("7718e226-0cf0-43b0-849a-e83e76470393"),
                             TransmissionType = "Automate"
                         },
                         new
                         {
-                            Id = new Guid("10ce6fd2-3d35-4023-8ba4-db331cd47941"),
-                            CarBrand = "Renault Kadjar",
+                            Id = new Guid("e85854bc-805b-4336-983e-a0a972506a49"),
+                            Brand = "Renault",
                             Color = "Black",
                             FuelConsumptionPerHundredKilometers = 4m,
-                            IsBooked = false,
                             LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Model = "Kadjar",
                             NumberOfSeats = 5,
                             PricePerDay = 60m,
-                            RentalPointId = new Guid("949694b8-0204-4796-999c-5afb4c58d4bf"),
+                            RentalPointId = new Guid("7718e226-0cf0-43b0-849a-e83e76470393"),
                             TransmissionType = "Mechanic"
                         },
                         new
                         {
-                            Id = new Guid("effed9d0-ccae-42a8-8761-4a08ed2729ee"),
-                            CarBrand = "Mazda cx 5",
+                            Id = new Guid("2598cb8e-e77f-4a1b-996d-1bc670125634"),
+                            Brand = "Mazda",
                             Color = "Blue",
                             FuelConsumptionPerHundredKilometers = 6.7m,
-                            IsBooked = false,
                             LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Model = "cx5",
                             NumberOfSeats = 5,
                             PricePerDay = 65m,
-                            RentalPointId = new Guid("949694b8-0204-4796-999c-5afb4c58d4bf"),
+                            RentalPointId = new Guid("7718e226-0cf0-43b0-849a-e83e76470393"),
                             TransmissionType = "Mechanic"
                         },
                         new
                         {
-                            Id = new Guid("5b41df87-3680-437a-969c-53f13f5c8ab3"),
-                            CarBrand = "Mazda cx 5",
+                            Id = new Guid("9ee6ddd0-728e-40c0-99e4-407af5474afc"),
+                            Brand = "Mazda",
                             Color = "Red",
                             FuelConsumptionPerHundredKilometers = 6.7m,
-                            IsBooked = false,
                             LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Model = "cx5",
                             NumberOfSeats = 5,
                             PricePerDay = 65m,
-                            RentalPointId = new Guid("fe05c837-2253-4282-b07f-45b49726c1b1"),
+                            RentalPointId = new Guid("bb68cc70-ab4a-47a6-8e4b-9c6f12e9d994"),
                             TransmissionType = "Mechanic"
                         });
                 });
@@ -207,14 +204,14 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3fb8fddf-d9d3-4678-a235-ae9ff3a5c92f"),
-                            CountryId = new Guid("b42689fa-c196-4a91-9c7c-7560eaf142a2"),
+                            Id = new Guid("9986866f-aeea-43e8-a5c7-80887c468761"),
+                            CountryId = new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"),
                             Title = "Minsk"
                         },
                         new
                         {
-                            Id = new Guid("398e9c3c-2dc8-4068-bcb6-befa6b87df0f"),
-                            CountryId = new Guid("4bb86572-d916-4de5-ad4b-7664f6edf11e"),
+                            Id = new Guid("b7e35e82-e23c-4937-8ba8-5f3ea604027b"),
+                            CountryId = new Guid("a878aa25-528e-4fd9-a489-748c416058e3"),
                             Title = "Warsaw"
                         });
                 });
@@ -238,12 +235,12 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b42689fa-c196-4a91-9c7c-7560eaf142a2"),
+                            Id = new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"),
                             Title = "Belarus"
                         },
                         new
                         {
-                            Id = new Guid("4bb86572-d916-4de5-ad4b-7664f6edf11e"),
+                            Id = new Guid("a878aa25-528e-4fd9-a489-748c416058e3"),
                             Title = "Poland"
                         });
                 });
@@ -281,10 +278,10 @@ namespace Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CityId")
+                    b.Property<Guid>("CityId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CountryId")
+                    b.Property<Guid>("CountryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<float?>("LocationX")
@@ -309,16 +306,16 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("949694b8-0204-4796-999c-5afb4c58d4bf"),
-                            CityId = new Guid("3fb8fddf-d9d3-4678-a235-ae9ff3a5c92f"),
-                            CountryId = new Guid("b42689fa-c196-4a91-9c7c-7560eaf142a2"),
+                            Id = new Guid("7718e226-0cf0-43b0-849a-e83e76470393"),
+                            CityId = new Guid("9986866f-aeea-43e8-a5c7-80887c468761"),
+                            CountryId = new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"),
                             Title = "Title 1!"
                         },
                         new
                         {
-                            Id = new Guid("fe05c837-2253-4282-b07f-45b49726c1b1"),
-                            CityId = new Guid("398e9c3c-2dc8-4068-bcb6-befa6b87df0f"),
-                            CountryId = new Guid("4bb86572-d916-4de5-ad4b-7664f6edf11e"),
+                            Id = new Guid("bb68cc70-ab4a-47a6-8e4b-9c6f12e9d994"),
+                            CityId = new Guid("b7e35e82-e23c-4937-8ba8-5f3ea604027b"),
+                            CountryId = new Guid("a878aa25-528e-4fd9-a489-748c416058e3"),
                             Title = "Title 2!"
                         });
                 });
@@ -341,12 +338,12 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5a26a613-a53f-47b5-a770-d9b00f48bb76"),
+                            Id = new Guid("0b239837-5b9d-4319-b3c0-96af5cca83ab"),
                             Title = "Admin"
                         },
                         new
                         {
-                            Id = new Guid("d0014d6e-cc4d-4957-9556-624504291be9"),
+                            Id = new Guid("a5a41062-4d2d-4fba-8e27-d850c09d7c11"),
                             Title = "User"
                         });
                 });
@@ -362,17 +359,9 @@ namespace Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -383,15 +372,15 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b44c72f6-d61f-4e49-a625-6a248ebacfc3"),
+                            Id = new Guid("1438482d-011a-4cc0-a822-c6068ed63e32"),
                             Email = "admin@mail.ru",
-                            PasswordHash = "123456"
+                            PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31"
                         },
                         new
                         {
-                            Id = new Guid("9529dcc8-5137-447f-b128-a9ab85e7529e"),
+                            Id = new Guid("8870174b-6a4f-4017-ac25-0b05e42a4f18"),
                             Email = "user@mail.ru",
-                            PasswordHash = "123456"
+                            PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31"
                         });
                 });
 
@@ -415,8 +404,7 @@ namespace Data.Migrations
                     b.HasOne("Data.Entities.CarEntity", "Car")
                         .WithMany("Bookings")
                         .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Data.Entities.RentalPointEntity", "RentalPoint")
                         .WithMany("Bookings")
@@ -426,7 +414,7 @@ namespace Data.Migrations
                     b.HasOne("Data.Entities.UserEntity", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Car");
@@ -441,7 +429,8 @@ namespace Data.Migrations
                     b.HasOne("Data.Entities.RentalPointEntity", "RentalPoint")
                         .WithMany("Cars")
                         .HasForeignKey("RentalPointId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("RentalPoint");
                 });
@@ -462,7 +451,7 @@ namespace Data.Migrations
                     b.HasOne("Data.Entities.CountryEntity", "Country")
                         .WithMany("Cities")
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Country");
@@ -482,12 +471,16 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
                 {
                     b.HasOne("Data.Entities.CityEntity", "City")
-                        .WithMany("RentalPointEntities")
-                        .HasForeignKey("CityId");
+                        .WithMany("RentalPoints")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Data.Entities.CountryEntity", "Country")
-                        .WithMany("RentalPointEntities")
-                        .HasForeignKey("CountryId");
+                        .WithMany("RentalPoints")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("City");
 
@@ -518,14 +511,14 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.CityEntity", b =>
                 {
-                    b.Navigation("RentalPointEntities");
+                    b.Navigation("RentalPoints");
                 });
 
             modelBuilder.Entity("Data.Entities.CountryEntity", b =>
                 {
                     b.Navigation("Cities");
 
-                    b.Navigation("RentalPointEntities");
+                    b.Navigation("RentalPoints");
                 });
 
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>

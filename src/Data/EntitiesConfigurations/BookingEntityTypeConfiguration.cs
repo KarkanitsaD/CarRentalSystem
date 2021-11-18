@@ -15,7 +15,7 @@ namespace Data.EntitiesConfigurations
             builder.HasOne(o => o.User)
                 .WithMany(u => u.Bookings)
                 .HasForeignKey(o => o.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(o => o.RentalPoint)
                 .WithMany(rp => rp.Bookings)
@@ -24,7 +24,8 @@ namespace Data.EntitiesConfigurations
 
             builder.HasOne(o => o.Car)
                 .WithMany(c => c.Bookings)
-                .HasForeignKey(o => o.CarId);
+                .HasForeignKey(o => o.CarId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.Property(o => o.KeyReceivingTime)
                 .IsRequired();

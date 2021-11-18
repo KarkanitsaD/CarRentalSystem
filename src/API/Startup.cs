@@ -1,4 +1,5 @@
 using API.Extensions;
+using Business.Extensions;
 using Business.Options;
 using Data;
 using Microsoft.AspNetCore.Builder;
@@ -32,13 +33,16 @@ namespace API
             services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));
 
             services.AddPasswordHasher();
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Startup))
+                .AddBusinessMapper();
+
+
             services.AddRepositories();
             services.AddServices();
             services.AddJwtBearerAuthentication(Configuration.GetSection(JwtOptions.Jwt).Get<JwtOptions>());
             services.AddAuthorizationService();
 
-            services.AddControllers();
+            services.AddControllersWithCache();
             services.AddSwaggerGenerator();
         }
 

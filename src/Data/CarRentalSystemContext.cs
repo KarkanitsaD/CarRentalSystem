@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Data.Entities;
 using Data.EntitiesConfigurations;
 using Microsoft.EntityFrameworkCore;
@@ -80,12 +81,12 @@ namespace Data
                 {
                     Id = firstCarId,
                     RentalPointId = firstRentalPointId,
-                    CarBrand = "Porsche 911",
+                    Brand = "Porsche",
+                    Model = "911",
                     FuelConsumptionPerHundredKilometers = 12,
                     TransmissionType = "Automate",
                     NumberOfSeats = 4,
                     Color = "Red",
-                    IsBooked = false,
                     LastViewTime = DateTime.MinValue,
                     PricePerDay = 150
                 },
@@ -93,12 +94,12 @@ namespace Data
                 {
                     Id = secondCarId,
                     RentalPointId = firstRentalPointId,
-                    CarBrand = "Renault Kadjar",
+                    Brand = "Renault",
+                    Model = "Kadjar",
                     FuelConsumptionPerHundredKilometers = 4,
                     TransmissionType = "Mechanic",
                     NumberOfSeats = 5,
                     Color = "Black",
-                    IsBooked = false,
                     LastViewTime = DateTime.MinValue,
                     PricePerDay = 60
                 },
@@ -106,12 +107,12 @@ namespace Data
                 {
                     Id = thirdCarId,
                     RentalPointId = firstRentalPointId,
-                    CarBrand = "Mazda cx 5",
+                    Brand = "Mazda",
+                    Model = "cx5",
                     FuelConsumptionPerHundredKilometers = new decimal(6.7),
                     TransmissionType = "Mechanic",
                     NumberOfSeats = 5,
                     Color = "Blue",
-                    IsBooked = false,
                     LastViewTime = DateTime.MinValue,
                     PricePerDay = 65
                 },
@@ -119,12 +120,12 @@ namespace Data
                 {
                     Id = fourthCarId,
                     RentalPointId = secondRentalPointId,
-                    CarBrand = "Mazda cx 5",
+                    Brand = "Mazda",
+                    Model = "cx5",
                     FuelConsumptionPerHundredKilometers = new decimal(6.7),
                     TransmissionType = "Mechanic",
                     NumberOfSeats = 5,
                     Color = "Red",
-                    IsBooked = false,
                     LastViewTime = DateTime.MinValue,
                     PricePerDay = 65
                 },
@@ -143,8 +144,8 @@ namespace Data
             var adminId = Guid.NewGuid();
             modelBuilder.Entity<UserEntity>().HasData(new UserEntity[]
             {
-                new UserEntity(){ Id = adminId, Email = "admin@mail.ru", PasswordHash = "123456" }, 
-                new UserEntity(){ Id = userId, Email = "user@mail.ru", PasswordHash = "123456" }, 
+                new UserEntity(){ Id = adminId, Email = "admin@mail.ru", PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31"}, 
+                new UserEntity(){ Id = userId, Email = "user@mail.ru", PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31"}, 
             });
         }
     }

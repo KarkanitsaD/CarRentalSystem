@@ -12,7 +12,7 @@ namespace Data.EntitiesConfigurations
             builder.Property(c => c.Id)
                 .IsRequired();
 
-            builder.Property(c => c.CarBrand)
+            builder.Property(c => c.Brand)
                 .HasMaxLength(50)
                 .IsRequired();
 
@@ -28,18 +28,13 @@ namespace Data.EntitiesConfigurations
             builder.Property(c => c.Color)
                 .HasMaxLength(50);
 
-            builder.Property(c => c.VehicleNumber);
-
-            builder.Property(c => c.IsBooked)
-                .IsRequired();
-
             builder.Property(c => c.PricePerDay)
                 .IsRequired();
 
             builder.HasOne(c => c.RentalPoint)
                 .WithMany(r => r.Cars)
                 .HasForeignKey(c => c.RentalPointId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(c => c.LastViewTime)
                 .IsRequired();
@@ -50,7 +45,7 @@ namespace Data.EntitiesConfigurations
 
             builder.HasOne(c => c.Picture)
                 .WithOne(p => p.Car)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

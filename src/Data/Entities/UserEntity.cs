@@ -6,8 +6,6 @@ namespace Data.Entities
     {
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
         public RefreshTokenEntity RefreshToken { get; set; }
         public ICollection<RoleEntity> Roles { get; set; }
         public ICollection<BookingEntity> Bookings { get; set; }

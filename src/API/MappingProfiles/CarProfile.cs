@@ -1,7 +1,6 @@
 ﻿using API.Models.Request.Car;
 using AutoMapper;
 using Business.Models;
-using Data.Entities;
 
 namespace API.MappingProfiles
 {
@@ -9,30 +8,12 @@ namespace API.MappingProfiles
     {
         public CarProfile()
         {
-            CreateMap<CarEntity, CarModel>()
-                .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
-                .ForMember(dest => dest.CarBrand, act => act.MapFrom(src => src.CarBrand))
-                .ForMember(dest => dest.FuelConsumptionPerHundredKilometers, 
-                    act => act.MapFrom(src => src.FuelConsumptionPerHundredKilometers))
-                .ForMember(dest => dest.TransmissionType, act => act.MapFrom(src => src.TransmissionType))
-                .ForMember(dest => dest.NumberOfSeats, act => act.MapFrom(src => src.NumberOfSeats))
-                .ForMember(dest => dest.Color, act => act.MapFrom(src => src.Color))
-                .ForMember(dest => dest.VehicleNumber, act => act.MapFrom(src => src.VehicleNumber))
-                .ForMember(dest => dest.RentalPointId, act => act.MapFrom(src => src.RentalPointId))
-                .ForMember(dest => dest.LastViewTime, act => act.MapFrom(src => src.LastViewTime))
-                .ForMember(dest => dest.PricePerDay, act => act.MapFrom(src => src.PricePerDay))
-                .ReverseMap();
-
             CreateMap<AddCarRequestModel, CarModel>()
-                .ForMember(dest => dest.CarBrand, act => act.MapFrom(src => src.CarBrand))
-                .ForMember(dest => dest.CarBrand, act => act.MapFrom(src => src.Model))
-                .ForMember(dest => dest.PricePerDay, act => act.MapFrom(src => src.PricePerDay))
-                .ForMember(dest => dest.FuelConsumptionPerHundredKilometers,
-                    act => act.MapFrom(src => src.FuelConsumptionPerHundredKilometers))
-                .ForMember(dest => dest.TransmissionType, act => act.MapFrom(src => src.TransmissionType))
-                .ForMember(dest => dest.NumberOfSeats, act => act.MapFrom(src => src.NumberOfSeats))
-                .ForMember(dest => dest.Color, act => act.MapFrom(src => src.Color))
-                .ForMember(dest => dest.RentalPointId, act => act.MapFrom(src => src.RentalPointId));
+                .ForMember(dest => dest.Id, act => act.Ignore())
+                .ForMember(dest => dest.Picture, act => act.MapFrom(src => new CarPictureModel(src.PictureBase64Content, src.PictureShortName, src.PictureExtension)));
+
+            CreateMap<UpdateCarRequestModel, CarModel>()
+                .ForMember(dest => dest.Picture, act => act.MapFrom(src => new CarPictureModel(src.PictureBase64Content, src.PictureShortName, src.PictureExtension){Id = src.ImageId, CarId = src.Id}));
         }
     }
 }
