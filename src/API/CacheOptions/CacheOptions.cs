@@ -1,6 +1,6 @@
-﻿namespace API.Cache
+﻿namespace API.CacheOptions
 {
-    public class Cache
+    public class CacheOptions
     {
         public const string BaseCacheProfile = "PrivateCache";
     }

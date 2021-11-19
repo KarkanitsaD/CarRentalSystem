@@ -37,20 +37,14 @@ namespace Business.Services
             return _mapper.Map<CarEntity, CarModel>(entity);
         }
 
-        public async Task<List<CarModel>> GetListAsync(CarQueryModel queryModel = null)
-        {
-            var query = new QueryParameters<CarEntity>
-            {
-                FilterRule = GetFilterRule(queryModel)
-            };
-
-            var entities = await _carRepository.GetListAsync(query);
-
-            return _mapper.Map<List<CarEntity>, List<CarModel>>(entities);
-        }
 
         public async Task<(List<CarModel>, int)> GetPageListAsync(CarQueryModel queryModel)
         {
+            if (!queryModel.IsValidPagination)
+            {
+                throw new BadRequestException("Pagination rule is not valid");
+            }
+
             var query = new QueryParameters<CarEntity>
             {
                 FilterRule = GetFilterRule(queryModel),

@@ -38,9 +38,9 @@ namespace Business.Services
             return _mapper.Map<IEnumerable<RentalPointEntity>, IEnumerable<RentalPointModel>>(entities);
         }
 
-        public IEnumerable<RentalPointModel> GetAll()
+        public async Task<List<RentalPointModel>> GetAllAsync()
         {
-            return _mapper.Map<IEnumerable<RentalPointEntity>, IEnumerable<RentalPointModel>>(_rentalPointRepository.GetList());
+            return _mapper.Map<List<RentalPointEntity>, List<RentalPointModel>>(await _rentalPointRepository.GetListAsync());
         }
 
         public async Task CreateAsync(RentalPointModel rentalPointModel)

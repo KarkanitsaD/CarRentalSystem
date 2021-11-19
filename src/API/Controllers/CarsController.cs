@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Models.Request.Car;
+using API.Models.Response.Car;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
@@ -34,16 +36,12 @@ namespace API.Controllers
 
 
         [HttpGet]
-        //[ResponseCache(CacheProfileName = "PrivateCache")]
         public async Task<IActionResult> GetCarsAsync([FromQuery] CarQueryModel queryModel)
         {
-            if (queryModel.IsValidPagination)
-            {
-                var (cars, itemsTotalCount) = await _carService.GetPageListAsync(queryModel);
-                return Ok(new { cars, itemsTotalCount});
-            }
-
-            return Ok(await _carService.GetListAsync(queryModel));
+            var (carsModels, itemsTotalCount) = await _carService.GetPageListAsync(queryModel);
+            var cars = _mapper.Map<List<CarModel>, List<CarResponseModel>>(carsModels);
+            return Ok(new { cars, itemsTotalCount });
+            
         }
 
         [HttpPost]

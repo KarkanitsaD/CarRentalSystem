@@ -23,6 +23,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{carId}")]
+        [ResponseCache(CacheProfileName = CacheOptions.CacheOptions.BaseCacheProfile)]
         public async Task<IActionResult> GetAsync(Guid carId)
         {
             var picture = await _carPictureService.GetAsync(carId);

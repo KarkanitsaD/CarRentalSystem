@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.IServices;
@@ -18,11 +17,6 @@ namespace Business.Services
         {
             _carPictureRepository = carPictureRepository;
             _mapper = mapper;
-        }
-
-        public IEnumerable<CarPictureModel> GetList()
-        {
-            return _mapper.Map<IEnumerable<CarPictureEntity>, IEnumerable<CarPictureModel>>(_carPictureRepository.GetList());
         }
 
         public async Task<CarPictureModel> GetAsync(Guid carId)

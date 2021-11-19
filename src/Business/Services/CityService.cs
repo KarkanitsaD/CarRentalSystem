@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
@@ -18,9 +19,9 @@ namespace Business.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<CityModel> GetList()
+        public async Task<List<CityModel>> GetListAsync()
         {
-            return _mapper.Map<IEnumerable<CityEntity>, IEnumerable<CityModel>>(_cityRepository.GetList());
+            return _mapper.Map<List<CityEntity>, List<CityModel>>(await _cityRepository.GetListAsync());
         }
     }
 }

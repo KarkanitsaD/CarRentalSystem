@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+﻿using API.Models.Response.Country;
+using AutoMapper;
 using Business.Models;
-using Data.Entities;
 
 namespace API.MappingProfiles
 {
@@ -8,9 +8,7 @@ namespace API.MappingProfiles
     {
         public CountryProfile()
         {
-            CreateMap<CountryEntity, CountryModel>()
-                .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Title, act => act.MapFrom(src => src.Title));
+            CreateMap<CountryModel, CountryResponseModel>();
         }
     }
 }

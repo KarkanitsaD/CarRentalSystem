@@ -9,7 +9,6 @@ namespace Business.IServices
     public interface ICarService
     {
         Task<CarModel> GetAsync(Guid id);
-        Task<List<CarModel>> GetListAsync(CarQueryModel queryModel = null);
         Task<(List<CarModel>, int)> GetPageListAsync(CarQueryModel queryModel);
         Task CreateAsync(CarModel addCarModel);
         Task UpdateAsync(Guid id, CarModel updateCarModel);

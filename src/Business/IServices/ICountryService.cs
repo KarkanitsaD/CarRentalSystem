@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Business.Models;
 
 namespace Business.IServices
 {
     public interface ICountryService
     {
-        IEnumerable<CountryModel> GetList();
+        Task<List<CountryModel>> GetListAsync();
     }
 }

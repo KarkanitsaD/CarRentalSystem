@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
@@ -11,15 +12,16 @@ namespace Business.Services
     {
         private readonly IMapper _mapper;
         private readonly ICountryRepository _countryRepository;
+
         public CountryService(ICountryRepository countryRepository, IMapper mapper)
         {
             _countryRepository = countryRepository;
             _mapper = mapper;
         }
 
-        public IEnumerable<CountryModel> GetList()
+        public async Task<List<CountryModel>> GetListAsync()
         {
-            return _mapper.Map<IEnumerable<CountryEntity>, IEnumerable<CountryModel>>(_countryRepository.GetList());
+            return _mapper.Map<List<CountryEntity>, List<CountryModel>>(await _countryRepository.GetListAsync());
         }
     }
 }
