@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
+using API.Models.Request.Auth;
+using API.Models.Response.Auth;
+using AutoMapper;
 using Business.IServices;
-using Business.Models.Authenticate;
+using Business.Models;
 using Business.Policies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,10 +17,12 @@ namespace API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IMapper _mapper;
         
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IMapper mapper)
         {
             _authService = authService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -33,7 +38,9 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel loginRequest)
         {
-            return Ok(await _authService.LoginAsync(loginRequest));
+            var loginModel = _mapper.Map<LoginRequestModel, LoginModel>(loginRequest);
+            var loginSuccessModel = await _authService.LoginAsync(loginModel);
+            return Ok(_mapper.Map<LoginSuccessModel, LoginResponseModel>(loginSuccessModel));
         }
 
         /// <summary>
@@ -49,23 +56,24 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RegisterAsync([FromBody] LoginRequestModel loginRequest)
         {
-            await _authService.RegisterUserAsync(loginRequest);
+            var loginModel = _mapper.Map<LoginRequestModel, LoginModel>(loginRequest);
+            await _authService.RegisterUserAsync(loginModel);
 
             return Ok();
         }
 
         [HttpPost]
-        [Authorize(Policy = Policy.ForUserOnly)]
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] string refreshRequestModel)
         {
-            return Ok(await _authService.RefreshTokenAsync(refreshRequestModel));
+            var successRefresh = await _authService.RefreshTokenAsync(refreshRequestModel);
+            return Ok(_mapper.Map<RefreshTokenSuccessModel, RefreshTokenResponseModel>(successRefresh));
         }
 
         [HttpGet]
-        [Authorize(Policy = "Vova")]
+        [Authorize(Policy = Policy.ForUserOnly)]
         [Route("test")]
-        public string TetsAsync()
+        public string TestAsync()
         {
             return "test";
         }

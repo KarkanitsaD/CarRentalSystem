@@ -19,11 +19,12 @@ namespace Data.EntitiesConfigurations
             builder.HasMany(c => c.Cities)
                 .WithOne(c => c.Country)
                 .HasForeignKey(c => c.CountryId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(c => c.RentalPointEntities)
+            builder.HasMany(c => c.RentalPoints)
                 .WithOne(r => r.Country)
-                .HasForeignKey(r => r.CountryId);
+                .HasForeignKey(r => r.CountryId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

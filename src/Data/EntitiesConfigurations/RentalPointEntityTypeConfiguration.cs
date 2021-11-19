@@ -19,13 +19,20 @@ namespace Data.EntitiesConfigurations
             builder.Property(rp => rp.Address)
                 .IsRequired(false);
 
+            builder.Property(rp => rp.LocationX)
+                .IsRequired(false);
+            builder.Property(rp => rp.LocationY)
+                .IsRequired(false);
+
             builder.HasOne(rp => rp.City)
                 .WithMany(c => c.RentalPointEntities)
-                .HasForeignKey(rp => rp.CityId);
+                .HasForeignKey(rp => rp.CityId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(rp => rp.Country)
-                .WithMany(c => c.RentalPointEntities)
-                .HasForeignKey(rp => rp.CountryId);
+                .WithMany(c => c.RentalPoints)
+                .HasForeignKey(rp => rp.CountryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(l => l.Bookings)
                 .WithOne(o => o.RentalPoint)
@@ -35,7 +42,7 @@ namespace Data.EntitiesConfigurations
             builder.HasMany(rp => rp.Cars)
                 .WithOne(c => c.RentalPoint)
                 .HasForeignKey(c => c.RentalPointId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

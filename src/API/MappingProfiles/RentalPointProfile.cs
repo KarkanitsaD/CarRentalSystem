@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using API.Models.Response.RentalPoint;
+using AutoMapper;
+using Business.Models;
 
 namespace API.MappingProfiles
 {
@@ -6,7 +8,7 @@ namespace API.MappingProfiles
     {
         public RentalPointProfile()
         {
-
+            CreateMap<RentalPointModel, RentalPointResponseModel>();
         }
     }
 }

@@ -3,8 +3,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Business.Exceptions;
+using Business.Helpers;
 using Business.IServices;
-using Business.Models.Authenticate;
+using Business.Models;
 using Business.Policies;
 using Data.Entities;
 using Data.IRepositories;
@@ -16,17 +17,19 @@ namespace Business.Services
         private readonly ITokenService _tokenService;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly PasswordHasher _passwordHasher;
 
-        public AuthService(ITokenService tokenService, IUserRepository userRepository, IRoleRepository roleRepository)
+        public AuthService(ITokenService tokenService, IUserRepository userRepository, IRoleRepository roleRepository, PasswordHasher passwordHasher)
         {
             _tokenService = tokenService;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _passwordHasher = passwordHasher;
         }
 
-        public async Task<LoginResponseModel> LoginAsync(LoginRequestModel loginRequest)
+        public async Task<LoginSuccessModel> LoginAsync(LoginModel loginRequest)
         {
-            var user = await _userRepository.GetByCredentialsAsync(loginRequest.Email, loginRequest.Password);
+            var user = await _userRepository.GetByCredentialsAsync(loginRequest.Email, _passwordHasher.GeneratePasswordHash(loginRequest.Password));
 
             if (user == null)
             {
@@ -46,10 +49,10 @@ namespace Business.Services
                 await _tokenService.UpdateRefreshTokenAsync(user.Id, refreshToken);
             }
 
-            return new LoginResponseModel(user, jwt, refreshToken);
+            return new LoginSuccessModel(user, jwt, refreshToken);
         }
 
-        public async Task RegisterUserAsync(LoginRequestModel loginRequest)
+        public async Task RegisterUserAsync(LoginModel loginRequest)
         {
             var user = await _userRepository.GetByEmailAsync(loginRequest.Email);
 
@@ -63,14 +66,14 @@ namespace Business.Services
             user = new UserEntity
             {
                 Email = loginRequest.Email,
-                PasswordHash = loginRequest.Password,
+                PasswordHash = _passwordHasher.GeneratePasswordHash(loginRequest.Password),
                 Roles = new List<RoleEntity>(userRoles)
             };
 
             await _userRepository.CreateAsync(user);
         }
 
-        public async Task<RefreshTokenResponseModel> RefreshTokenAsync(string refreshTokenRequest)
+        public async Task<RefreshTokenSuccessModel> RefreshTokenAsync(string refreshTokenRequest)
         {
             await _tokenService.ValidateRefreshTokenAsync(refreshTokenRequest);
 
@@ -82,7 +85,7 @@ namespace Business.Services
 
             await _tokenService.UpdateRefreshTokenAsync(user.Id, refreshToken);
 
-            return new RefreshTokenResponseModel(jwt, refreshToken);
+            return new RefreshTokenSuccessModel(jwt, refreshToken);
         }
 
         private IEnumerable<Claim> GetUserClaims(UserEntity user)

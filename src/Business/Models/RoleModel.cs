@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Business.Models
 {
@@ -6,5 +7,6 @@ namespace Business.Models
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
+        public ICollection<UserModel> Users { get; set; }
     }
 }

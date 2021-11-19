@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Data.Entities;
 
 namespace Business.Models
 {
@@ -11,8 +10,7 @@ namespace Business.Models
         public string PasswordHash { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-
         public ICollection<RoleModel> Roles { get; set; }
-        public ICollection<BookingEntity> Bookings { get; set; }
+        public ICollection<BookingModel> Bookings { get; set; }
     }
 }

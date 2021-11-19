@@ -6,6 +6,6 @@ namespace Data.Entities
     {
         public string Title { get; set; }
         public ICollection<CityEntity> Cities { get; set; }
-        public ICollection<RentalPointEntity> RentalPointEntities { get; set; }
+        public ICollection<RentalPointEntity> RentalPoints { get; set; }
     }
 }

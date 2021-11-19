@@ -1,8 +1,10 @@
-﻿using Business.IServices;
+﻿using Business.Helpers;
+using Business.IServices;
 using Business.Services;
 using Data.IRepositories;
 using Data.Repositories;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Extensions
 {
@@ -16,6 +18,9 @@ namespace API.Extensions
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IRentalPointRepository, RentalPointRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<ICarPictureRepository, CarPictureRepository>();
+            services.AddScoped<ICountryRepository, CountryRepository>();
+            services.AddScoped<ICityRepository, CityRepository>();
 
             return services;
         }
@@ -29,6 +34,9 @@ namespace API.Extensions
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<ICityService, CityService>();
+            services.AddScoped<ICarPictureService, CarPictureService>();
 
             return services;
         }
@@ -44,6 +52,25 @@ namespace API.Extensions
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddPasswordHasher(this IServiceCollection services)
+        {
+            return services.AddScoped<PasswordHasher>();
+        }
+
+        public static IServiceCollection AddControllersWithCache(this IServiceCollection services)
+        {
+            services.AddControllers(options =>
+            {
+                options.CacheProfiles.Add(CacheOptions.CacheOptions.BaseCacheProfile, new CacheProfile()
+                {
+                    Location = ResponseCacheLocation.Client,
+                    Duration = 60
+                });
             });
 
             return services;

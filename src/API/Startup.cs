@@ -1,4 +1,5 @@
 using API.Extensions;
+using Business.Extensions;
 using Business.Options;
 using Data;
 using Microsoft.AspNetCore.Builder;
@@ -6,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace API
 {
@@ -32,26 +32,23 @@ namespace API
 
             services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddPasswordHasher();
+            services.AddAutoMapper(typeof(Startup))
+                .AddBusinessMapper();
+
+
             services.AddRepositories();
             services.AddServices();
             services.AddJwtBearerAuthentication(Configuration.GetSection(JwtOptions.Jwt).Get<JwtOptions>());
             services.AddAuthorizationService();
 
-            services.AddControllers();
+            services.AddControllersWithCache();
             services.AddSwaggerGenerator();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseErrorHandler();
-            }
+            app.UseErrorHandler();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
