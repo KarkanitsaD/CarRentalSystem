@@ -22,8 +22,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("titles")]
-        public async Task<IActionResult> GetRentalPointsTitles()
+        public async Task<IActionResult> GetAllAsync()
         {
             var rpResponseModels = await _rentalPointService.GetAllAsync();
             return Ok(_mapper.Map<List<RentalPointModel>, List<RentalPointResponseModel>>(rpResponseModels));
