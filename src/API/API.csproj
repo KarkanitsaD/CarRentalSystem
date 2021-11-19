@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Models\Request\Booking\" />
-    <Folder Include="Models\Request\RentalPoint\" />
     <Folder Include="Models\Request\User\" />
     <Folder Include="Models\Response\Booking\" />
     <Folder Include="Models\Response\User\" />

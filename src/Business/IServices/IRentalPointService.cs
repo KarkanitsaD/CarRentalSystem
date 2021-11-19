@@ -7,5 +7,6 @@ namespace Business.IServices
     public interface IRentalPointService
     {
         Task<List<RentalPointModel>> GetAllAsync();
+        Task CreateAsync(RentalPointModel rentalPointModel);
     }
 }
