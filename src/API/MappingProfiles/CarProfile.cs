@@ -9,7 +9,7 @@ namespace API.MappingProfiles
     {
         public CarProfile()
         {
-            CreateMap<AddCarRequestModel, CarModel>()
+            CreateMap<CreateCarRequestModel, CarModel>()
                 .ForMember(dest => dest.Id, act => act.Ignore())
                 .ForMember(dest => dest.Picture, act => act.MapFrom(src => new CarPictureModel(src.PictureBase64Content, src.PictureShortName, src.PictureExtension)));
 

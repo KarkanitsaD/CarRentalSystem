@@ -10,6 +10,8 @@ namespace API.Models.Response.RentalPoint
         public float? LocationX { get; set; }
         public float? LocationY { get; set; }
         public Guid CountryId { get; set; }
+        public string Country { get; set; }
         public Guid CityId { get; set; }
+        public string City { get; set; }
     }
 }

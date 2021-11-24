@@ -31,13 +31,6 @@ namespace Business.Services
             return _mapper.Map<UserEntity, UserModel>(entity);
         }
 
-        public IEnumerable<UserModel> GetList()
-        {
-            var userEntities = _userRepository.GetList();
-
-            return _mapper.Map<IEnumerable<UserEntity>, IEnumerable<UserModel>>(userEntities);
-        }
-
 
         public async Task CreateAsync(UserModel userModel)
         {
@@ -56,7 +49,9 @@ namespace Business.Services
             if (entityToUpdate == null)
                 throw new NotFoundException($"{nameof(userModel)} with id = {id} not found.");
 
-            entityToUpdate = _mapper.Map<UserModel, UserEntity>(userModel);
+            entityToUpdate.Email = userModel.Email;
+            entityToUpdate.Name = userModel.Name;
+            entityToUpdate.Surname = userModel.Surname;
 
             await _userRepository.UpdateAsync(entityToUpdate);
         }
@@ -69,6 +64,13 @@ namespace Business.Services
                 throw new NotFoundException($"{nameof(entityToDelete)} with id = {id} not found.");
 
             await _userRepository.DeleteAsync(entityToDelete);
+        }
+
+        public async Task<List<UserModel>> GetAllAsync()
+        {
+            var users = await _userRepository.GetListAsync();
+
+            return _mapper.Map<List<UserEntity>, List<UserModel>>(users);
         }
     }
 }

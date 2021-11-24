@@ -45,9 +45,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCar([FromBody] AddCarRequestModel addCarModel)
+        public async Task<IActionResult> AddCar([FromBody] CreateCarRequestModel addCarModel)
         {
-            var car = _mapper.Map<AddCarRequestModel, CarModel>(addCarModel);
+            var car = _mapper.Map<CreateCarRequestModel, CarModel>(addCarModel);
             await _carService.CreateAsync(car);
             return Ok();
         }

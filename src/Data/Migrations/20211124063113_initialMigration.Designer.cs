@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(CarRentalSystemContext))]
-    [Migration("20211117074912_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20211124063113_initialMigration")]
+    partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -98,60 +98,6 @@ namespace Data.Migrations
                     b.HasIndex("RentalPointId");
 
                     b.ToTable("Cars");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("0aba2fee-535d-4819-b6c3-53a114395ea1"),
-                            Brand = "Porsche",
-                            Color = "Red",
-                            FuelConsumptionPerHundredKilometers = 12m,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Model = "911",
-                            NumberOfSeats = 4,
-                            PricePerDay = 150m,
-                            RentalPointId = new Guid("7718e226-0cf0-43b0-849a-e83e76470393"),
-                            TransmissionType = "Automate"
-                        },
-                        new
-                        {
-                            Id = new Guid("e85854bc-805b-4336-983e-a0a972506a49"),
-                            Brand = "Renault",
-                            Color = "Black",
-                            FuelConsumptionPerHundredKilometers = 4m,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Model = "Kadjar",
-                            NumberOfSeats = 5,
-                            PricePerDay = 60m,
-                            RentalPointId = new Guid("7718e226-0cf0-43b0-849a-e83e76470393"),
-                            TransmissionType = "Mechanic"
-                        },
-                        new
-                        {
-                            Id = new Guid("2598cb8e-e77f-4a1b-996d-1bc670125634"),
-                            Brand = "Mazda",
-                            Color = "Blue",
-                            FuelConsumptionPerHundredKilometers = 6.7m,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Model = "cx5",
-                            NumberOfSeats = 5,
-                            PricePerDay = 65m,
-                            RentalPointId = new Guid("7718e226-0cf0-43b0-849a-e83e76470393"),
-                            TransmissionType = "Mechanic"
-                        },
-                        new
-                        {
-                            Id = new Guid("9ee6ddd0-728e-40c0-99e4-407af5474afc"),
-                            Brand = "Mazda",
-                            Color = "Red",
-                            FuelConsumptionPerHundredKilometers = 6.7m,
-                            LastViewTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Model = "cx5",
-                            NumberOfSeats = 5,
-                            PricePerDay = 65m,
-                            RentalPointId = new Guid("bb68cc70-ab4a-47a6-8e4b-9c6f12e9d994"),
-                            TransmissionType = "Mechanic"
-                        });
                 });
 
             modelBuilder.Entity("Data.Entities.CarPictureEntity", b =>
@@ -200,20 +146,6 @@ namespace Data.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Cities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("9986866f-aeea-43e8-a5c7-80887c468761"),
-                            CountryId = new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"),
-                            Title = "Minsk"
-                        },
-                        new
-                        {
-                            Id = new Guid("b7e35e82-e23c-4937-8ba8-5f3ea604027b"),
-                            CountryId = new Guid("a878aa25-528e-4fd9-a489-748c416058e3"),
-                            Title = "Warsaw"
-                        });
                 });
 
             modelBuilder.Entity("Data.Entities.CountryEntity", b =>
@@ -231,18 +163,6 @@ namespace Data.Migrations
                     b.HasAlternateKey("Title");
 
                     b.ToTable("Countries");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"),
-                            Title = "Belarus"
-                        },
-                        new
-                        {
-                            Id = new Guid("a878aa25-528e-4fd9-a489-748c416058e3"),
-                            Title = "Poland"
-                        });
                 });
 
             modelBuilder.Entity("Data.Entities.RefreshTokenEntity", b =>
@@ -302,22 +222,6 @@ namespace Data.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("RentalPoints");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7718e226-0cf0-43b0-849a-e83e76470393"),
-                            CityId = new Guid("9986866f-aeea-43e8-a5c7-80887c468761"),
-                            CountryId = new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"),
-                            Title = "Title 1!"
-                        },
-                        new
-                        {
-                            Id = new Guid("bb68cc70-ab4a-47a6-8e4b-9c6f12e9d994"),
-                            CityId = new Guid("b7e35e82-e23c-4937-8ba8-5f3ea604027b"),
-                            CountryId = new Guid("a878aa25-528e-4fd9-a489-748c416058e3"),
-                            Title = "Title 2!"
-                        });
                 });
 
             modelBuilder.Entity("Data.Entities.RoleEntity", b =>
@@ -338,12 +242,12 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0b239837-5b9d-4319-b3c0-96af5cca83ab"),
+                            Id = new Guid("eb196eb1-6f55-4d1a-95ba-7079bb1f6171"),
                             Title = "Admin"
                         },
                         new
                         {
-                            Id = new Guid("a5a41062-4d2d-4fba-8e27-d850c09d7c11"),
+                            Id = new Guid("b12bd628-127c-48ae-8d3e-817846cd1d05"),
                             Title = "User"
                         });
                 });
@@ -359,8 +263,14 @@ namespace Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -372,15 +282,19 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1438482d-011a-4cc0-a822-c6068ed63e32"),
+                            Id = new Guid("79827fd1-2656-40e1-9550-5741a8addefa"),
                             Email = "admin@mail.ru",
-                            PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31"
+                            Name = "Dima",
+                            PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31",
+                            Surname = "Karkanitsa"
                         },
                         new
                         {
-                            Id = new Guid("8870174b-6a4f-4017-ac25-0b05e42a4f18"),
+                            Id = new Guid("e3ce0e30-e3b3-422c-8fba-22f0ac7d4522"),
                             Email = "user@mail.ru",
-                            PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31"
+                            Name = "Vova",
+                            PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31",
+                            Surname = "Petrov"
                         });
                 });
 
@@ -471,7 +385,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.RentalPointEntity", b =>
                 {
                     b.HasOne("Data.Entities.CityEntity", "City")
-                        .WithMany("RentalPoints")
+                        .WithMany("RentalPointEntities")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -511,7 +425,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.CityEntity", b =>
                 {
-                    b.Navigation("RentalPoints");
+                    b.Navigation("RentalPointEntities");
                 });
 
             modelBuilder.Entity("Data.Entities.CountryEntity", b =>

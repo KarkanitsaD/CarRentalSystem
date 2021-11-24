@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -38,7 +38,9 @@ namespace Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -221,61 +223,21 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Countries",
-                columns: new[] { "Id", "Title" },
-                values: new object[,]
-                {
-                    { new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"), "Belarus" },
-                    { new Guid("a878aa25-528e-4fd9-a489-748c416058e3"), "Poland" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "Title" },
                 values: new object[,]
                 {
-                    { new Guid("0b239837-5b9d-4319-b3c0-96af5cca83ab"), "Admin" },
-                    { new Guid("a5a41062-4d2d-4fba-8e27-d850c09d7c11"), "User" }
+                    { new Guid("eb196eb1-6f55-4d1a-95ba-7079bb1f6171"), "Admin" },
+                    { new Guid("b12bd628-127c-48ae-8d3e-817846cd1d05"), "User" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "PasswordHash" },
+                columns: new[] { "Id", "Email", "Name", "PasswordHash", "Surname" },
                 values: new object[,]
                 {
-                    { new Guid("1438482d-011a-4cc0-a822-c6068ed63e32"), "admin@mail.ru", "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31" },
-                    { new Guid("8870174b-6a4f-4017-ac25-0b05e42a4f18"), "user@mail.ru", "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Cities",
-                columns: new[] { "Id", "CountryId", "Title" },
-                values: new object[] { new Guid("9986866f-aeea-43e8-a5c7-80887c468761"), new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"), "Minsk" });
-
-            migrationBuilder.InsertData(
-                table: "Cities",
-                columns: new[] { "Id", "CountryId", "Title" },
-                values: new object[] { new Guid("b7e35e82-e23c-4937-8ba8-5f3ea604027b"), new Guid("a878aa25-528e-4fd9-a489-748c416058e3"), "Warsaw" });
-
-            migrationBuilder.InsertData(
-                table: "RentalPoints",
-                columns: new[] { "Id", "Address", "CityId", "CountryId", "LocationX", "LocationY", "Title" },
-                values: new object[] { new Guid("7718e226-0cf0-43b0-849a-e83e76470393"), null, new Guid("9986866f-aeea-43e8-a5c7-80887c468761"), new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"), null, null, "Title 1!" });
-
-            migrationBuilder.InsertData(
-                table: "RentalPoints",
-                columns: new[] { "Id", "Address", "CityId", "CountryId", "LocationX", "LocationY", "Title" },
-                values: new object[] { new Guid("bb68cc70-ab4a-47a6-8e4b-9c6f12e9d994"), null, new Guid("b7e35e82-e23c-4937-8ba8-5f3ea604027b"), new Guid("a878aa25-528e-4fd9-a489-748c416058e3"), null, null, "Title 2!" });
-
-            migrationBuilder.InsertData(
-                table: "Cars",
-                columns: new[] { "Id", "Brand", "Color", "FuelConsumptionPerHundredKilometers", "LastViewTime", "Model", "NumberOfSeats", "PricePerDay", "RentalPointId", "TransmissionType" },
-                values: new object[,]
-                {
-                    { new Guid("0aba2fee-535d-4819-b6c3-53a114395ea1"), "Porsche", "Red", 12m, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "911", 4, 150m, new Guid("7718e226-0cf0-43b0-849a-e83e76470393"), "Automate" },
-                    { new Guid("e85854bc-805b-4336-983e-a0a972506a49"), "Renault", "Black", 4m, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Kadjar", 5, 60m, new Guid("7718e226-0cf0-43b0-849a-e83e76470393"), "Mechanic" },
-                    { new Guid("2598cb8e-e77f-4a1b-996d-1bc670125634"), "Mazda", "Blue", 6.7m, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "cx5", 5, 65m, new Guid("7718e226-0cf0-43b0-849a-e83e76470393"), "Mechanic" },
-                    { new Guid("9ee6ddd0-728e-40c0-99e4-407af5474afc"), "Mazda", "Red", 6.7m, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "cx5", 5, 65m, new Guid("bb68cc70-ab4a-47a6-8e4b-9c6f12e9d994"), "Mechanic" }
+                    { new Guid("79827fd1-2656-40e1-9550-5741a8addefa"), "admin@mail.ru", "Dima", "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31", "Karkanitsa" },
+                    { new Guid("e3ce0e30-e3b3-422c-8fba-22f0ac7d4522"), "user@mail.ru", "Vova", "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31", "Petrov" }
                 });
 
             migrationBuilder.CreateIndex(

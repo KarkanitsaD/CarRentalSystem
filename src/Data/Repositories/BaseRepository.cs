@@ -42,11 +42,13 @@ namespace Data.Repositories
             return createdEntity.Entity;
         }
 
-        public async Task UpdateAsync(TEntity entity)
+        public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            DbSet.Update(entity);
+            var updatedEntity = DbSet.Update(entity).Entity;
 
             await _carRentalSystemContext.SaveChangesAsync();
+
+            return updatedEntity;
         }
 
         public async Task DeleteAsync(TEntity entityToDelete)

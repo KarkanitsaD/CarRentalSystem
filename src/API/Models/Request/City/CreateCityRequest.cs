@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace API.Models.Response.City
+namespace API.Models.Request.City
 {
-    public class CityResponseModel
+    public class CreateCityRequest
     {
         public Guid Id { get; set; }
         public Guid CountryId { get; set; }

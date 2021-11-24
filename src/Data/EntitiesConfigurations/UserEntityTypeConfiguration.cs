@@ -20,6 +20,9 @@ namespace Data.EntitiesConfigurations
             builder.Property(u => u.PasswordHash)
                 .IsRequired();
 
+            builder.Property(u => u.Name);
+            builder.Property(u => u.Surname);
+
             builder.HasOne(u => u.RefreshToken)
                 .WithOne(t => t.User)
                 .HasForeignKey<RefreshTokenEntity>(t => t.UserId);

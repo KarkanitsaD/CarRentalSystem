@@ -2,7 +2,7 @@
 
 namespace API.Models.Request.Car
 {
-    public class AddCarRequestModel
+    public class CreateCarRequestModel
     {
         public string Brand { get; set; }
         public string Model { get; set; }

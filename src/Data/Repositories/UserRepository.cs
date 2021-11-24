@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Data.Entities;
 using Data.IRepositories;
+using Data.Query;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
@@ -28,6 +30,22 @@ namespace Data.Repositories
         {
             return await DbSet.Include(u => u.RefreshToken).Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => u.RefreshToken.Token == refreshToken);
+        }
+
+        public override async Task<List<UserEntity>> GetListAsync(QueryParameters<UserEntity> queryParameters = null)
+        {
+            var query = DbSet.AsQueryable();
+
+            if (queryParameters == null)
+            {
+                return await query.Include(u => u.Roles).ToListAsync();
+            }
+
+            query = BaseQuery(query, queryParameters);
+
+            query.Include(u => u.Roles);
+
+            return await query.ToListAsync();
         }
     }
 }

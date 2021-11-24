@@ -20,7 +20,7 @@ namespace Data.IRepositories
         Task<List<TEntity>> GetListAsync(QueryParameters<TEntity> queryParameters = null);
         Task<PageResult<TEntity>> GetPageListAsync(QueryParameters<TEntity> queryParameters);
         Task<TEntity> CreateAsync(TEntity entity);
-        Task UpdateAsync(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity);
         Task<bool> ExistsAsync(FilterRule<TEntity> filterRule);
     }
 }

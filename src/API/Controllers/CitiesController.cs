@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using API.Models.Request.City;
 using API.Models.Response.City;
 using AutoMapper;
 using Business.IServices;
@@ -26,6 +28,21 @@ namespace API.Controllers
         {
             var cities = await _cityService.GetListAsync();
             return Ok(_mapper.Map<List<CityModel>, List<CityResponseModel>>(cities));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync([FromBody] CreateCityRequest request)
+        {
+            var model = await _cityService.CreateAsync(_mapper.Map<CreateCityRequest, CityModel>(request));
+            return Ok(_mapper.Map<CityModel, CityResponseModel>(model));
+        }
+
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
+        {
+            await _cityService.DeleteAsync(id);
+            return Ok();
         }
     }
 }

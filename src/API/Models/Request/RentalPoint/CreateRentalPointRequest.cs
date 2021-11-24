@@ -1,14 +1,12 @@
-﻿using System;
-
-namespace API.Models.Request.RentalPoint
+﻿namespace API.Models.Request.RentalPoint
 {
-    public class CreateRentalPointRequestModel
+    public class CreateRentalPointRequest
     {
         public string Title { get; set; }
         public string Address { get; set; }
         public float? LocationX { get; set; }
         public float? LocationY { get; set; }
-        public Guid? CityId { get; set; }
-        public Guid? CountryId { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
     }
 }
