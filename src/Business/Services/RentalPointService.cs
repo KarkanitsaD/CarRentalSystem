@@ -36,13 +36,6 @@ namespace Business.Services
             return _mapper.Map<RentalPointEntity, RentalPointModel>(entity);
         }
 
-        public IEnumerable<RentalPointModel> GetList()
-        {
-            var entities = _rentalPointRepository.GetList();
-
-            return _mapper.Map<IEnumerable<RentalPointEntity>, IEnumerable<RentalPointModel>>(entities);
-        }
-
         public async Task<List<RentalPointModel>> GetAllAsync()
         {
             return _mapper.Map<List<RentalPointEntity>, List<RentalPointModel>>(await _rentalPointRepository.GetListAsync());
@@ -69,7 +62,12 @@ namespace Business.Services
             if (entityToUpdate == null)
                 throw new NotFoundException($"{nameof(rentalPointModel)} with id = {id} not found.");
 
-            entityToUpdate = _mapper.Map<RentalPointModel, RentalPointEntity>(rentalPointModel);
+            var (countryId, cityId) = await GetCountryAndCityIdentifiersAsync(rentalPointModel);
+
+            entityToUpdate.CountryId = countryId;
+            entityToUpdate.CityId = cityId;
+            entityToUpdate.Address = rentalPointModel.Address;
+            entityToUpdate.Title = rentalPointModel.Title;
 
             await _rentalPointRepository.UpdateAsync(entityToUpdate);
         }

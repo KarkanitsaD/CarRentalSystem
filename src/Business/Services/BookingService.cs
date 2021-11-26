@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
@@ -29,13 +28,6 @@ namespace Business.Services
                 throw new NotFoundException($"{nameof(entity)} with id = {id} not found.");
 
             return _mapper.Map<BookingEntity, BookingModel>(entity);
-        }
-
-        public IEnumerable<BookingModel> GetList()
-        {
-            var entities = _bookingRepository.GetList();
-
-            return _mapper.Map<IEnumerable<BookingEntity>, IEnumerable<BookingModel>>(entities);
         }
 
         public async Task CreateAsync(BookingModel bookingModel)

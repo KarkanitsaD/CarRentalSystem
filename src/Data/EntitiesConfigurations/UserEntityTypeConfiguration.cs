@@ -27,8 +27,10 @@ namespace Data.EntitiesConfigurations
                 .WithOne(t => t.User)
                 .HasForeignKey<RefreshTokenEntity>(t => t.UserId);
 
-            builder.HasMany(u => u.Roles)
-                .WithMany(r => r.Users);
+            builder.HasOne(u => u.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasMany(u => u.Bookings)
                 .WithOne(o => o.User)

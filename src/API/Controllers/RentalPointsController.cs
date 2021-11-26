@@ -24,6 +24,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetAsync([FromRoute] Guid id)
+        {
+            var rentalPoint = await _rentalPointService.GetAsync(id);
+            return Ok(_mapper.Map<RentalPointModel, RentalPointResponseModel>(rentalPoint));
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
             var rpResponseModels = await _rentalPointService.GetAllAsync();
@@ -36,6 +44,18 @@ namespace API.Controllers
             var model = _mapper.Map<CreateRentalPointRequest, RentalPointModel>(request);
 
             await _rentalPointService.CreateAsync(model);
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id,
+            [FromBody] UpdateRentalPointRequest updateModel)
+        {
+            var rentalPoint = _mapper.Map<UpdateRentalPointRequest, RentalPointModel>(updateModel);
+
+            await _rentalPointService.UpdateAsync(id, rentalPoint);
+
             return Ok();
         }
 

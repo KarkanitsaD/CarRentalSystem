@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using API.Models.Request.Auth;
+﻿using API.Models.Request.Auth;
 using API.Models.Request.User;
 using API.Models.Response.Auth;
 using API.Models.Response.User;
@@ -12,11 +11,11 @@ namespace API.MappingProfiles
     {
         public UserProfile()
         {
-            CreateMap<LoginRequestModel, LoginModel>();
+            CreateMap<LoginRegisterRequestModel, LoginRegisterModel>();
             CreateMap<LoginSuccessModel, LoginResponseModel>();
-            CreateMap<UserModel, UserResponse>()
-                .ForMember(src => src.Roles, act => act.MapFrom(dest => dest.Roles.Select(x => x.Title)));
+            CreateMap<UserModel, UserResponse>();
             CreateMap<UpdateUserRequest, UserModel>();
+            CreateMap<CreateUserRequest, CreateUserModel>();
         }
     }
 }

@@ -10,11 +10,7 @@ namespace Data.IRepositories
         where TEntity : Entity
     {
         Task<TEntity> GetAsync(Guid id);
-        IEnumerable<TEntity> GetList();
         Task DeleteAsync(TEntity id);
-        Task<bool> ExistsAsync(Guid id);
-
-
         Task<int> CountAsync(FilterRule<TEntity> filterRule = null);
         Task<TEntity> GetAsync(FilterRule<TEntity> filterRule = null);
         Task<List<TEntity>> GetListAsync(QueryParameters<TEntity> queryParameters = null);
@@ -22,5 +18,6 @@ namespace Data.IRepositories
         Task<TEntity> CreateAsync(TEntity entity);
         Task<TEntity> UpdateAsync(TEntity entity);
         Task<bool> ExistsAsync(FilterRule<TEntity> filterRule);
+        Task<bool> ExistsAsync(Guid id);
     }
 }

@@ -6,6 +6,9 @@ using API.Models.Response.User;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
+using Business.Policies;
+using Business.Query;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -24,18 +27,38 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] UserQueryModel userQueryModel)
         {
-            var users = await _userService.GetAllAsync();
-            return Ok(_mapper.Map<List<UserModel>, List<UserResponse>>(users));
+            var (userModels, itemsTotalCount) = await _userService.GetPageListAsync(userQueryModel);
+            var users = _mapper.Map<List<UserModel>, List<UserResponse>>(userModels);
+            return Ok(new { users,  itemsTotalCount });
+        }
+
+        [HttpPost]
+        [Authorize(Policy = Policy.ForAdminOnly)]
+        public async Task<IActionResult> CreateAsync([FromBody] CreateUserRequest createUserRequest)
+        {
+            var user = _mapper.Map<CreateUserRequest, CreateUserModel>(createUserRequest);
+            await _userService.CreateUser(user);
+            return Ok();
         }
 
         [HttpPut]
         [Route("{id:guid}")]
+        [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateUserRequest updateModel)
         {
             var user = _mapper.Map<UpdateUserRequest, UserModel>(updateModel);
             await _userService.UpdateAsync(id, user);
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{id:guid}")]
+        [Authorize(Policy = Policy.ForAdminOnly)]
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
+        {
+            await _userService.DeleteAsync(id);
             return Ok();
         }
     }

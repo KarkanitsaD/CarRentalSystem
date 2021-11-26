@@ -1,4 +1,5 @@
 ﻿using System;
+using API.Models.Response.Role;
 
 namespace API.Models.Response.Auth
 {
@@ -10,6 +11,6 @@ namespace API.Models.Response.Auth
         public string Surname { get; set; }
         public string Jwt { get; set; }
         public string RefreshToken { get; set; }
-        public string[] Roles { get; set; }
+        public RoleResponse Role { get; set; }
     }
 }

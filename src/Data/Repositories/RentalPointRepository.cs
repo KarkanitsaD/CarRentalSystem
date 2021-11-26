@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Data.Entities;
 using Data.IRepositories;
@@ -29,6 +30,11 @@ namespace Data.Repositories
             query.Include(rp => rp.City).Include(rp => rp.Country);
 
             return await query.ToListAsync();
+        }
+
+        public override async Task<RentalPointEntity> GetAsync(Guid id)
+        {
+            return await DbSet.Include(rp => rp.City).Include(rp => rp.Country).FirstOrDefaultAsync(rp => rp.Id == id);
         }
     }
 }

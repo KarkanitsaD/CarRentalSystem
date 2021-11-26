@@ -240,12 +240,12 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("eb196eb1-6f55-4d1a-95ba-7079bb1f6171"),
+                            Id = new Guid("00882590-454e-43ed-a31d-cb424b7b0179"),
                             Title = "Admin"
                         },
                         new
                         {
-                            Id = new Guid("b12bd628-127c-48ae-8d3e-817846cd1d05"),
+                            Id = new Guid("5d10caf7-01ce-4366-8ad0-3666b0d26fce"),
                             Title = "User"
                         });
                 });
@@ -268,6 +268,9 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
@@ -275,12 +278,14 @@ namespace Data.Migrations
 
                     b.HasAlternateKey("Email");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("79827fd1-2656-40e1-9550-5741a8addefa"),
+                            Id = new Guid("f939c8a5-1d97-481a-a063-3a499ba4942c"),
                             Email = "admin@mail.ru",
                             Name = "Dima",
                             PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31",
@@ -288,27 +293,12 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e3ce0e30-e3b3-422c-8fba-22f0ac7d4522"),
+                            Id = new Guid("ed6cecda-4a07-4c96-aff0-c61d256f09e6"),
                             Email = "user@mail.ru",
                             Name = "Vova",
                             PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31",
                             Surname = "Petrov"
                         });
-                });
-
-            modelBuilder.Entity("RoleEntityUserEntity", b =>
-                {
-                    b.Property<Guid>("RolesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsersId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("RolesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleEntityUserEntity");
                 });
 
             modelBuilder.Entity("Data.Entities.BookingEntity", b =>
@@ -399,19 +389,14 @@ namespace Data.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("RoleEntityUserEntity", b =>
+            modelBuilder.Entity("Data.Entities.UserEntity", b =>
                 {
-                    b.HasOne("Data.Entities.RoleEntity", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Data.Entities.RoleEntity", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Data.Entities.UserEntity", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Data.Entities.CarEntity", b =>
@@ -438,6 +423,11 @@ namespace Data.Migrations
                     b.Navigation("Bookings");
 
                     b.Navigation("Cars");
+                });
+
+            modelBuilder.Entity("Data.Entities.RoleEntity", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Data.Entities.UserEntity", b =>

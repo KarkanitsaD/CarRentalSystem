@@ -23,7 +23,7 @@ namespace Data.Repositories
 
         protected readonly DbSet<TEntity> DbSet;
 
-        public async Task<TEntity> GetAsync(Guid id)
+        public virtual async Task<TEntity> GetAsync(Guid id)
         {
             return await DbSet.FindAsync(id);
         }

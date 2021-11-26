@@ -1,7 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
 using Data.Entities;
@@ -21,36 +20,11 @@ namespace Business.Services
             _roleRepository = roleRepository;
         }
 
-        public async Task CreateAsync(RoleModel roleModel)
+        public async Task<List<RoleModel>> GetAllAsync()
         {
-            var entity = _mapper.Map<RoleModel, RoleEntity>(roleModel);
+            var roles = await _roleRepository.GetListAsync();
 
-            await _roleRepository.CreateAsync(entity);
-        }
-
-        public async Task UpdateAsync(Guid id, RoleModel roleModel)
-        {
-            if (id != roleModel.Id)
-                throw new BadRequestException("Check data.");
-
-            var entityToUpdate = await _roleRepository.GetAsync(id);
-
-            if (entityToUpdate == null)
-                throw new NotFoundException($"{nameof(roleModel)} with id = {id} not found.");
-
-            entityToUpdate = _mapper.Map<RoleModel, RoleEntity>(roleModel);
-
-            await _roleRepository.UpdateAsync(entityToUpdate);
-        }
-
-        public async Task DeleteAsync(Guid id)
-        {
-            var entityToDelete = await _roleRepository.GetAsync(id);
-
-            if (entityToDelete == null)
-                throw new NotFoundException($"{nameof(entityToDelete)} with id = {id} not found.");
-
-            await _roleRepository.DeleteAsync(entityToDelete);
+            return _mapper.Map<List<RoleEntity>, List<RoleModel>>(roles);
         }
     }
 }

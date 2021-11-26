@@ -3,7 +3,7 @@
     "SecretKey": "MySecretKeyCsGoIsTheBestGame_ThisFileShouldBeHideButIPushedItBecauseItPetProjectAndMentorShouldSeeMyWork",
     "Issuer": "KarkanitsaDima",
     "Audience": "PeopleWhoUseBestApi",
-    "TokenLifeTimeInSeconds": 20,
-    "RefreshTokenLifeTimeInSeconds": 1200
+    "TokenLifeTimeInSeconds": 3000,
+    "RefreshTokenLifeTimeInSeconds": 400000
   }
 }

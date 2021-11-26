@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using API.Models.Response.Role;
 
 namespace API.Models.Response.User
 {
@@ -8,6 +10,6 @@ namespace API.Models.Response.User
         public string Email { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string[] Roles { get; set; }
+        public RoleResponse Role { get; set; }
     }
 }

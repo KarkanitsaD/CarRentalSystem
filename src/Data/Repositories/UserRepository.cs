@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Data.Entities;
 using Data.IRepositories;
@@ -16,7 +17,7 @@ namespace Data.Repositories
 
         public async Task<UserEntity> GetByCredentialsAsync(string email, string password)
         {
-            return await DbSet.Include(user => user.Roles).Include(user => user.RefreshToken)
+            return await DbSet.Include(user => user.Role).Include(user => user.RefreshToken)
                 .FirstOrDefaultAsync(user => user.Email == email && user.PasswordHash == password);
         }
 
@@ -28,24 +29,34 @@ namespace Data.Repositories
 
         public async Task<UserEntity> GetByRefreshTokenAsync(string refreshToken)
         {
-            return await DbSet.Include(u => u.RefreshToken).Include(u => u.Roles)
+            return await DbSet.Include(u => u.RefreshToken).Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.RefreshToken.Token == refreshToken);
         }
 
-        public override async Task<List<UserEntity>> GetListAsync(QueryParameters<UserEntity> queryParameters = null)
+
+        public override async Task<PageResult<UserEntity>> GetPageListAsync(QueryParameters<UserEntity> queryParameters)
         {
             var query = DbSet.AsQueryable();
 
-            if (queryParameters == null)
-            {
-                return await query.Include(u => u.Roles).ToListAsync();
-            }
-
             query = BaseQuery(query, queryParameters);
 
-            query.Include(u => u.Roles);
+            int totalItemsCount = await query.CountAsync();
 
-            return await query.ToListAsync();
+            if (queryParameters.PaginationRule != null)
+            {
+                query = PaginationQuery(query, queryParameters.PaginationRule);
+            }
+
+            query = query.Include(u => u.Role);
+
+            var items = await query.ToListAsync();
+
+            return new PageResult<UserEntity>(items, totalItemsCount);
+        }
+
+        public override Task<UserEntity> GetAsync(Guid id)
+        {
+            return DbSet.Include(user => user.Role).FirstOrDefaultAsync(user => user.Id == id);
         }
     }
 }
