@@ -19,7 +19,7 @@ namespace Business.Services
         private readonly PasswordHasher _passwordHasher;
         private readonly IMapper _mapper;
 
-        public UserService(IMapper mapper, IUserRepository userRepository, ITokenService tokenService, IRoleRepository roleRepository, PasswordHasher passwordHasher)
+        public UserService(IMapper mapper, IUserRepository userRepository, PasswordHasher passwordHasher)
         {
             _mapper = mapper;
             _userRepository = userRepository;

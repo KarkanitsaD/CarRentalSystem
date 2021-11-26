@@ -31,6 +31,8 @@ namespace Data.EntitiesConfigurations
             builder.Property(c => c.PricePerDay)
                 .IsRequired();
 
+            builder.Property(c => c.Description);
+
             builder.HasOne(c => c.RentalPoint)
                 .WithMany(r => r.Cars)
                 .HasForeignKey(c => c.RentalPointId)

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
+using Business.Query;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
@@ -117,6 +120,30 @@ namespace Business.Services
             }
 
             return (countryEntity.Id, cityEntity.Id);
-        } 
+        }
+
+        protected virtual FilterRule<RentalPointEntity> GetFilterRule(RentalPointQueryModel rpModel)
+        {
+            rpModel.NumberOfAvailableCars ??= 1;
+            var filterRule = new FilterRule<RentalPointEntity>
+            {
+                FilterExpression = rentalPoint =>
+                    rentalPoint.Cars.AsQueryable().Include(car => car.Bookings)
+                        .Count(car => car.Bookings.AsQueryable()
+                            .Count(order =>
+                                rpModel.CarPickUpDate.Date > order.KeyReceivingTime.Date && rpModel.CarPickUpDate.Date < order.KeyHandOverTime.Date ||
+                                rpModel.CarReturnDate.Date > order.KeyReceivingTime.Date && rpModel.CarReturnDate.Date < order.KeyHandOverTime.Date) == 0) >= rpModel.NumberOfAvailableCars &&
+                    (rpModel.CountryId != null && rentalPoint.CountryId == rpModel.CountryId || rpModel.CountryId == null) &&
+                    (rpModel.CityId != null && rentalPoint.CityId == rpModel.CountryId || rpModel.CityId == null)
+            };
+
+            return filterRule;
+        }
+
+        protected virtual PaginationRule GetPaginationRule(RentalPointQueryModel rpModel) => new PaginationRule
+        {
+            Index = rpModel.PageIndex,
+            Size = rpModel.PageSize
+        };
     }
 }

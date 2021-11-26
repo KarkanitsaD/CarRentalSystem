@@ -4,10 +4,10 @@ namespace Business.Query
 {
     public class RentalPointQueryModel : QueryModel
     {
-        public Guid Id { get; set; }
-        public string Country { get; set; }
-        public string City { get; set; }
-        public DateTime[] SelectedDates { get; set; }
+        public Guid? CountryId { get; set; }
+        public Guid? CityId { get; set; }
+        public DateTime CarPickUpDate { get; set; }
+        public DateTime CarReturnDate { get; set; }
         public int? NumberOfAvailableCars { get; set; }
     }
 }
