@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using API.Models.Request.Role;
+using API.Models.Response.Role;
+using AutoMapper;
+using Business.Models;
 
 namespace API.MappingProfiles
 {
@@ -6,6 +9,8 @@ namespace API.MappingProfiles
     {
         public RoleProfile()
         {
+            CreateMap<RoleModel, RoleResponse>();
+            CreateMap<RoleRequest, RoleModel>();
         }
     }
 }

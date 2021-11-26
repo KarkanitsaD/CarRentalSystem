@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,20 +33,6 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                    table.UniqueConstraint("AK_Users_Email", x => x.Email);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Cities",
                 columns: table => new
                 {
@@ -66,47 +52,26 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RefreshTokens",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.UniqueConstraint("AK_Users_Email", x => x.Email);
                     table.ForeignKey(
-                        name: "FK_RefreshTokens_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RoleEntityUserEntity",
-                columns: table => new
-                {
-                    RolesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UsersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RoleEntityUserEntity", x => new { x.RolesId, x.UsersId });
-                    table.ForeignKey(
-                        name: "FK_RoleEntityUserEntity_Roles_RolesId",
-                        column: x => x.RolesId,
+                        name: "FK_Users_Roles_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RoleEntityUserEntity_Users_UsersId",
-                        column: x => x.UsersId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -136,6 +101,26 @@ namespace Data.Migrations
                         principalTable: "Countries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,61 +206,21 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Countries",
-                columns: new[] { "Id", "Title" },
-                values: new object[,]
-                {
-                    { new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"), "Belarus" },
-                    { new Guid("a878aa25-528e-4fd9-a489-748c416058e3"), "Poland" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "Title" },
                 values: new object[,]
                 {
-                    { new Guid("0b239837-5b9d-4319-b3c0-96af5cca83ab"), "Admin" },
-                    { new Guid("a5a41062-4d2d-4fba-8e27-d850c09d7c11"), "User" }
+                    { new Guid("00882590-454e-43ed-a31d-cb424b7b0179"), "Admin" },
+                    { new Guid("5d10caf7-01ce-4366-8ad0-3666b0d26fce"), "User" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "PasswordHash" },
+                columns: new[] { "Id", "Email", "Name", "PasswordHash", "RoleId", "Surname" },
                 values: new object[,]
                 {
-                    { new Guid("1438482d-011a-4cc0-a822-c6068ed63e32"), "admin@mail.ru", "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31" },
-                    { new Guid("8870174b-6a4f-4017-ac25-0b05e42a4f18"), "user@mail.ru", "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Cities",
-                columns: new[] { "Id", "CountryId", "Title" },
-                values: new object[] { new Guid("9986866f-aeea-43e8-a5c7-80887c468761"), new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"), "Minsk" });
-
-            migrationBuilder.InsertData(
-                table: "Cities",
-                columns: new[] { "Id", "CountryId", "Title" },
-                values: new object[] { new Guid("b7e35e82-e23c-4937-8ba8-5f3ea604027b"), new Guid("a878aa25-528e-4fd9-a489-748c416058e3"), "Warsaw" });
-
-            migrationBuilder.InsertData(
-                table: "RentalPoints",
-                columns: new[] { "Id", "Address", "CityId", "CountryId", "LocationX", "LocationY", "Title" },
-                values: new object[] { new Guid("7718e226-0cf0-43b0-849a-e83e76470393"), null, new Guid("9986866f-aeea-43e8-a5c7-80887c468761"), new Guid("2d97b536-5513-4390-bb68-f3796abb1ca4"), null, null, "Title 1!" });
-
-            migrationBuilder.InsertData(
-                table: "RentalPoints",
-                columns: new[] { "Id", "Address", "CityId", "CountryId", "LocationX", "LocationY", "Title" },
-                values: new object[] { new Guid("bb68cc70-ab4a-47a6-8e4b-9c6f12e9d994"), null, new Guid("b7e35e82-e23c-4937-8ba8-5f3ea604027b"), new Guid("a878aa25-528e-4fd9-a489-748c416058e3"), null, null, "Title 2!" });
-
-            migrationBuilder.InsertData(
-                table: "Cars",
-                columns: new[] { "Id", "Brand", "Color", "FuelConsumptionPerHundredKilometers", "LastViewTime", "Model", "NumberOfSeats", "PricePerDay", "RentalPointId", "TransmissionType" },
-                values: new object[,]
-                {
-                    { new Guid("0aba2fee-535d-4819-b6c3-53a114395ea1"), "Porsche", "Red", 12m, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "911", 4, 150m, new Guid("7718e226-0cf0-43b0-849a-e83e76470393"), "Automate" },
-                    { new Guid("e85854bc-805b-4336-983e-a0a972506a49"), "Renault", "Black", 4m, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Kadjar", 5, 60m, new Guid("7718e226-0cf0-43b0-849a-e83e76470393"), "Mechanic" },
-                    { new Guid("2598cb8e-e77f-4a1b-996d-1bc670125634"), "Mazda", "Blue", 6.7m, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "cx5", 5, 65m, new Guid("7718e226-0cf0-43b0-849a-e83e76470393"), "Mechanic" },
-                    { new Guid("9ee6ddd0-728e-40c0-99e4-407af5474afc"), "Mazda", "Red", 6.7m, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "cx5", 5, 65m, new Guid("bb68cc70-ab4a-47a6-8e4b-9c6f12e9d994"), "Mechanic" }
+                    { new Guid("f939c8a5-1d97-481a-a063-3a499ba4942c"), "admin@mail.ru", "Dima", "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31", null, "Karkanitsa" },
+                    { new Guid("ed6cecda-4a07-4c96-aff0-c61d256f09e6"), "user@mail.ru", "Vova", "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31", null, "Petrov" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -326,9 +271,9 @@ namespace Data.Migrations
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleEntityUserEntity_UsersId",
-                table: "RoleEntityUserEntity",
-                column: "UsersId");
+                name: "IX_Users_RoleId",
+                table: "Users",
+                column: "RoleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -343,19 +288,16 @@ namespace Data.Migrations
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "RoleEntityUserEntity");
-
-            migrationBuilder.DropTable(
                 name: "Cars");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
                 name: "RentalPoints");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Cities");

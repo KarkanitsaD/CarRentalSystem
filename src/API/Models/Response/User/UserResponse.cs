@@ -1,16 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using API.Models.Response.Role;
 
-namespace API.Models.Response.Auth
+namespace API.Models.Response.User
 {
-    public class LoginResponseModel
+    public class UserResponse
     {
         public Guid Id { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string Jwt { get; set; }
-        public string RefreshToken { get; set; }
         public RoleResponse Role { get; set; }
     }
 }

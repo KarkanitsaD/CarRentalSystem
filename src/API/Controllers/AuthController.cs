@@ -36,9 +36,9 @@ namespace API.Controllers
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel loginRequest)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginRegisterRequestModel loginRequest)
         {
-            var loginModel = _mapper.Map<LoginRequestModel, LoginModel>(loginRequest);
+            var loginModel = _mapper.Map<LoginRegisterRequestModel, LoginRegisterModel>(loginRequest);
             var loginSuccessModel = await _authService.LoginAsync(loginModel);
             return Ok(_mapper.Map<LoginSuccessModel, LoginResponseModel>(loginSuccessModel));
         }
@@ -54,9 +54,9 @@ namespace API.Controllers
         [Route("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RegisterAsync([FromBody] LoginRequestModel loginRequest)
+        public async Task<IActionResult> RegisterAsync([FromBody] LoginRegisterRequestModel loginRequest)
         {
-            var loginModel = _mapper.Map<LoginRequestModel, LoginModel>(loginRequest);
+            var loginModel = _mapper.Map<LoginRegisterRequestModel, LoginRegisterModel>(loginRequest);
             await _authService.RegisterUserAsync(loginModel);
 
             return Ok();

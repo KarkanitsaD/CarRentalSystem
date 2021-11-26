@@ -27,7 +27,7 @@ namespace Business.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<LoginSuccessModel> LoginAsync(LoginModel loginRequest)
+        public async Task<LoginSuccessModel> LoginAsync(LoginRegisterModel loginRequest)
         {
             var user = await _userRepository.GetByCredentialsAsync(loginRequest.Email, _passwordHasher.GeneratePasswordHash(loginRequest.Password));
 
@@ -52,7 +52,7 @@ namespace Business.Services
             return new LoginSuccessModel(user, jwt, refreshToken);
         }
 
-        public async Task RegisterUserAsync(LoginModel loginRequest)
+        public async Task RegisterUserAsync(LoginRegisterModel loginRequest)
         {
             var user = await _userRepository.GetByEmailAsync(loginRequest.Email);
 
@@ -60,14 +60,14 @@ namespace Business.Services
             {
                 throw new NotAuthenticatedException("User with that credentials already exists.");
             }
-
-            var userRoles = _roleRepository.GetList().Where(role => role.Title == Policy.ForUserOnly);
+            var roles = await _roleRepository.GetListAsync();
+            var userRole = roles.First(role => role.Title == Policy.ForUserOnly);
 
             user = new UserEntity
             {
                 Email = loginRequest.Email,
                 PasswordHash = _passwordHasher.GeneratePasswordHash(loginRequest.Password),
-                Roles = new List<RoleEntity>(userRoles)
+                RoleId= userRole.Id
             };
 
             await _userRepository.CreateAsync(user);
@@ -90,13 +90,12 @@ namespace Business.Services
 
         private IEnumerable<Claim> GetUserClaims(UserEntity user)
         {
-            var roleClaims = user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Title));
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.Title)
             };
-            claims.AddRange(roleClaims);
 
             return claims;
         }

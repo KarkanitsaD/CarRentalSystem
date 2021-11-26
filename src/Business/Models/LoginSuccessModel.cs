@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Data.Entities;
 
 namespace Business.Models
@@ -10,15 +9,19 @@ namespace Business.Models
         {
             Id = user.Id;
             Email = user.Email;
+            Name = user.Name;
+            Surname = user.Surname;
             Jwt = jwt;
             RefreshToken = refreshToken;
-            Roles = user.Roles.Select(role => role.Title).ToArray();
+            Role = new RoleModel { Id = user.Role.Id, Title = user.Role.Title };
         }
 
         public Guid Id { get; set; }
         public string Email { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
         public string Jwt { get; set; }
         public string RefreshToken { get; set; }
-        public string[] Roles { get; set; }
+        public RoleModel Role { get; set; }
     }
 }

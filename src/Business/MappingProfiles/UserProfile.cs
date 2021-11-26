@@ -12,8 +12,7 @@ namespace Business.MappingProfiles
 
             CreateMap<UserModel, UserEntity>()
                 .ForMember(src => src.RefreshToken, act => act.Ignore())
-                .ForMember(src => src.Bookings, act => act.Ignore())
-                .ForMember(src => src.Roles, act => act.Ignore());
+                .ForMember(src => src.Bookings, act => act.Ignore());
         }
     }
 }

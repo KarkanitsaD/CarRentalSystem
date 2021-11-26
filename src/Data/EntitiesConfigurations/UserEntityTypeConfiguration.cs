@@ -20,12 +20,17 @@ namespace Data.EntitiesConfigurations
             builder.Property(u => u.PasswordHash)
                 .IsRequired();
 
+            builder.Property(u => u.Name);
+            builder.Property(u => u.Surname);
+
             builder.HasOne(u => u.RefreshToken)
                 .WithOne(t => t.User)
                 .HasForeignKey<RefreshTokenEntity>(t => t.UserId);
 
-            builder.HasMany(u => u.Roles)
-                .WithMany(r => r.Users);
+            builder.HasOne(u => u.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasMany(u => u.Bookings)
                 .WithOne(o => o.User)

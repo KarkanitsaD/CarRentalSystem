@@ -17,7 +17,8 @@ namespace Data.EntitiesConfigurations
                 .IsRequired();
 
             builder.HasMany(r => r.Users)
-                .WithMany(u => u.Roles);
+                .WithOne(u => u.Role)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
