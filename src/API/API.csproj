@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Request\Booking\" />
     <Folder Include="Models\Response\Booking\" />
   </ItemGroup>
 

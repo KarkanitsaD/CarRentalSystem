@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System;
+using API.Models.Request.Booking;
+using AutoMapper;
+using Business.Models;
 
 namespace API.MappingProfiles
 {
@@ -6,7 +9,8 @@ namespace API.MappingProfiles
     {
         public BookingProfile()
         {
-
+            CreateMap<CreateBookingRequest, BookingModel>()
+                .ForMember(src => src.BookingTime, act => act.MapFrom(dest => DateTime.Now));
         }
     }
 }

@@ -6,6 +6,7 @@ using API.Models.Response.RentalPoint;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
+using Business.Query.RentalPoint;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -32,10 +33,11 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromBody] RentalPointQueryModel queryModel)
         {
-            var rpResponseModels = await _rentalPointService.GetAllAsync();
-            return Ok(_mapper.Map<List<RentalPointModel>, List<RentalPointResponseModel>>(rpResponseModels));
+            var (rentalPointsModels, itemsTotalCount) = await _rentalPointService.GetPageListAsync(queryModel);
+            var rentalPoints = _mapper.Map<List<RentalPointModel>, List<RentalPointResponseModel>>(rentalPointsModels);
+            return Ok(new { rentalPoints, itemsTotalCount });
         }
 
         [HttpPost]

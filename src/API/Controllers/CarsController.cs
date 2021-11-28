@@ -6,7 +6,8 @@ using API.Models.Response.Car;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
-using Business.Query;
+using Business.Policies;
+using Business.Query.Car;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +37,7 @@ namespace API.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetCarsAsync([FromQuery] CarQueryModel queryModel)
         {
             var (carsModels, itemsTotalCount) = await _carService.GetPageListAsync(queryModel);
@@ -44,7 +46,19 @@ namespace API.Controllers
             
         }
 
+        [HttpPut]
+        [Route("{carId:guid}/lock")]
+        [Authorize]
+        public async Task<IActionResult> LockCarAsync([FromRoute] Guid carId)
+        {
+            await _carService.LockCarAsync(carId);
+            return Ok();
+        }
+
+
+
         [HttpPost]
+        [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> AddCar([FromBody] CreateCarRequestModel addCarModel)
         {
             var car = _mapper.Map<CreateCarRequestModel, CarModel>(addCarModel);
@@ -54,6 +68,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{carId:guid}")]
+        [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> UpdateCar([FromRoute] Guid carId, [FromBody] UpdateCarRequestModel updateCarModel)
         {
             var car = _mapper.Map<UpdateCarRequestModel, CarModel>(updateCarModel);
@@ -63,6 +78,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{carId:guid}")]
+        [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> DeleteCar([FromRoute] Guid carId)
         {
             await _carService.DeleteAsync(carId);

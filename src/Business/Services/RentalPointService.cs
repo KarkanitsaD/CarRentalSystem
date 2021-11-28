@@ -6,7 +6,7 @@ using AutoMapper;
 using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
-using Business.Query;
+using Business.Query.RentalPoint;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query;
@@ -42,6 +42,26 @@ namespace Business.Services
         public async Task<List<RentalPointModel>> GetAllAsync()
         {
             return _mapper.Map<List<RentalPointEntity>, List<RentalPointModel>>(await _rentalPointRepository.GetListAsync());
+        }
+
+        public async Task<(List<RentalPointModel>, int)> GetPageListAsync(RentalPointQueryModel queryModel)
+        {
+            if (!queryModel.IsValidPagination)
+            {
+                throw new BadRequestException("Pagination rule is not valid");
+            }
+
+            var queryParameters = new QueryParameters<RentalPointEntity>
+            {
+                FilterRule = GetFilterRule(queryModel),
+                PaginationRule = GetPaginationRule(queryModel)
+            };
+
+            var result = await _rentalPointRepository.GetPageListAsync(queryParameters);
+
+            var rentalPointModels = _mapper.Map<List<RentalPointEntity>, List<RentalPointModel>>(result.Items); 
+
+            return (rentalPointModels, result.TotalItemsCount);
         }
 
         public async Task CreateAsync(RentalPointModel rentalPointModel)
@@ -128,11 +148,13 @@ namespace Business.Services
             var filterRule = new FilterRule<RentalPointEntity>
             {
                 FilterExpression = rentalPoint =>
-                    rentalPoint.Cars.AsQueryable().Include(car => car.Bookings)
-                        .Count(car => car.Bookings.AsQueryable()
-                            .Count(order =>
-                                rpModel.CarPickUpDate.Date > order.KeyReceivingTime.Date && rpModel.CarPickUpDate.Date < order.KeyHandOverTime.Date ||
-                                rpModel.CarReturnDate.Date > order.KeyReceivingTime.Date && rpModel.CarReturnDate.Date < order.KeyHandOverTime.Date) == 0) >= rpModel.NumberOfAvailableCars &&
+                    (rpModel.KeyReceivingTime != null && rpModel.KeyHandOverTime != null &&
+                     rentalPoint.Cars.AsQueryable().Include(car => car.Bookings)
+                         .Count(car => car.Bookings.AsQueryable()
+                             .Count(booking =>
+                                 !(booking.KeyReceivingTime > rpModel.KeyReceivingTime && booking.KeyReceivingTime > rpModel.KeyHandOverTime ||
+                                   booking.KeyHandOverTime < rpModel.KeyReceivingTime && booking.KeyHandOverTime < rpModel.KeyHandOverTime)) == 0) >= rpModel.NumberOfAvailableCars ||
+                     rpModel.KeyReceivingTime == null || rpModel.KeyHandOverTime == null) &&
                     (rpModel.CountryId != null && rentalPoint.CountryId == rpModel.CountryId || rpModel.CountryId == null) &&
                     (rpModel.CityId != null && rentalPoint.CityId == rpModel.CountryId || rpModel.CityId == null)
             };
