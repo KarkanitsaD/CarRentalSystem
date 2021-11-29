@@ -128,7 +128,8 @@ namespace Business.Services
                     (carModel.Brand != null && car.Brand.Contains(carModel.Brand) || carModel.Brand == null) &&
                     (carModel.Color != null && car.Color == carModel.Color || carModel.Color == null) &&
                     (carModel.MaxPricePerDay != null && car.PricePerDay < carModel.MaxPricePerDay || carModel.MaxPricePerDay == null) &&
-                    (carModel.MinPricePerDay != null && car.PricePerDay > carModel.MinPricePerDay || carModel.MinPricePerDay == null)
+                    (carModel.MinPricePerDay != null && car.PricePerDay > carModel.MinPricePerDay || carModel.MinPricePerDay == null) &&
+                    (carModel.RentalPointId != null && car.RentalPointId == carModel.RentalPointId || carModel.RentalPointId == null) 
             };
 
         protected virtual PaginationRule GetPaginationRule(CarQueryModel carModel) => new PaginationRule
