@@ -28,11 +28,6 @@ namespace Data.Repositories
             return await DbSet.FindAsync(id);
         }
 
-        public IEnumerable<TEntity> GetList()
-        {
-            return DbSet.AsEnumerable();
-        }
-
         public async Task<TEntity> CreateAsync(TEntity entity)
         {
             var createdEntity = DbSet.Add(entity);
@@ -57,10 +52,14 @@ namespace Data.Repositories
             await _carRentalSystemContext.SaveChangesAsync();
         }
 
-
-        public async Task<bool> ExistsAsync(Guid id)
+        public virtual async Task<bool> ExistsAsync(Guid id)
         {
             return await DbSet.FindAsync(id) != null;
+        }
+
+        public virtual async Task<bool> ExistsAsync(FilterRule<TEntity> filterRule)
+        {
+            return await CountAsync(filterRule) > 0;
         }
 
         public virtual async Task<int> CountAsync(FilterRule<TEntity> filterRule = null)
@@ -73,11 +72,6 @@ namespace Data.Repositories
             }
 
             return await FilterQuery(query, filterRule).CountAsync();
-        }
-
-        public virtual async Task<bool> ExistsAsync(FilterRule<TEntity> filterRule)
-        {
-            return await CountAsync(filterRule) > 0;
         }
 
         public async Task<TEntity> GetAsync(FilterRule<TEntity> filterRule = null)
@@ -142,7 +136,7 @@ namespace Data.Repositories
 
         protected virtual IQueryable<TEntity> PaginationQuery(IQueryable<TEntity> queryable, PaginationRule paginationRule)
         {
-            queryable = queryable.Skip(paginationRule.Index * paginationRule.Size).Take(paginationRule.Size);
+            queryable = queryable.Skip((int)(paginationRule.Index * paginationRule.Size)).Take((int)paginationRule.Size);
 
             return queryable;
         }

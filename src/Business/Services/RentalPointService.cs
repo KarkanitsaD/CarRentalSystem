@@ -39,18 +39,8 @@ namespace Business.Services
             return _mapper.Map<RentalPointEntity, RentalPointModel>(entity);
         }
 
-        public async Task<List<RentalPointModel>> GetAllAsync()
-        {
-            return _mapper.Map<List<RentalPointEntity>, List<RentalPointModel>>(await _rentalPointRepository.GetListAsync());
-        }
-
         public async Task<(List<RentalPointModel>, int)> GetPageListAsync(RentalPointQueryModel queryModel)
         {
-            if (!queryModel.IsValidPagination)
-            {
-                throw new BadRequestException("Pagination rule is not valid");
-            }
-
             var queryParameters = new QueryParameters<RentalPointEntity>
             {
                 FilterRule = GetFilterRule(queryModel),
@@ -156,7 +146,7 @@ namespace Business.Services
                                    booking.KeyHandOverTime < rpModel.KeyReceivingTime && booking.KeyHandOverTime < rpModel.KeyHandOverTime)) == 0) >= rpModel.NumberOfAvailableCars ||
                      rpModel.KeyReceivingTime == null || rpModel.KeyHandOverTime == null) &&
                     (rpModel.CountryId != null && rentalPoint.CountryId == rpModel.CountryId || rpModel.CountryId == null) &&
-                    (rpModel.CityId != null && rentalPoint.CityId == rpModel.CountryId || rpModel.CityId == null)
+                    (rpModel.CityId != null && rentalPoint.CityId == rpModel.CityId || rpModel.CityId == null)
             };
 
             return filterRule;

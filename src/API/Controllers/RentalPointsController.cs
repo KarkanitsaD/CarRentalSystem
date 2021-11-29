@@ -33,7 +33,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync([FromBody] RentalPointQueryModel queryModel)
+        public async Task<IActionResult> GetAllAsync([FromQuery] RentalPointQueryModel queryModel)
         {
             var (rentalPointsModels, itemsTotalCount) = await _rentalPointService.GetPageListAsync(queryModel);
             var rentalPoints = _mapper.Map<List<RentalPointModel>, List<RentalPointResponseModel>>(rentalPointsModels);

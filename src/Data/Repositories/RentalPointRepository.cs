@@ -16,20 +16,24 @@ namespace Data.Repositories
 
         }
 
-        public override async Task<List<RentalPointEntity>> GetListAsync(QueryParameters<RentalPointEntity> queryParameters = null)
+        public override async Task<PageResult<RentalPointEntity>> GetPageListAsync(QueryParameters<RentalPointEntity> queryParameters)
         {
             var query = DbSet.AsQueryable();
 
-            if (queryParameters == null)
-            {
-                return await query.Include(rp => rp.City).Include(rp => rp.Country).ToListAsync();
-            }
+            query = query.Include(rp => rp.City).Include(rp => rp.Country);
 
             query = BaseQuery(query, queryParameters);
 
-            query.Include(rp => rp.City).Include(rp => rp.Country);
+            int totalItemsCount = await query.CountAsync();
 
-            return await query.ToListAsync();
+            if (queryParameters.PaginationRule is {IsValid: true})
+            {
+                query = PaginationQuery(query, queryParameters.PaginationRule);
+            }
+
+            var items = await query.ToListAsync();
+
+            return new PageResult<RentalPointEntity>(items, totalItemsCount);
         }
 
         public override async Task<RentalPointEntity> GetAsync(Guid id)
