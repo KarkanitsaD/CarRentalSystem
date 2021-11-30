@@ -122,7 +122,7 @@ namespace Business.Services
                 FilterExpression = car =>
                     (carModel.KeyReceivingTime != null && carModel.KeyHandOverTime != null && car.Bookings.AsQueryable()
                          .Count(booking => 
-                             !(booking.KeyReceivingTime > carModel.KeyReceivingTime && booking.KeyReceivingTime > carModel.KeyHandOverTime &&
+                             !(booking.KeyReceivingTime > carModel.KeyReceivingTime && booking.KeyReceivingTime > carModel.KeyHandOverTime ||
                                booking.KeyHandOverTime < carModel.KeyReceivingTime && booking.KeyHandOverTime < carModel.KeyHandOverTime)) == 0 ||
                      carModel.KeyReceivingTime == null || carModel.KeyHandOverTime == null) &&
                     (carModel.Brand != null && car.Brand.Contains(carModel.Brand) || carModel.Brand == null) &&
