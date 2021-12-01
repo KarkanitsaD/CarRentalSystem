@@ -59,9 +59,9 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize(Policy = Policy.ForAdminOnly)]
-        public async Task<IActionResult> AddCar([FromBody] CreateCarRequestModel addCarModel)
+        public async Task<IActionResult> AddCar([FromBody] CreateCarRequest addCarModel)
         {
-            var car = _mapper.Map<CreateCarRequestModel, CarModel>(addCarModel);
+            var car = _mapper.Map<CreateCarRequest, CarModel>(addCarModel);
             await _carService.CreateAsync(car);
             return Ok();
         }
@@ -69,9 +69,9 @@ namespace API.Controllers
         [HttpPut]
         [Route("{carId:guid}")]
         [Authorize(Policy = Policy.ForAdminOnly)]
-        public async Task<IActionResult> UpdateCar([FromRoute] Guid carId, [FromBody] UpdateCarRequestModel updateCarModel)
+        public async Task<IActionResult> UpdateCar([FromRoute] Guid carId, [FromBody] UpdateCarRequest updateCarModel)
         {
-            var car = _mapper.Map<UpdateCarRequestModel, CarModel>(updateCarModel);
+            var car = _mapper.Map<UpdateCarRequest, CarModel>(updateCarModel);
             await _carService.UpdateAsync(carId, car);
             return Ok();
         }
