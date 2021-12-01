@@ -15,9 +15,9 @@ namespace API.Validators.Booking
             RuleFor(p => p.KeyReceivingTime).Must(IsValidDateTime).WithMessage("Invalid DateTime range!");
         }
 
-        private bool IsValidDateTime(CreateBookingRequest model, DateTime keyReceivingTime)
+        private bool IsValidDateTime(CreateBookingRequest model, DateTimeOffset keyReceivingTime)
         {
-            return keyReceivingTime >= DateTime.Now && keyReceivingTime < model.KeyHandOverTime;
+            return keyReceivingTime >= DateTimeOffset.Now && keyReceivingTime < model.KeyHandOverTime;
         }
     }
 }

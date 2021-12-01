@@ -11,8 +11,8 @@ namespace Business.Models
         public RentalPointModel RentalPoint { get; set; }
         public Guid CarId { get; set; }
         public CarModel Car { get; set; }
-        public DateTime KeyReceivingTime { get; set; }
-        public DateTime KeyHandOverTime { get; set; }
-        public DateTime BookingTime { get; set; }
+        public DateTimeOffset KeyReceivingTime { get; set; }
+        public DateTimeOffset KeyHandOverTime { get; set; }
+        public DateTimeOffset BookingTime { get; set; }
     }
 }

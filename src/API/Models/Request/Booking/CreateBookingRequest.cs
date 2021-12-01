@@ -6,7 +6,7 @@ namespace API.Models.Request.Booking
     {
         public Guid CarId { get; set; }
         public Guid RentalPointId { get; set; }
-        public DateTime KeyReceivingTime { get; set; }
-        public DateTime KeyHandOverTime { get; set; }
+        public DateTimeOffset KeyReceivingTime { get; set; }
+        public DateTimeOffset KeyHandOverTime { get; set; }
     }
 }

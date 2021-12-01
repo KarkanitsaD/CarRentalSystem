@@ -64,8 +64,8 @@ namespace Business.Services
             await _bookingRepository.DeleteAsync(entityToDelete);
         }
 
-        protected virtual FilterRule<BookingEntity> GetBookingFilterRule(Guid carId, DateTime keyReceivingTime,
-            DateTime keyHandOverTime) => new FilterRule<BookingEntity>
+        protected virtual FilterRule<BookingEntity> GetBookingFilterRule(Guid carId, DateTimeOffset keyReceivingTime,
+            DateTimeOffset keyHandOverTime) => new FilterRule<BookingEntity>
             {
                 FilterExpression = booking =>
                     booking.CarId == carId &&
