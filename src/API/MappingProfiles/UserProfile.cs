@@ -11,7 +11,9 @@ namespace API.MappingProfiles
     {
         public UserProfile()
         {
+            CreateMap<RefreshTokenSuccessModel, RefreshTokenResponseModel>();
             CreateMap<LoginRegisterRequestModel, LoginRegisterModel>();
+            CreateMap<RegisterRequest, RegisterModel>();
             CreateMap<LoginSuccessModel, LoginResponseModel>();
             CreateMap<UserModel, UserResponse>();
             CreateMap<UpdateUserRequest, UserModel>();

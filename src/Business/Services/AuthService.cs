@@ -52,7 +52,7 @@ namespace Business.Services
             return new LoginSuccessModel(user, jwt, refreshToken);
         }
 
-        public async Task RegisterUserAsync(LoginRegisterModel loginRequest)
+        public async Task RegisterUserAsync(RegisterModel loginRequest)
         {
             var user = await _userRepository.GetByEmailAsync(loginRequest.Email);
 
@@ -66,6 +66,8 @@ namespace Business.Services
             user = new UserEntity
             {
                 Email = loginRequest.Email,
+                Name = loginRequest.Name,
+                Surname = loginRequest.Surname,
                 PasswordHash = _passwordHasher.GeneratePasswordHash(loginRequest.Password),
                 RoleId= userRole.Id
             };

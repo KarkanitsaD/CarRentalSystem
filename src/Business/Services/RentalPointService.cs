@@ -81,6 +81,8 @@ namespace Business.Services
             entityToUpdate.CityId = cityId;
             entityToUpdate.Address = rentalPointModel.Address;
             entityToUpdate.Title = rentalPointModel.Title;
+            entityToUpdate.LocationX = rentalPointModel.LocationX;
+            entityToUpdate.LocationY = rentalPointModel.LocationY;
 
             await _rentalPointRepository.UpdateAsync(entityToUpdate);
         }

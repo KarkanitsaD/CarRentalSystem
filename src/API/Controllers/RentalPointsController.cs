@@ -23,7 +23,7 @@ namespace API.Controllers
             _rentalPointService = rentalPointService;
             _mapper = mapper;
         }
-
+        
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<IActionResult> GetAsync([FromRoute] Guid id)

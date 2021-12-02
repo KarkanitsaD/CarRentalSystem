@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Response\Booking\" />
     <Folder Include="Validators\Auth\" />
   </ItemGroup>
 

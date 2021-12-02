@@ -85,10 +85,12 @@ namespace Business.Services
             entityToUpdate.RentalPointId = updatedEntity.RentalPointId;
             entityToUpdate.PricePerDay = updatedEntity.PricePerDay;
             entityToUpdate.Brand = updatedEntity.Brand;
+            entityToUpdate.Model = updatedEntity.Model;
             entityToUpdate.Color = updatedEntity.Color;
             entityToUpdate.NumberOfSeats = updatedEntity.NumberOfSeats;
             entityToUpdate.TransmissionType = updatedEntity.TransmissionType;
             entityToUpdate.FuelConsumptionPerHundredKilometers = updatedEntity.FuelConsumptionPerHundredKilometers;
+            entityToUpdate.Description = updatedEntity.Description;
 
             await _carPictureRepository.UpdateAsync(updatedEntity.Picture);
 
