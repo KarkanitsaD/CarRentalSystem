@@ -4,6 +4,7 @@ namespace API.Models.Response.Booking
 {
     public class BookingResponse
     {
+        public decimal Price { get; set; }
         public Guid Id { get; set; }
         public Guid CarId { get; set; }
         public string Model { get; set; }

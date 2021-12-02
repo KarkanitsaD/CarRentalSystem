@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,9 +9,11 @@ using Business.IServices;
 using Business.Models;
 using Business.Policies;
 using Business.Query.Booking;
+using Data;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
@@ -19,29 +22,50 @@ namespace Business.Services
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
         private readonly IBookingRepository _bookingRepository;
+        private readonly CarRentalSystemContext _context;
 
-        public BookingService(IMapper mapper, IBookingRepository bookingRepository, ITokenService tokenService)
+        public BookingService(IMapper mapper, IBookingRepository bookingRepository, ITokenService tokenService, CarRentalSystemContext context)
         {
             _mapper = mapper;
             _bookingRepository = bookingRepository;
             _tokenService = tokenService;
+            _context = context;
         }
 
         public async Task CreateAsync(string authorization, BookingModel bookingModel)
         {
-            var filetRule = GetBookingExistsFilterRule(bookingModel.CarId, bookingModel.KeyReceivingTime,
-                bookingModel.KeyHandOverTime);
-
-            if (await _bookingRepository.ExistsAsync(filetRule))
+            await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+            try
             {
-                throw new BadRequestException("The booking for the given time already exists");
+                var filetRule = GetBookingExistsFilterRule(bookingModel.CarId, bookingModel.KeyReceivingTime,
+                    bookingModel.KeyHandOverTime);
+
+                if (await _context.Bookings.CountAsync(filetRule.FilterExpression) > 0)
+                {
+                    throw new BadRequestException("The booking for the given time already exists");
+                }
+
+                var userId = _tokenService.GetClaimFromJwt(authorization.Split(' ')[1], ClaimTypes.NameIdentifier)
+                    .Value;
+                bookingModel.UserId = Guid.Parse(userId);
+                var entity = _mapper.Map<BookingModel, BookingEntity>(bookingModel);
+
+                await _context.Bookings.AddAsync(entity);
+
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
             }
-
-            var userId = _tokenService.GetClaimFromJwt(authorization.Split(' ')[1], ClaimTypes.NameIdentifier).Value;
-            bookingModel.UserId = Guid.Parse(userId);
-            var entity = _mapper.Map<BookingModel, BookingEntity>(bookingModel);
-
-            await _bookingRepository.CreateAsync(entity);
+            catch (BadRequestException)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("Transaction is canceled!");
+            }
         }
 
         public async Task<(List<BookingModel>, int)> GetAllAsync(string authorization, BookingQueryModel queryModel)
@@ -96,7 +120,12 @@ namespace Business.Services
             new FilterRule<BookingEntity>
             {
                 FilterExpression = booking =>
-                    booking.UserId == userId
+                    (userId != null && userId == booking.UserId || userId == null) &&
+                    (queryModel.CountryId != null && booking.RentalPoint.CountryId == queryModel.CountryId || queryModel.CountryId == null) && 
+                    (queryModel.CityId != null && booking.RentalPoint.CityId == queryModel.CityId || queryModel.CityId == null) && 
+                    (queryModel.GetCurrent == null ||
+                     queryModel.GetCurrent == false && booking.KeyHandOverTime < DateTimeOffset.Now ||
+                     queryModel.GetCurrent == true && booking.KeyHandOverTime > DateTimeOffset.Now)
             };
 
         protected virtual PaginationRule GetPaginationRule(BookingQueryModel queryModel) => new PaginationRule

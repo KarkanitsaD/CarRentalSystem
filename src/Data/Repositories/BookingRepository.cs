@@ -21,7 +21,7 @@ namespace Data.Repositories
 
             int totalItemsCount = await query.CountAsync();
 
-            if (queryParameters.PaginationRule != null)
+            if (queryParameters.PaginationRule.IsValid)
             {
                 query = PaginationQuery(query, queryParameters.PaginationRule);
             }

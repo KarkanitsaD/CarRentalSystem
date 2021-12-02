@@ -2,7 +2,6 @@ using API.Extensions;
 using Business.Extensions;
 using Business.Options;
 using Data;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

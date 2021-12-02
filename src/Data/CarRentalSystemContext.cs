@@ -7,7 +7,7 @@ namespace Data
 {
     public class CarRentalSystemContext : DbContext
     {
-        public CarRentalSystemContext(DbContextOptions options)
+        public CarRentalSystemContext(DbContextOptions<CarRentalSystemContext> options)
             : base(options)
         {
 

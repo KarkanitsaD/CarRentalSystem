@@ -4,6 +4,7 @@ namespace Data.Entities
 {
     public class BookingEntity : Entity
     {
+        public decimal Price { get; set; }
         public Guid UserId { get; set; }
         public UserEntity User { get; set; }
         public Guid? RentalPointId { get; set; }
