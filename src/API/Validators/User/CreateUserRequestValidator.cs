@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace API.Validators.User
 {
-    public class AddUserRequestValidator : AbstractValidator<CreateUserRequest>
+    public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
     {
-        public AddUserRequestValidator()
+        public CreateUserRequestValidator()
         {
             RuleFor(p => p.Password).Must(IsValidPassword).WithMessage(p =>
                 $"{nameof(p.Password)} must be more than 5 characters long, contain letters of the English alphabet and contain at least one number.");
