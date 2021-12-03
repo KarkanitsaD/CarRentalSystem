@@ -39,8 +39,6 @@ namespace Data
                 .ApplyConfiguration(new CountryEntityTypeConfiguration())
                 .ApplyConfiguration(new RefreshTokenEntityTypeConfiguration())
                 .ApplyConfiguration(new CarPictureEntityTypeConfiguration());
-
-            SeedData(modelBuilder);
         }
 
         private void SeedData(ModelBuilder modelBuilder)
