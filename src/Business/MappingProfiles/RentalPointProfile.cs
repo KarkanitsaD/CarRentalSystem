@@ -8,7 +8,8 @@ namespace Business.MappingProfiles
     {
         public RentalPointProfile()
         {
-            CreateMap<RentalPointEntity, RentalPointModel>();
+            CreateMap<RentalPointEntity, RentalPointModel>()
+                .ForMember(src => src.TimeOffset, act => act.Ignore());
 
             CreateMap<RentalPointModel, RentalPointEntity>()
                 .ForMember(src => src.City, act => act.Ignore())

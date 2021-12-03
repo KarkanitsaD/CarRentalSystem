@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
+using Business.Query.RentalPoint;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
@@ -36,9 +39,19 @@ namespace Business.Services
             return _mapper.Map<RentalPointEntity, RentalPointModel>(entity);
         }
 
-        public async Task<List<RentalPointModel>> GetAllAsync()
+        public async Task<(List<RentalPointModel>, int)> GetPageListAsync(RentalPointQueryModel queryModel)
         {
-            return _mapper.Map<List<RentalPointEntity>, List<RentalPointModel>>(await _rentalPointRepository.GetListAsync());
+            var queryParameters = new QueryParameters<RentalPointEntity>
+            {
+                FilterRule = GetFilterRule(queryModel),
+                PaginationRule = GetPaginationRule(queryModel)
+            };
+
+            var result = await _rentalPointRepository.GetPageListAsync(queryParameters);
+
+            var rentalPointModels = _mapper.Map<List<RentalPointEntity>, List<RentalPointModel>>(result.Items); 
+
+            return (rentalPointModels, result.TotalItemsCount);
         }
 
         public async Task CreateAsync(RentalPointModel rentalPointModel)
@@ -68,6 +81,8 @@ namespace Business.Services
             entityToUpdate.CityId = cityId;
             entityToUpdate.Address = rentalPointModel.Address;
             entityToUpdate.Title = rentalPointModel.Title;
+            entityToUpdate.LocationX = rentalPointModel.LocationX;
+            entityToUpdate.LocationY = rentalPointModel.LocationY;
 
             await _rentalPointRepository.UpdateAsync(entityToUpdate);
         }
@@ -100,6 +115,7 @@ namespace Business.Services
             {
                 countryEntity = await _countryRepository.CreateAsync(_mapper.Map<CountryModel, CountryEntity>(countryModel));
                 cityModel.CountryId = countryEntity.Id;
+                cityModel.TimeOffset = rentalPoint.TimeOffset;
                 cityEntity = await _cityRepository.CreateAsync(_mapper.Map<CityModel, CityEntity>(cityModel));
             }
             else
@@ -117,6 +133,32 @@ namespace Business.Services
             }
 
             return (countryEntity.Id, cityEntity.Id);
-        } 
+        }
+
+        protected virtual FilterRule<RentalPointEntity> GetFilterRule(RentalPointQueryModel rpModel)
+        {
+            rpModel.NumberOfAvailableCars ??= 1;
+            var filterRule = new FilterRule<RentalPointEntity>
+            {
+                FilterExpression = rentalPoint =>
+                    (rpModel.KeyReceivingTime != null && rpModel.KeyHandOverTime != null &&
+                     rentalPoint.Cars.AsQueryable().Include(car => car.Bookings)
+                         .Count(car => car.LastViewTime.AddMinutes(5) < DateTime.Now && car.Bookings.AsQueryable()
+                             .Count(booking =>
+                                 !(booking.KeyReceivingTime > rpModel.KeyReceivingTime && booking.KeyReceivingTime > rpModel.KeyHandOverTime ||
+                                   booking.KeyHandOverTime < rpModel.KeyReceivingTime && booking.KeyHandOverTime < rpModel.KeyHandOverTime)) == 0) >= rpModel.NumberOfAvailableCars ||
+                     rpModel.KeyReceivingTime == null || rpModel.KeyHandOverTime == null) &&
+                    (rpModel.CountryId != null && rentalPoint.CountryId == rpModel.CountryId || rpModel.CountryId == null) &&
+                    (rpModel.CityId != null && rentalPoint.CityId == rpModel.CityId || rpModel.CityId == null)
+            };
+
+            return filterRule;
+        }
+
+        protected virtual PaginationRule GetPaginationRule(RentalPointQueryModel rpModel) => new PaginationRule
+        {
+            Index = rpModel.PageIndex,
+            Size = rpModel.PageSize
+        };
     }
 }

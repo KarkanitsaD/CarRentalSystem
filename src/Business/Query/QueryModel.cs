@@ -3,8 +3,8 @@
     public class QueryModel
     {
         public int PageIndex { get; set; } = 0;
-        public int PageSize { get; set; } = -1;
+        public int? PageSize { get; set; }
 
-        public bool IsValidPagination => PageSize > 0 && PageIndex >= 0;
+        public bool IsValidPagination => PageSize != null && PageSize > 0 && PageIndex >= 0;
     }
 }

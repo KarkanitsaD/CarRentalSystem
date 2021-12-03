@@ -2,12 +2,11 @@
 
 namespace API.Models.Request.Car
 {
-    public class UpdateCarRequestModel
+    public class CreateCarRequest
     {
-        public Guid Id { get; set; }
-        public Guid ImageId { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
+        public string Description { get; set; }
         public decimal PricePerDay { get; set; }
         public decimal FuelConsumptionPerHundredKilometers { get; set; }
         public string TransmissionType { get; set; }

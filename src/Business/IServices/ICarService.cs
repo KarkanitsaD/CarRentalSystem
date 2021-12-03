@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Business.Models;
-using Business.Query;
+using Business.Query.Car;
 
 namespace Business.IServices
 {
@@ -13,5 +13,6 @@ namespace Business.IServices
         Task CreateAsync(CarModel addCarModel);
         Task UpdateAsync(Guid id, CarModel updateCarModel);
         Task DeleteAsync(Guid id);
+        Task LockCarAsync(Guid id);
     }
 }

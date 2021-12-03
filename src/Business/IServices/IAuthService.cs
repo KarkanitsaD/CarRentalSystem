@@ -6,7 +6,7 @@ namespace Business.IServices
     public interface IAuthService
     {
         Task<LoginSuccessModel> LoginAsync(LoginRegisterModel loginModel);
-        Task RegisterUserAsync(LoginRegisterModel loginRequest);
+        Task RegisterUserAsync(RegisterModel loginRequest);
         Task<RefreshTokenSuccessModel> RefreshTokenAsync(string refreshTokenRequest);
     }
 }

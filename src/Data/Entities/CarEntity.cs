@@ -12,6 +12,7 @@ namespace Data.Entities
         public string TransmissionType { get; set; }
         public int NumberOfSeats { get; set; }
         public string Color { get; set; }
+        public string Description { get; set; }
         public Guid RentalPointId { get; set; }
         public RentalPointEntity RentalPoint { get; set; }
         public DateTime LastViewTime { get; set; }

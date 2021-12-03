@@ -37,6 +37,9 @@ namespace Data.Migrations
                     b.Property<DateTime>("KeyReceivingTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid?>("RentalPointId")
                         .HasColumnType("uniqueidentifier");
 
@@ -68,6 +71,9 @@ namespace Data.Migrations
                     b.Property<string>("Color")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("FuelConsumptionPerHundredKilometers")
                         .HasColumnType("decimal(18,2)");
@@ -135,6 +141,9 @@ namespace Data.Migrations
 
                     b.Property<Guid>("CountryId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<float>("TimeOffset")
+                        .HasColumnType("real");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -240,12 +249,12 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00882590-454e-43ed-a31d-cb424b7b0179"),
+                            Id = new Guid("07180e0f-83cf-4f6a-95a7-a8abba451f3c"),
                             Title = "Admin"
                         },
                         new
                         {
-                            Id = new Guid("5d10caf7-01ce-4366-8ad0-3666b0d26fce"),
+                            Id = new Guid("38fb64f0-9fe9-451d-b0b0-1714600b19c0"),
                             Title = "User"
                         });
                 });
@@ -285,7 +294,7 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f939c8a5-1d97-481a-a063-3a499ba4942c"),
+                            Id = new Guid("056ae3a0-63c3-4a81-9a61-3b942bfbe056"),
                             Email = "admin@mail.ru",
                             Name = "Dima",
                             PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31",
@@ -293,7 +302,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("ed6cecda-4a07-4c96-aff0-c61d256f09e6"),
+                            Id = new Guid("5fe769b0-0608-4dd8-ba6c-dbd487d530d1"),
                             Email = "user@mail.ru",
                             Name = "Vova",
                             PasswordHash = "a1e48daec54145146b89d816a089ba3294d2748796b8491e9a719d54d2ca0b8aHpd_7foo.ss]jr4F-nNMes31",

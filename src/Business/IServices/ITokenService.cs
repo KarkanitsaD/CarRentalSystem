@@ -12,5 +12,6 @@ namespace Business.IServices
         Task ValidateRefreshTokenAsync(string refreshToken);
         Task CreateRefreshTokenAsync(Guid userId, string refreshToken);
         Task UpdateRefreshTokenAsync(Guid userId, string refreshToken);
+        Claim GetClaimFromJwt(string jwt, string claimType);
     }
 }

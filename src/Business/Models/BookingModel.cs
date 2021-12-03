@@ -4,6 +4,7 @@ namespace Business.Models
 {
     public class BookingModel
     {
+        public decimal Price { get; set; }
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public UserModel User { get; set; }

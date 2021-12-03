@@ -54,9 +54,9 @@ namespace API.Controllers
         [Route("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RegisterAsync([FromBody] LoginRegisterRequestModel loginRequest)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest loginRequest)
         {
-            var loginModel = _mapper.Map<LoginRegisterRequestModel, LoginRegisterModel>(loginRequest);
+            var loginModel = _mapper.Map<RegisterRequest, RegisterModel>(loginRequest);
             await _authService.RegisterUserAsync(loginModel);
 
             return Ok();

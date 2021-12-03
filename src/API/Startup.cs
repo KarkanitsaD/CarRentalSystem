@@ -2,6 +2,7 @@ using API.Extensions;
 using Business.Extensions;
 using Business.Options;
 using Data;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,7 @@ namespace API
             services.AddAuthorizationService();
 
             services.AddControllersWithCache();
+            services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
             services.AddSwaggerGenerator();
         }
 

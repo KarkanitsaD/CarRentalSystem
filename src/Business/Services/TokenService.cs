@@ -89,5 +89,13 @@ namespace Business.Services
 
             await _refreshTokenRepository.UpdateAsync(tokenToUpdate);
         }
+
+        public Claim GetClaimFromJwt(string jwt, string claimType)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.ReadJwtToken(jwt);
+            var claim = token.Claims.First(c => c.Type == claimType);
+            return claim;
+        }
     }
 }

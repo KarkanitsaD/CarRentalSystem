@@ -7,6 +7,7 @@ namespace API.Models.Response.Car
         public Guid Id { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
+        public string Description { get; set; }
         public decimal FuelConsumptionPerHundredKilometers { get; set; }
         public string TransmissionType { get; set; }
         public int NumberOfSeats { get; set; }
