@@ -122,6 +122,7 @@ namespace Business.Services
             new FilterRule<CarEntity>
             {
                 FilterExpression = car =>
+                    car.LastViewTime.AddMinutes(5) < DateTime.Now &&
                     (carModel.KeyReceivingTime != null && carModel.KeyHandOverTime != null && car.Bookings.AsQueryable()
                          .Count(booking => 
                              !(booking.KeyReceivingTime > carModel.KeyReceivingTime && booking.KeyReceivingTime > carModel.KeyHandOverTime ||

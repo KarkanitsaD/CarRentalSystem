@@ -39,7 +39,6 @@ namespace API.Controllers
         public async Task<IActionResult> GetAllAsync([FromHeader] string authorization, [FromQuery] BookingQueryModel queryModel)
         {
             var (bookingsModels, itemsTotalCount) = await _bookingService.GetAllAsync(authorization, queryModel);
-            var booking = _mapper.Map<BookingModel, BookingResponse>(bookingsModels[0]);
             var bookings = _mapper.Map<List<BookingModel>, List<BookingResponse>>(bookingsModels);
             return Ok(new { bookings, itemsTotalCount });
         }

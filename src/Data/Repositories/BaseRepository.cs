@@ -136,7 +136,8 @@ namespace Data.Repositories
 
         protected virtual IQueryable<TEntity> PaginationQuery(IQueryable<TEntity> queryable, PaginationRule paginationRule)
         {
-            queryable = queryable.Skip((int)(paginationRule.Index * paginationRule.Size)).Take((int)paginationRule.Size);
+            if(paginationRule.IsValid)
+                queryable = queryable.Skip((int)(paginationRule.Index * paginationRule.Size)).Take((int)paginationRule.Size);
 
             return queryable;
         }

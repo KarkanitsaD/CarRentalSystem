@@ -11,8 +11,8 @@ namespace API.Models.Response.Booking
         public string Brand { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
-        public DateTimeOffset KeyReceivingTime { get; set; }
-        public DateTimeOffset KeyHandOverTime { get; set; }
-        public DateTimeOffset BookingTime { get; set; }
+        public DateTime KeyReceivingTime { get; set; }
+        public DateTime KeyHandOverTime { get; set; }
+        public DateTime BookingTime { get; set; }
     }
 }

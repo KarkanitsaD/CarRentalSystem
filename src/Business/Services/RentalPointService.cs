@@ -115,6 +115,7 @@ namespace Business.Services
             {
                 countryEntity = await _countryRepository.CreateAsync(_mapper.Map<CountryModel, CountryEntity>(countryModel));
                 cityModel.CountryId = countryEntity.Id;
+                cityModel.TimeOffset = rentalPoint.TimeOffset;
                 cityEntity = await _cityRepository.CreateAsync(_mapper.Map<CityModel, CityEntity>(cityModel));
             }
             else
@@ -142,7 +143,7 @@ namespace Business.Services
                 FilterExpression = rentalPoint =>
                     (rpModel.KeyReceivingTime != null && rpModel.KeyHandOverTime != null &&
                      rentalPoint.Cars.AsQueryable().Include(car => car.Bookings)
-                         .Count(car => car.Bookings.AsQueryable()
+                         .Count(car => car.LastViewTime.AddMinutes(5) < DateTime.Now && car.Bookings.AsQueryable()
                              .Count(booking =>
                                  !(booking.KeyReceivingTime > rpModel.KeyReceivingTime && booking.KeyReceivingTime > rpModel.KeyHandOverTime ||
                                    booking.KeyHandOverTime < rpModel.KeyReceivingTime && booking.KeyHandOverTime < rpModel.KeyHandOverTime)) == 0) >= rpModel.NumberOfAvailableCars ||

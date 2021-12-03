@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -37,12 +38,31 @@ namespace Business.Services
             await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
             try
             {
+                var carFilterRule = GetCarFilterRule((Guid) bookingModel.RentalPointId, bookingModel.CarId);
+
+                if (await _context.RentalPoints.CountAsync(carFilterRule.FilterExpression) == 0)
+                {
+                    throw new NotFoundException("Car not found.");
+                }
+
+                var rentalPoint = await _context.RentalPoints.Include(rp => rp.City)
+                    .FirstOrDefaultAsync(rp => rp.Id == bookingModel.RentalPointId);
+
+                if (bookingModel.KeyReceivingTime < DateTime.UtcNow.AddSeconds(rentalPoint.City.TimeOffset))
+                {
+                    throw new BadRequestException("Invalid time range.");
+                }
+
+                var carEntity = await _context.Cars.FirstOrDefaultAsync(car => car.Id == bookingModel.CarId);
+                carEntity.LastViewTime = DateTime.MinValue;
+                await _context.SaveChangesAsync();
+
                 var filetRule = GetBookingExistsFilterRule(bookingModel.CarId, bookingModel.KeyReceivingTime,
                     bookingModel.KeyHandOverTime);
 
                 if (await _context.Bookings.CountAsync(filetRule.FilterExpression) > 0)
                 {
-                    throw new BadRequestException("The booking for the given time already exists");
+                    throw new BadRequestException("The booking for the given time already exists.");
                 }
 
                 var userId = _tokenService.GetClaimFromJwt(authorization.Split(' ')[1], ClaimTypes.NameIdentifier)
@@ -115,6 +135,14 @@ namespace Business.Services
                 !(booking.KeyReceivingTime > keyReceivingTime && booking.KeyReceivingTime > keyHandOverTime ||
                   booking.KeyHandOverTime < keyReceivingTime && booking.KeyHandOverTime < keyHandOverTime)
         };
+
+        protected virtual FilterRule<RentalPointEntity> GetCarFilterRule(Guid rentalPointId, Guid carId) =>
+            new FilterRule<RentalPointEntity>
+            {
+                FilterExpression = rentalPoint => 
+                    rentalPoint.Id == rentalPointId &&
+                    rentalPoint.Cars.AsQueryable().Count(car => car.Id == carId) > 0
+            };
 
         protected virtual FilterRule<BookingEntity> GetBookingFilterRule(BookingQueryModel queryModel, Guid userId) =>
             new FilterRule<BookingEntity>

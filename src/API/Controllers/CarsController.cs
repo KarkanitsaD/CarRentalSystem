@@ -55,8 +55,6 @@ namespace API.Controllers
             return Ok();
         }
 
-
-
         [HttpPost]
         [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> AddCar([FromBody] CreateCarRequest addCarModel)

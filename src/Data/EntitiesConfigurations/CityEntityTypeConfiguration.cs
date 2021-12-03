@@ -8,6 +8,8 @@ namespace Data.EntitiesConfigurations
     {
         public void Configure(EntityTypeBuilder<CityEntity> builder)
         {
+            builder.Property(c => c.TimeOffset);
+
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id)
                 .IsRequired();
