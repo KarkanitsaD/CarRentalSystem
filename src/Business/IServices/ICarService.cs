@@ -11,6 +11,7 @@ namespace Business.IServices
         Task<CarModel> GetAsync(Guid id);
         Task<(List<CarModel>, int)> GetPageListAsync(CarQueryModel queryModel);
         Task CreateAsync(CarModel addCarModel);
+        //Task CreateRangeAsync(List<CarModel> carModels);
         Task UpdateAsync(Guid id, CarModel updateCarModel);
         Task DeleteAsync(Guid id);
         Task LockCarAsync(Guid id);

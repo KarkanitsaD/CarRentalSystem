@@ -17,6 +17,10 @@ namespace Data.Repositories
         {
             var query = DbSet.AsQueryable();
 
+            query = query.Include(b => b.Car)
+                .Include(b => b.RentalPoint).ThenInclude(rp => rp.Country)
+                .Include(b => b.RentalPoint).ThenInclude(rp => rp.City);
+
             query = BaseQuery(query, queryParameters);
 
             int totalItemsCount = await query.CountAsync();
@@ -25,10 +29,6 @@ namespace Data.Repositories
             {
                 query = PaginationQuery(query, queryParameters.PaginationRule);
             }
-
-            query = query.Include(b => b.Car)
-                .Include(b => b.RentalPoint).ThenInclude(rp => rp.Country)
-                .Include(b => b.RentalPoint).ThenInclude(rp => rp.City);
 
             var items = await query.ToListAsync();
 

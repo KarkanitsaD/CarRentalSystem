@@ -37,6 +37,12 @@ namespace Data.Repositories
             return createdEntity.Entity;
         }
 
+        public async Task CreateRangeAsync(List<TEntity> range)
+        {
+            await DbSet.AddRangeAsync(range);
+            await _carRentalSystemContext.SaveChangesAsync();
+        }
+
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             var updatedEntity = DbSet.Update(entity).Entity;

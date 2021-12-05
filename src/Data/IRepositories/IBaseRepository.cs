@@ -16,6 +16,7 @@ namespace Data.IRepositories
         Task<List<TEntity>> GetListAsync(QueryParameters<TEntity> queryParameters = null);
         Task<PageResult<TEntity>> GetPageListAsync(QueryParameters<TEntity> queryParameters);
         Task<TEntity> CreateAsync(TEntity entity);
+        Task CreateRangeAsync(List<TEntity> range);
         Task<TEntity> UpdateAsync(TEntity entity);
         Task<bool> ExistsAsync(FilterRule<TEntity> filterRule);
         Task<bool> ExistsAsync(Guid id);

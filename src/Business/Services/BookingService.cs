@@ -48,14 +48,15 @@ namespace Business.Services
                 var rentalPoint = await _context.RentalPoints.Include(rp => rp.City)
                     .FirstOrDefaultAsync(rp => rp.Id == bookingModel.RentalPointId);
 
-                if (bookingModel.KeyReceivingTime < DateTime.UtcNow.AddSeconds(rentalPoint.City.TimeOffset))
-                {
-                    throw new BadRequestException("Invalid time range.");
-                }
-
                 var carEntity = await _context.Cars.FirstOrDefaultAsync(car => car.Id == bookingModel.CarId);
                 carEntity.LastViewTime = DateTime.MinValue;
                 await _context.SaveChangesAsync();
+
+                if (bookingModel.KeyReceivingTime < DateTime.UtcNow.AddSeconds(rentalPoint.City.TimeOffset))
+                {
+                    throw new InvalidTimeRangeException(
+                        "Invalid time range for this country. Entered time is over in this country!");
+                }
 
                 var filetRule = GetBookingExistsFilterRule(bookingModel.CarId, bookingModel.KeyReceivingTime,
                     bookingModel.KeyHandOverTime);
@@ -81,6 +82,11 @@ namespace Business.Services
                 await transaction.RollbackAsync();
                 throw;
             }
+            catch (InvalidTimeRangeException)
+            {
+                await transaction.CommitAsync();
+                throw;
+            }
             catch (Exception)
             {
                 await transaction.RollbackAsync();
@@ -98,6 +104,7 @@ namespace Business.Services
                 FilterRule = GetBookingFilterRule(queryModel, userId),
                 PaginationRule = GetPaginationRule(queryModel)
             };
+
             var result = await _bookingRepository.GetPageListAsync(queryParameters);
 
             var bookings = _mapper.Map<List<BookingEntity>, List<BookingModel>>(result.Items);
@@ -152,8 +159,8 @@ namespace Business.Services
                     (queryModel.CountryId != null && booking.RentalPoint.CountryId == queryModel.CountryId || queryModel.CountryId == null) && 
                     (queryModel.CityId != null && booking.RentalPoint.CityId == queryModel.CityId || queryModel.CityId == null) && 
                     (queryModel.GetCurrent == null ||
-                     queryModel.GetCurrent == false && booking.KeyHandOverTime < DateTimeOffset.Now ||
-                     queryModel.GetCurrent == true && booking.KeyHandOverTime > DateTimeOffset.Now)
+                     queryModel.GetCurrent == false && booking.KeyHandOverTime < DateTime.UtcNow.AddSeconds(booking.RentalPoint.City.TimeOffset) ||
+                     queryModel.GetCurrent == true && booking.KeyHandOverTime > DateTime.UtcNow.AddSeconds(booking.RentalPoint.City.TimeOffset))
             };
 
         protected virtual PaginationRule GetPaginationRule(BookingQueryModel queryModel) => new PaginationRule
