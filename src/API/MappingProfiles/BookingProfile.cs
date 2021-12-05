@@ -1,5 +1,4 @@
-﻿using System;
-using API.Models.Request.Booking;
+﻿using API.Models.Request.Booking;
 using API.Models.Response.Booking;
 using AutoMapper;
 using Business.Models;
@@ -10,8 +9,7 @@ namespace API.MappingProfiles
     {
         public BookingProfile()
         {
-            CreateMap<CreateBookingRequest, BookingModel>()
-                .ForMember(src => src.BookingTime, act => act.MapFrom(dest => DateTime.Now));
+            CreateMap<CreateBookingRequest, BookingModel>();
 
             CreateMap<BookingModel, BookingResponse>()
                 .ForMember(src => src.Country, act => act.MapFrom(dest => dest.RentalPoint.Country.Title))

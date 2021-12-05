@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Models.Request.Booking;
 using API.Models.Response.Booking;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
+using Business.Policies;
 using Business.Query.Booking;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +27,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = Policy.ForUserOnly)]
         public async Task<IActionResult> CreateAsync([FromHeader] string authorization, [FromBody] CreateBookingRequest bookingRequest)
         {
             var booking = _mapper.Map<CreateBookingRequest, BookingModel>(bookingRequest);
@@ -41,6 +44,15 @@ namespace API.Controllers
             var (bookingsModels, itemsTotalCount) = await _bookingService.GetAllAsync(authorization, queryModel);
             var bookings = _mapper.Map<List<BookingModel>, List<BookingResponse>>(bookingsModels);
             return Ok(new { bookings, itemsTotalCount });
+        }
+
+        [HttpDelete]
+        [Authorize(Policy = Policy.ForUserOnly)]
+        [Route("{bookingId:guid}")]
+        public async Task<IActionResult> DeleteAsync([FromHeader] string authorization, [FromRoute] Guid bookingId)
+        {
+            await _bookingService.DeleteAsync(authorization, bookingId);
+            return Ok();
         }
     }
 }

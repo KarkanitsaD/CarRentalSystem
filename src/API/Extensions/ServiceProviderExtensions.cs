@@ -69,7 +69,7 @@ namespace API.Extensions
                 options.CacheProfiles.Add(CacheOptions.CacheOptions.BaseCacheProfile, new CacheProfile()
                 {
                     Location = ResponseCacheLocation.Client,
-                    Duration = 60
+                    Duration = 300
                 });
             });
 

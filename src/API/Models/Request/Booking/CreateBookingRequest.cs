@@ -9,5 +9,6 @@ namespace API.Models.Request.Booking
         public Guid RentalPointId { get; set; }
         public DateTime KeyReceivingTime { get; set; }
         public DateTime KeyHandOverTime { get; set; }
+        public DateTime BookingTime { get; set; }
     }
 }
