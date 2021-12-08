@@ -33,7 +33,7 @@ namespace Business.Services
             _context = context;
         }
 
-        public async Task CreateAsync(string authorization, BookingModel bookingModel)
+        public async Task CreateAsync(Guid userId, BookingModel bookingModel)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
             try
@@ -45,12 +45,15 @@ namespace Business.Services
                     throw new NotFoundException("Car not found.");
                 }
 
+                var carLock = await _context.CarLocks.FirstOrDefaultAsync(cl => cl.CarId == bookingModel.CarId);
+                if (carLock != null)
+                {
+                    _context.CarLocks.Remove(carLock);
+                }
+                await _context.SaveChangesAsync();
+
                 var rentalPoint = await _context.RentalPoints.Include(rp => rp.City)
                     .FirstOrDefaultAsync(rp => rp.Id == bookingModel.RentalPointId);
-
-                var carEntity = await _context.Cars.FirstOrDefaultAsync(car => car.Id == bookingModel.CarId);
-                carEntity.LastViewTime = DateTime.MinValue;
-                await _context.SaveChangesAsync();
 
                 if (bookingModel.KeyReceivingTime < DateTime.UtcNow.AddSeconds(rentalPoint.City.TimeOffset))
                 {
@@ -66,9 +69,7 @@ namespace Business.Services
                     throw new BadRequestException("The booking for the given time already exists.");
                 }
 
-                var userId = _tokenService.GetClaimFromJwt(authorization.Split(' ')[1], ClaimTypes.NameIdentifier)
-                    .Value;
-                bookingModel.UserId = Guid.Parse(userId);
+                bookingModel.UserId = userId;
                 var entity = _mapper.Map<BookingModel, BookingEntity>(bookingModel);
 
                 await _context.Bookings.AddAsync(entity);

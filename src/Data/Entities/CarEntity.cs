@@ -17,6 +17,7 @@ namespace Data.Entities
         public RentalPointEntity RentalPoint { get; set; }
         public DateTime LastViewTime { get; set; }
         public CarPictureEntity Picture { get; set; }
+        public CarLockEntity CarLockEntity { get; set; }
 
         public ICollection<BookingEntity> Bookings { get; set; }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Models.Request.Booking;
 using API.Models.Response.Booking;
@@ -20,19 +21,23 @@ namespace API.Controllers
     {
         private readonly IBookingService _bookingService;
         private readonly IMapper _mapper;
-        public BookingsController(IBookingService bookingService, IMapper mapper)
+        private readonly ITokenService _tokenService;
+        public BookingsController(IBookingService bookingService, IMapper mapper, ITokenService tokenService)
         {
             _bookingService = bookingService;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
 
         [HttpPost]
         [Authorize(Policy = Policy.ForUserOnly)]
         public async Task<IActionResult> CreateAsync([FromHeader] string authorization, [FromBody] CreateBookingRequest bookingRequest)
         {
+            var userId = _tokenService.GetClaimFromJwt(authorization.Split(' ')[1], ClaimTypes.NameIdentifier).Value;
+
             var booking = _mapper.Map<CreateBookingRequest, BookingModel>(bookingRequest);
 
-            await _bookingService.CreateAsync(authorization, booking);
+            await _bookingService.CreateAsync(Guid.Parse(userId), booking);
 
             return Ok();
         }

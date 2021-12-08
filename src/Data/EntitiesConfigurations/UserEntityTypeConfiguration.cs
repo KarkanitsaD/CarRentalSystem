@@ -32,6 +32,10 @@ namespace Data.EntitiesConfigurations
                 .HasForeignKey(u => u.RoleId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            builder.HasOne(u => u.CarLockEntity)
+                .WithOne(l => l.User)
+                .HasForeignKey<CarLockEntity>(l => l.UserId);
+
             builder.HasMany(u => u.Bookings)
                 .WithOne(o => o.User)
                 .HasForeignKey(o => o.UserId)

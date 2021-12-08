@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Models.Request.Car;
 using API.Models.Response.Car;
@@ -9,22 +11,27 @@ using Business.Models;
 using Business.Policies;
 using Business.Query.Car;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     public class CarsController : ControllerBase
     {
         private readonly ICarService _carService;
         private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CarsController(ICarService carService, IMapper mapper)
+        public CarsController(ICarService carService, IMapper mapper, ITokenService tokenService, IHttpContextAccessor httpContextAccessor)
         {
             _carService = carService;
             _mapper = mapper;
+            _tokenService = tokenService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -37,21 +44,23 @@ namespace API.Controllers
 
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetCarsAsync([FromQuery] CarQueryModel queryModel)
         {
-            var (carsModels, itemsTotalCount) = await _carService.GetPageListAsync(queryModel);
+            var idClaim = _httpContextAccessor.HttpContext.User
+                .Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier);
+            Guid? userId = idClaim == null ? (Guid?) null : Guid.Parse(idClaim.Value);
+            var (carsModels, itemsTotalCount) = await _carService.GetPageListAsync(queryModel, userId);
             var cars = _mapper.Map<List<CarModel>, List<CarResponseModel>>(carsModels);
             return Ok(new { cars, itemsTotalCount });
-            
         }
 
         [HttpPut]
         [Route("{carId:guid}/lock")]
         [Authorize]
-        public async Task<IActionResult> LockCarAsync([FromRoute] Guid carId)
+        public async Task<IActionResult> LockCarAsync([FromHeader] string authorization, [FromRoute] Guid carId)
         {
-            await _carService.LockCarAsync(carId);
+            var userIdClaim = _tokenService.GetClaimFromJwt(authorization.Split(' ')[1], ClaimTypes.NameIdentifier).Value;
+            await _carService.LockCarAsync(carId, Guid.Parse(userIdClaim));
             return Ok();
         }
 

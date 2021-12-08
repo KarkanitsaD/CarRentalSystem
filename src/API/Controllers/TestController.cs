@@ -1,5 +1,8 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace API.Controllers
 {
@@ -8,9 +11,10 @@ namespace API.Controllers
     public class TestController: ControllerBase
     {
         [HttpPost]
-        public IActionResult Post([FromBody] DateTime date)
+        [Authorize]
+        public IActionResult Post([FromHeader] string authorization)
         {
-            return Ok(date);
+            return Ok();
         }
     }
 }

@@ -27,6 +27,7 @@ namespace Data
         public DbSet<BookingEntity> Bookings { get; set; }
         public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
         public DbSet<CarPictureEntity> CarPictureEntities { get; set; }
+        public DbSet<CarLockEntity> CarLocks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

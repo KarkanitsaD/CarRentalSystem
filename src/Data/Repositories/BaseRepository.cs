@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Entities;
-using Data.IRepositories;
 using Data.Query;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
-    public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
+    public abstract class BaseRepository<TEntity>
         where TEntity : Entity
     {
 

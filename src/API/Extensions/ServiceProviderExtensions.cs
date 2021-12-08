@@ -21,6 +21,7 @@ namespace API.Extensions
             services.AddScoped<ICarPictureRepository, CarPictureRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
+            services.AddScoped<ICarLockRepository, CarLockRepository>();
 
             return services;
         }

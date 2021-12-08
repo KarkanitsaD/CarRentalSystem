@@ -19,13 +19,17 @@ namespace Business.Services
         private readonly ICarRepository _carRepository;
         private readonly IRentalPointRepository _rentalPointRepository;
         private readonly ICarPictureRepository _carPictureRepository;
+        private readonly ICarLockRepository _carLockRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CarService(IMapper mapper, ICarRepository carRepository, IRentalPointRepository rentalPointRepository, ICarPictureRepository carPictureRepository)
+        public CarService(IMapper mapper, ICarRepository carRepository, IRentalPointRepository rentalPointRepository, ICarPictureRepository carPictureRepository, ICarLockRepository carLockRepository, IUserRepository userRepository)
         {
             _mapper = mapper;
             _carRepository = carRepository;
             _rentalPointRepository = rentalPointRepository;
             _carPictureRepository = carPictureRepository;
+            _carLockRepository = carLockRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<CarModel> GetAsync(Guid id)
@@ -38,7 +42,7 @@ namespace Business.Services
             return _mapper.Map<CarEntity, CarModel>(entity);
         }
 
-        public async Task<(List<CarModel>, int)> GetPageListAsync(CarQueryModel queryModel)
+        public async Task<(List<CarModel>, int)> GetPageListAsync(CarQueryModel queryModel, Guid? userId)
         {
             if (!queryModel.IsValidPagination)
             {
@@ -47,7 +51,7 @@ namespace Business.Services
 
             var query = new QueryParameters<CarEntity>
             {
-                FilterRule = GetFilterRule(queryModel),
+                FilterRule = GetFilterRule(queryModel, userId),
                 PaginationRule = GetPaginationRule(queryModel)
             };
 
@@ -118,11 +122,43 @@ namespace Business.Services
             await _carRepository.UpdateAsync(car);
         }
 
-        protected virtual FilterRule<CarEntity> GetFilterRule(CarQueryModel carModel) =>
+        public async Task LockCarAsync(Guid carId, Guid userId)
+        {
+            var carToLock = await _carRepository.GetAsync(carId);
+            if (carToLock.CarLockEntity != null)
+            {
+                if (carToLock.CarLockEntity.LockTime.AddMinutes(5) < DateTime.Now)
+                {
+                    throw new BadRequestException("This car is already locked.");
+                }
+
+                await _carLockRepository.DeleteAsync(carToLock.CarLockEntity);
+            }
+
+            var user = await _userRepository.GetWithCarLockAsync(userId);
+            if (user.CarLockEntity != null)
+            {
+                user.CarLockEntity.CarId = carId;
+                user.CarLockEntity.LockTime = DateTime.Now;
+                await _carLockRepository.UpdateAsync(user.CarLockEntity);
+            }
+            else
+            {
+                var carLock = new CarLockEntity
+                {
+                    UserId = userId,
+                    CarId = carId,
+                    LockTime = DateTime.Now
+                };
+                await _carLockRepository.CreateAsync(carLock);
+            }
+        }
+
+        protected virtual FilterRule<CarEntity> GetFilterRule(CarQueryModel carModel, Guid? userId) =>
             new FilterRule<CarEntity>
             {
                 FilterExpression = car =>
-                    car.LastViewTime.AddMinutes(5) < DateTime.Now &&
+                    (car.CarLockEntity != null && (car.CarLockEntity.LockTime.AddMinutes(5) < DateTime.Now || car.CarLockEntity.UserId == userId)|| car.CarLockEntity == null) &&
                     (carModel.KeyReceivingTime != null && carModel.KeyHandOverTime != null && car.Bookings.AsQueryable()
                          .Count(booking => 
                              !(booking.KeyReceivingTime > carModel.KeyReceivingTime && booking.KeyReceivingTime > carModel.KeyHandOverTime ||

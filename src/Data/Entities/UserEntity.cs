@@ -12,6 +12,7 @@ namespace Data.Entities
         public Guid? RoleId { get; set; }
         public RoleEntity Role { get; set; }
         public RefreshTokenEntity RefreshToken { get; set; }
+        public CarLockEntity CarLockEntity { get; set; }
         public ICollection<BookingEntity> Bookings { get; set; }
     }
 }

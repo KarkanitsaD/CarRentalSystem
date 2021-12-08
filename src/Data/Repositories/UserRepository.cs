@@ -58,5 +58,10 @@ namespace Data.Repositories
         {
             return DbSet.Include(user => user.Role).FirstOrDefaultAsync(user => user.Id == id);
         }
+
+        public async Task<UserEntity> GetWithCarLockAsync(Guid userId)
+        {
+            return await DbSet.Include(user => user.CarLockEntity).FirstOrDefaultAsync(user => user.Id == userId);
+        }
     }
 }

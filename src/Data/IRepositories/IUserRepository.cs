@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Data.Entities;
 
 namespace Data.IRepositories
@@ -8,5 +9,6 @@ namespace Data.IRepositories
         Task<UserEntity> GetByCredentialsAsync(string email, string password);
         Task<UserEntity> GetByEmailAsync(string email);
         Task<UserEntity> GetByRefreshTokenAsync(string refreshToken);
+        Task<UserEntity> GetWithCarLockAsync(Guid userId);
     }
 }
