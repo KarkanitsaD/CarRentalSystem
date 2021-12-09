@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
@@ -9,8 +8,7 @@ using Business.Models;
 using Business.Query.RentalPoint;
 using Data.Entities;
 using Data.IRepositories;
-using Data.Query;
-using Microsoft.EntityFrameworkCore;
+using Data.Query.FiltrationModels;
 
 namespace Business.Services
 {
@@ -41,13 +39,8 @@ namespace Business.Services
 
         public async Task<(List<RentalPointModel>, int)> GetPageListAsync(RentalPointQueryModel queryModel)
         {
-            var queryParameters = new QueryParameters<RentalPointEntity>
-            {
-                FilterRule = GetFilterRule(queryModel),
-                PaginationRule = GetPaginationRule(queryModel)
-            };
-
-            var result = await _rentalPointRepository.GetPageListAsync(queryParameters);
+            var rentalPointFilter = _mapper.Map<RentalPointQueryModel, RentalPointFiltrationModel>(queryModel);
+            var result = await _rentalPointRepository.GetPageListAsync(rentalPointFilter, queryModel.PageIndex, queryModel.PageSize);
 
             var rentalPointModels = _mapper.Map<List<RentalPointEntity>, List<RentalPointModel>>(result.Items); 
 
@@ -105,12 +98,7 @@ namespace Business.Services
             var countryModel = rentalPoint.Country;
             var cityModel = rentalPoint.City;
 
-            var countryFilterRule = new FilterRule<CountryEntity>
-            {
-                FilterExpression = country => country.Title == countryModel.Title
-            };
-
-            countryEntity = await _countryRepository.GetAsync(countryFilterRule);
+            countryEntity = await _countryRepository.GetByTitleAsync(countryModel.Title);
             if (countryEntity == null)
             {
                 countryEntity = await _countryRepository.CreateAsync(_mapper.Map<CountryModel, CountryEntity>(countryModel));
@@ -120,45 +108,14 @@ namespace Business.Services
             }
             else
             {
-                var cityFilterRule = new FilterRule<CityEntity>
-                {
-                    FilterExpression = city => city.Title == cityModel.Title && city.CountryId == countryEntity.Id
-                };
-                cityEntity = await _cityRepository.GetAsync(cityFilterRule);
+                cityEntity = await _cityRepository.GetByTitleAndCountryIdAsync(cityModel.Title, countryEntity.Id);
                 if (cityEntity == null)
                 {
                     cityModel.CountryId = countryEntity.Id;
                     cityEntity = await _cityRepository.CreateAsync(_mapper.Map<CityModel, CityEntity>(cityModel));
                 }
             }
-
             return (countryEntity.Id, cityEntity.Id);
         }
-
-        protected virtual FilterRule<RentalPointEntity> GetFilterRule(RentalPointQueryModel rpModel)
-        {
-            rpModel.NumberOfAvailableCars ??= 1;
-            var filterRule = new FilterRule<RentalPointEntity>
-            {
-                FilterExpression = rentalPoint =>
-                    (rpModel.KeyReceivingTime != null && rpModel.KeyHandOverTime != null &&
-                     rentalPoint.Cars.AsQueryable().Include(car => car.Bookings)
-                         .Count(car => car.LastViewTime.AddMinutes(5) < DateTime.Now && car.Bookings.AsQueryable()
-                             .Count(booking =>
-                                 !(booking.KeyReceivingTime > rpModel.KeyReceivingTime && booking.KeyReceivingTime > rpModel.KeyHandOverTime ||
-                                   booking.KeyHandOverTime < rpModel.KeyReceivingTime && booking.KeyHandOverTime < rpModel.KeyHandOverTime)) == 0) >= rpModel.NumberOfAvailableCars ||
-                     rpModel.KeyReceivingTime == null || rpModel.KeyHandOverTime == null) &&
-                    (rpModel.CountryId != null && rentalPoint.CountryId == rpModel.CountryId || rpModel.CountryId == null) &&
-                    (rpModel.CityId != null && rentalPoint.CityId == rpModel.CityId || rpModel.CityId == null)
-            };
-
-            return filterRule;
-        }
-
-        protected virtual PaginationRule GetPaginationRule(RentalPointQueryModel rpModel) => new PaginationRule
-        {
-            Index = rpModel.PageIndex,
-            Size = rpModel.PageSize
-        };
     }
 }

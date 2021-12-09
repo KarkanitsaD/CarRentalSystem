@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Business.Models;
+using Business.Query.RentalPoint;
 using Data.Entities;
+using Data.Query.FiltrationModels;
 
 namespace Business.MappingProfiles
 {
@@ -16,6 +18,8 @@ namespace Business.MappingProfiles
                 .ForMember(src => src.Country, act => act.Ignore())
                 .ForMember(src => src.Bookings, act => act.Ignore())
                 .ForMember(src => src.Cars, act => act.Ignore());
+
+            CreateMap<RentalPointQueryModel, RentalPointFiltrationModel>();
         }
     }
 }

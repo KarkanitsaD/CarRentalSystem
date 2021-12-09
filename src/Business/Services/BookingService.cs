@@ -14,6 +14,7 @@ using Data;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query;
+using Data.Query.FiltrationModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
@@ -95,18 +96,10 @@ namespace Business.Services
             }
         }
 
-        public async Task<(List<BookingModel>, int)> GetAllAsync(string authorization, BookingQueryModel queryModel)
+        public async Task<(List<BookingModel>, int)> GetAllAsync(Guid userId, BookingQueryModel queryModel)
         {
-            var jwt = authorization.Split(' ')[1];
-            var idClaim = _tokenService.GetClaimFromJwt(jwt, ClaimTypes.NameIdentifier);
-            var userId = Guid.Parse(idClaim.Value);
-            var queryParameters = new QueryParameters<BookingEntity>
-            {
-                FilterRule = GetBookingFilterRule(queryModel, userId),
-                PaginationRule = GetPaginationRule(queryModel)
-            };
-
-            var result = await _bookingRepository.GetPageListAsync(queryParameters);
+            var bookingFiltration = _mapper.Map<BookingQueryModel, BookingFiltrationModel>(queryModel);
+            var result = await _bookingRepository.GetPageListAsync(userId, bookingFiltration, queryModel.PageIndex, queryModel.PageSize);
 
             var bookings = _mapper.Map<List<BookingEntity>, List<BookingModel>>(result.Items);
             return (bookings, result.TotalItemsCount);
@@ -151,23 +144,5 @@ namespace Business.Services
                     rentalPoint.Id == rentalPointId &&
                     rentalPoint.Cars.AsQueryable().Count(car => car.Id == carId) > 0
             };
-
-        protected virtual FilterRule<BookingEntity> GetBookingFilterRule(BookingQueryModel queryModel, Guid userId) =>
-            new FilterRule<BookingEntity>
-            {
-                FilterExpression = booking =>
-                    (userId != null && userId == booking.UserId || userId == null) &&
-                    (queryModel.CountryId != null && booking.RentalPoint.CountryId == queryModel.CountryId || queryModel.CountryId == null) && 
-                    (queryModel.CityId != null && booking.RentalPoint.CityId == queryModel.CityId || queryModel.CityId == null) && 
-                    (queryModel.GetCurrent == null ||
-                     queryModel.GetCurrent == false && booking.KeyHandOverTime < DateTime.UtcNow.AddSeconds(booking.RentalPoint.City.TimeOffset) ||
-                     queryModel.GetCurrent == true && booking.KeyHandOverTime > DateTime.UtcNow.AddSeconds(booking.RentalPoint.City.TimeOffset))
-            };
-
-        protected virtual PaginationRule GetPaginationRule(BookingQueryModel queryModel) => new PaginationRule
-        {
-            Index = queryModel.PageIndex,
-            Size = queryModel.PageSize
-        };
     }
 }

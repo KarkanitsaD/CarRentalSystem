@@ -1,7 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query;
+using Data.Query.FiltrationModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
@@ -13,26 +17,33 @@ namespace Data.Repositories
         {
         }
 
-        public override async Task<PageResult<BookingEntity>> GetPageListAsync(QueryParameters<BookingEntity> queryParameters)
+        public async Task<PageResult<BookingEntity>> GetPageListAsync(Guid userId, BookingFiltrationModel bookingFiltrationModel, int pageIndex, int pageSize)
         {
-            var query = DbSet.AsQueryable();
+            var queryable = DbSet.AsQueryable().Where(GetFilterExpression(userId, bookingFiltrationModel));
+            var totalItemsCount = await queryable.CountAsync();
 
-            query = query.Include(b => b.Car)
-                .Include(b => b.RentalPoint).ThenInclude(rp => rp.Country)
-                .Include(b => b.RentalPoint).ThenInclude(rp => rp.City);
-
-            query = BaseQuery(query, queryParameters);
-
-            int totalItemsCount = await query.CountAsync();
-
-            if (queryParameters.PaginationRule.IsValid)
-            {
-                query = PaginationQuery(query, queryParameters.PaginationRule);
-            }
-
-            var items = await query.ToListAsync();
+            var items = await queryable.Skip(pageSize * pageIndex).Take(pageSize)
+                .Include(b => b.RentalPoint)
+                    .ThenInclude(rp => rp.Country)
+                .Include(b => b.RentalPoint)
+                    .ThenInclude(rp => rp.City).ToListAsync();
 
             return new PageResult<BookingEntity>(items, totalItemsCount);
+        }
+
+        private Expression<Func<BookingEntity, bool>> GetFilterExpression(Guid userId, BookingFiltrationModel filtrationModel)
+        {
+            return booking =>
+                userId == booking.UserId &&
+                (filtrationModel.CountryId != null && booking.RentalPoint.CountryId == filtrationModel.CountryId ||
+                 filtrationModel.CountryId == null) &&
+                (filtrationModel.CityId != null && booking.RentalPoint.CityId == filtrationModel.CityId ||
+                 filtrationModel.CityId == null) &&
+                (filtrationModel.GetCurrent == null ||
+                 filtrationModel.GetCurrent == false && booking.KeyHandOverTime <
+                 DateTime.UtcNow.AddSeconds(booking.RentalPoint.City.TimeOffset) ||
+                 filtrationModel.GetCurrent == true && booking.KeyHandOverTime >
+                 DateTime.UtcNow.AddSeconds(booking.RentalPoint.City.TimeOffset));
         }
     }
 }

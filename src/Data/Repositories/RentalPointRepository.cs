@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query;
+using Data.Query.FiltrationModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
@@ -16,29 +18,46 @@ namespace Data.Repositories
 
         }
 
-        public override async Task<PageResult<RentalPointEntity>> GetPageListAsync(QueryParameters<RentalPointEntity> queryParameters)
+        public override async Task<RentalPointEntity> GetAsync(Guid id)
         {
-            var query = DbSet.AsQueryable();
+            return await DbSet.Include(rp => rp.City)
+                .Include(rp => rp.Country)
+                .FirstOrDefaultAsync(rp => rp.Id == id);
+        }
 
-            query = query.Include(rp => rp.City).Include(rp => rp.Country);
+        public async Task<PageResult<RentalPointEntity>> GetPageListAsync(RentalPointFiltrationModel rentalPointFiltrationModel, int pageIndex, int pageSize)
+        {
+            var queryable = DbSet.AsQueryable().Where(GetFilterExpression(rentalPointFiltrationModel));
+            var totalItemsCount = await queryable.CountAsync();
 
-            query = BaseQuery(query, queryParameters);
+            queryable = queryable.Include(rp => rp.City)
+                .Include(rp => rp.Country);
 
-            int totalItemsCount = await query.CountAsync();
-
-            if (queryParameters.PaginationRule is {IsValid: true})
-            {
-                query = PaginationQuery(query, queryParameters.PaginationRule);
-            }
-
-            var items = await query.ToListAsync();
+            var items = await queryable.ToListAsync();
 
             return new PageResult<RentalPointEntity>(items, totalItemsCount);
         }
 
-        public override async Task<RentalPointEntity> GetAsync(Guid id)
+        private Expression<Func<RentalPointEntity, bool>> GetFilterExpression(
+            RentalPointFiltrationModel filtrationModel)
         {
-            return await DbSet.Include(rp => rp.City).Include(rp => rp.Country).FirstOrDefaultAsync(rp => rp.Id == id);
+            return rentalPoint =>
+                (filtrationModel.KeyReceivingTime != null && filtrationModel.KeyHandOverTime != null &&
+                 rentalPoint.Cars.AsQueryable().Include(car => car.Bookings)
+                     .Count(car => 
+                         (car.CarLockEntity != null && car.CarLockEntity.LockTime.AddMinutes(5) < DateTime.Now || car.CarLockEntity == null) &&
+                                   car.Bookings.AsQueryable()
+                         .Count(booking =>
+                             !(booking.KeyReceivingTime > filtrationModel.KeyReceivingTime &&
+                               booking.KeyReceivingTime > filtrationModel.KeyHandOverTime ||
+                               booking.KeyHandOverTime < filtrationModel.KeyReceivingTime &&
+                               booking.KeyHandOverTime < filtrationModel.KeyHandOverTime)) == 0) >=
+                 filtrationModel.NumberOfAvailableCars ||
+                 filtrationModel.KeyReceivingTime == null || filtrationModel.KeyHandOverTime == null) &&
+                (filtrationModel.CountryId != null && rentalPoint.CountryId == filtrationModel.CountryId ||
+                 filtrationModel.CountryId == null) &&
+                (filtrationModel.CityId != null && rentalPoint.CityId == filtrationModel.CityId ||
+                 filtrationModel.CityId == null);
         }
     }
 }

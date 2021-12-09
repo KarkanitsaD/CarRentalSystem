@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Business.Models;
+using Business.Query;
 using Data.Entities;
+using Data.Query.FiltrationModels;
 
 namespace Business.MappingProfiles
 {
@@ -13,6 +15,8 @@ namespace Business.MappingProfiles
             CreateMap<UserModel, UserEntity>()
                 .ForMember(src => src.RefreshToken, act => act.Ignore())
                 .ForMember(src => src.Bookings, act => act.Ignore());
+
+            CreateMap<UserQueryModel, UserFiltrationModel>();
         }
     }
 }

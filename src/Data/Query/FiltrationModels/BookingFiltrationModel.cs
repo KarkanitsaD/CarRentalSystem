@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Business.Query.Booking
+namespace Data.Query.FiltrationModels
 {
-    public class BookingQueryModel : QueryModel
+    public class BookingFiltrationModel
     {
         public Guid? CountryId { get; set; }
         public Guid? CityId { get; set; }
         public bool? GetCurrent { get; set; }
-        public Guid UserId { get; set; }
     }
 }

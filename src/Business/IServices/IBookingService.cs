@@ -9,7 +9,7 @@ namespace Business.IServices
     public interface IBookingService
     {
         Task CreateAsync(Guid userId, BookingModel bookingModel);
-        Task<(List<BookingModel>, int)> GetAllAsync(string authorization, BookingQueryModel queryModel);
+        Task<(List<BookingModel>, int)> GetAllAsync(Guid userId, BookingQueryModel queryModel);
         Task DeleteAsync(string authorization, Guid bookingId);
     }
 }

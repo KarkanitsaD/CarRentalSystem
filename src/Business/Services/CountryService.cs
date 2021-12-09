@@ -7,7 +7,6 @@ using Business.IServices;
 using Business.Models;
 using Data.Entities;
 using Data.IRepositories;
-using Data.Query;
 
 namespace Business.Services
 {
@@ -29,12 +28,7 @@ namespace Business.Services
 
         public async Task<CountryModel> CreateAsync(string title)
         {
-            var filterRule = new FilterRule<CountryEntity>
-            {
-                FilterExpression = country => country.Title == title
-            };
-
-            if (await _countryRepository.CountAsync(filterRule) > 0)
+            if (await _countryRepository.GetByTitleAsync(title) != null)
             {
                 throw new BadRequestException($"Country with title = {title} already exists");
             }

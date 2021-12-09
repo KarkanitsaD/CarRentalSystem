@@ -14,20 +14,20 @@ namespace Data.Repositories
         {
         }
 
-        public override async Task<List<RoleEntity>> GetListAsync(QueryParameters<RoleEntity> queryParameters = null)
-        {
-            var query = DbSet.AsQueryable();
+        //public override async Task<List<RoleEntity>> GetListAsync(QueryParameters<RoleEntity> queryParameters = null)
+        //{
+        //    var query = DbSet.AsQueryable();
 
-            if (queryParameters == null)
-            {
-                return await query.Include(r => r.Users).ToListAsync();
-            }
+        //    if (queryParameters == null)
+        //    {
+        //        return await query.Include(r => r.Users).ToListAsync();
+        //    }
 
-            query = BaseQuery(query, queryParameters);
+        //    query = BaseQuery(query, queryParameters);
 
-            query.Include(r => r.Users);
+        //    query.Include(r => r.Users);
 
-            return await query.ToListAsync();
-        }
+        //    return await query.ToListAsync();
+        //}
     }
 }

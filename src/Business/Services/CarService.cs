@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
@@ -9,7 +8,7 @@ using Business.Models;
 using Business.Query.Car;
 using Data.Entities;
 using Data.IRepositories;
-using Data.Query;
+using Data.Query.FiltrationModels;
 
 namespace Business.Services
 {
@@ -22,7 +21,13 @@ namespace Business.Services
         private readonly ICarLockRepository _carLockRepository;
         private readonly IUserRepository _userRepository;
 
-        public CarService(IMapper mapper, ICarRepository carRepository, IRentalPointRepository rentalPointRepository, ICarPictureRepository carPictureRepository, ICarLockRepository carLockRepository, IUserRepository userRepository)
+        public CarService(
+            IMapper mapper,
+            ICarRepository carRepository,
+            IRentalPointRepository rentalPointRepository,
+            ICarPictureRepository carPictureRepository,
+            ICarLockRepository carLockRepository,
+            IUserRepository userRepository)
         {
             _mapper = mapper;
             _carRepository = carRepository;
@@ -49,13 +54,9 @@ namespace Business.Services
                 throw new BadRequestException("Pagination rule is not valid");
             }
 
-            var query = new QueryParameters<CarEntity>
-            {
-                FilterRule = GetFilterRule(queryModel, userId),
-                PaginationRule = GetPaginationRule(queryModel)
-            };
+            var filtrationModel = _mapper.Map<CarQueryModel, CarFiltrationModel>(queryModel);
 
-            var paginationResult = await _carRepository.GetPageListAsync(query);
+            var paginationResult = await _carRepository.GetPageListAsync(userId, filtrationModel, queryModel.PageIndex, queryModel.PageSize);
 
             var carModels = _mapper.Map<List<CarEntity>, List<CarModel>>(paginationResult.Items);
 
@@ -64,7 +65,7 @@ namespace Business.Services
 
         public async Task CreateAsync(CarModel addCarModel)
         {
-            if (!await _rentalPointRepository.ExistsAsync(addCarModel.RentalPointId))
+            if (await _rentalPointRepository.GetAsync(addCarModel.RentalPointId) == null)
             {
                 throw new BadRequestException("Invalid rental point Id");
             }
@@ -153,28 +154,5 @@ namespace Business.Services
                 await _carLockRepository.CreateAsync(carLock);
             }
         }
-
-        protected virtual FilterRule<CarEntity> GetFilterRule(CarQueryModel carModel, Guid? userId) =>
-            new FilterRule<CarEntity>
-            {
-                FilterExpression = car =>
-                    (car.CarLockEntity != null && (car.CarLockEntity.LockTime.AddMinutes(5) < DateTime.Now || car.CarLockEntity.UserId == userId)|| car.CarLockEntity == null) &&
-                    (carModel.KeyReceivingTime != null && carModel.KeyHandOverTime != null && car.Bookings.AsQueryable()
-                         .Count(booking => 
-                             !(booking.KeyReceivingTime > carModel.KeyReceivingTime && booking.KeyReceivingTime > carModel.KeyHandOverTime ||
-                               booking.KeyHandOverTime < carModel.KeyReceivingTime && booking.KeyHandOverTime < carModel.KeyHandOverTime)) == 0 ||
-                     carModel.KeyReceivingTime == null || carModel.KeyHandOverTime == null) &&
-                    (carModel.Brand != null && car.Brand.Contains(carModel.Brand) || carModel.Brand == null) &&
-                    (carModel.Color != null && car.Color == carModel.Color || carModel.Color == null) &&
-                    (carModel.MaxPricePerDay != null && car.PricePerDay < carModel.MaxPricePerDay || carModel.MaxPricePerDay == null) &&
-                    (carModel.MinPricePerDay != null && car.PricePerDay > carModel.MinPricePerDay || carModel.MinPricePerDay == null) &&
-                    (carModel.RentalPointId != null && car.RentalPointId == carModel.RentalPointId || carModel.RentalPointId == null) 
-            };
-
-        protected virtual PaginationRule GetPaginationRule(CarQueryModel carModel) => new PaginationRule
-        {
-            Index = carModel.PageIndex,
-            Size = carModel.PageSize
-        };
     }
 }
