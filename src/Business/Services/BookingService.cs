@@ -105,23 +105,16 @@ namespace Business.Services
             return (bookings, result.TotalItemsCount);
         }
 
-        public async Task DeleteAsync(string authorization, Guid id)
+        public async Task DeleteAsync(Guid userId, Guid id)
         {
             var entityToDelete = await _bookingRepository.GetAsync(id);
 
             if (entityToDelete == null)
                 throw new NotFoundException($"{nameof(entityToDelete)} with id = {id} not found.");
 
-            var jwt = authorization.Split(' ')[1];
-            var roleClaim = _tokenService.GetClaimFromJwt(jwt, ClaimTypes.Role);
-
-            if (roleClaim.Value == Policy.ForUserOnly)
-            {
-                var userId = _tokenService.GetClaimFromJwt(jwt, ClaimTypes.NameIdentifier).Value;
-                if (entityToDelete.UserId != Guid.Parse(userId))
-                {
-                    throw new NotAuthenticatedException($"No permission to delete booking with id = {id}.");
-                }
+            if (entityToDelete.UserId != userId)
+            { 
+                throw new NotAuthenticatedException($"No permission to delete booking with id = {id}.");
             }
 
             await _bookingRepository.DeleteAsync(entityToDelete);

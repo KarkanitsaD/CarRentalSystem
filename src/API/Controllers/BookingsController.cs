@@ -23,21 +23,20 @@ namespace API.Controllers
     {
         private readonly IBookingService _bookingService;
         private readonly IMapper _mapper;
-        private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BookingsController(IBookingService bookingService, IMapper mapper, ITokenService tokenService, IHttpContextAccessor httpContextAccessor)
+        public BookingsController(IBookingService bookingService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _bookingService = bookingService;
             _mapper = mapper;
-            _tokenService = tokenService;
             _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromHeader] string authorization, [FromBody] CreateBookingRequest bookingRequest)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateBookingRequest bookingRequest)
         {
-            var userId = _tokenService.GetClaimFromJwt(authorization.Split(' ')[1], ClaimTypes.NameIdentifier).Value;
+            var userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(claim =>
+                claim.Type == ClaimTypes.NameIdentifier)?.Value;
 
             var booking = _mapper.Map<CreateBookingRequest, BookingModel>(bookingRequest);
 
@@ -47,7 +46,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync([FromHeader] string authorization, [FromQuery] BookingQueryModel queryModel)
+        public async Task<IActionResult> GetAllAsync([FromQuery] BookingQueryModel queryModel)
         {
             var userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(claim =>
                     claim.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -59,9 +58,12 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{bookingId:guid}")]
-        public async Task<IActionResult> DeleteAsync([FromHeader] string authorization, [FromRoute] Guid bookingId)
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid bookingId)
         {
-            await _bookingService.DeleteAsync(authorization, bookingId);
+            var userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(claim =>
+                claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            await _bookingService.DeleteAsync(Guid.Parse(userId), bookingId);
             return Ok();
         }
     }

@@ -10,6 +10,6 @@ namespace Business.IServices
     {
         Task CreateAsync(Guid userId, BookingModel bookingModel);
         Task<(List<BookingModel>, int)> GetAllAsync(Guid userId, BookingQueryModel queryModel);
-        Task DeleteAsync(string authorization, Guid bookingId);
+        Task DeleteAsync(Guid userId, Guid bookingId);
     }
 }
