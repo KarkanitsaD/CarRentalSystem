@@ -18,7 +18,6 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = Policy.ForAdminOnly)]
     public class CarsController : ControllerBase
     {
         private readonly ICarService _carService;

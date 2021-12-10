@@ -128,7 +128,7 @@ namespace Business.Services
             var carToLock = await _carRepository.GetAsync(carId);
             if (carToLock.CarLockEntity != null)
             {
-                if (carToLock.CarLockEntity.LockTime.AddMinutes(5) < DateTime.Now)
+                if (carToLock.CarLockEntity.LockTime.AddMinutes(5) > DateTime.Now && carToLock.CarLockEntity.UserId != userId)
                 {
                     throw new BadRequestException("This car is already locked.");
                 }
