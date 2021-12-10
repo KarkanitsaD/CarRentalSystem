@@ -25,6 +25,7 @@ namespace API.Controllers
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+
         public BookingsController(IBookingService bookingService, IMapper mapper, ITokenService tokenService, IHttpContextAccessor httpContextAccessor)
         {
             _bookingService = bookingService;

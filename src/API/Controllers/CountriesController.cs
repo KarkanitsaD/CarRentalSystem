@@ -5,12 +5,15 @@ using API.Models.Response.Country;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
+using Business.Policies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = Policy.ForAdminOnly)]
     public class CountriesController : ControllerBase
     {
         private readonly ICountryService _countryService;
@@ -23,6 +26,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetListAsync()
         {
             var countries = await _countryService.GetListAsync();

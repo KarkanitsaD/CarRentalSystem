@@ -15,6 +15,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = Policy.ForAdminOnly)]
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -35,7 +36,6 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> CreateAsync([FromBody] CreateUserRequest createUserRequest)
         {
             var user = _mapper.Map<CreateUserRequest, CreateUserModel>(createUserRequest);
@@ -45,7 +45,6 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateUserRequest updateModel)
         {
             var user = _mapper.Map<UpdateUserRequest, UserModel>(updateModel);
@@ -55,7 +54,6 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
-        [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
         {
             await _userService.DeleteAsync(id);

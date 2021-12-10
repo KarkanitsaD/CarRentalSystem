@@ -17,8 +17,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
     [Route("api/[controller]")]
+    [Authorize(Policy = Policy.ForAdminOnly)]
     public class CarsController : ControllerBase
     {
         private readonly ICarService _carService;
@@ -36,6 +36,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{carId:guid}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCar([FromRoute] Guid carId)
         {
             var car = await _carService.GetAsync(carId);
@@ -44,6 +45,7 @@ namespace API.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCarsAsync([FromQuery] CarQueryModel queryModel)
         {
             var idClaim = _httpContextAccessor.HttpContext.User
@@ -56,7 +58,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{carId:guid}/lock")]
-        [Authorize]
+        [Authorize(Policy = Policy.ForUserOnly)]
         public async Task<IActionResult> LockCarAsync([FromHeader] string authorization, [FromRoute] Guid carId)
         {
             var userIdClaim = _tokenService.GetClaimFromJwt(authorization.Split(' ')[1], ClaimTypes.NameIdentifier).Value;
@@ -65,7 +67,6 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> AddCar([FromBody] CreateCarRequest addCarModel)
         {
             var car = _mapper.Map<CreateCarRequest, CarModel>(addCarModel);
@@ -75,7 +76,6 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{carId:guid}")]
-        [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> UpdateCar([FromRoute] Guid carId, [FromBody] UpdateCarRequest updateCarModel)
         {
             var car = _mapper.Map<UpdateCarRequest, CarModel>(updateCarModel);
@@ -85,7 +85,6 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{carId:guid}")]
-        [Authorize(Policy = Policy.ForAdminOnly)]
         public async Task<IActionResult> DeleteCar([FromRoute] Guid carId)
         {
             await _carService.DeleteAsync(carId);

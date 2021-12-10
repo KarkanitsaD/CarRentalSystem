@@ -6,13 +6,16 @@ using API.Models.Response.RentalPoint;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
+using Business.Policies;
 using Business.Query.RentalPoint;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = Policy.ForAdminOnly)]
     public class RentalPointsController : ControllerBase
     {
         private readonly IRentalPointService _rentalPointService;
@@ -33,6 +36,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllAsync([FromQuery] RentalPointQueryModel queryModel)
         {
             var (rentalPointsModels, itemsTotalCount) = await _rentalPointService.GetPageListAsync(queryModel);

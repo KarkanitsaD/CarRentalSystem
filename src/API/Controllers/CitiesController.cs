@@ -6,12 +6,15 @@ using API.Models.Response.City;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
+using Business.Policies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = Policy.ForAdminOnly)]
     public class CitiesController : ControllerBase
     {
         private readonly ICityService _cityService;
@@ -24,6 +27,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetListAsync()
         {
             var cities = await _cityService.GetListAsync();
