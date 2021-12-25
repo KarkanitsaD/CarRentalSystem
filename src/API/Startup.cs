@@ -1,3 +1,4 @@
+using API.ApplicationOptions;
 using API.Extensions;
 using Business.Extensions;
 using Business.Options;
@@ -64,7 +65,7 @@ namespace API
 
             app.UseRouting();
 
-            app.UseCors(CorsOptions.CorsOptions.WebApp);
+            app.UseCors(CorsOptions.WebApp);
 
             app.UseCors(x => x
                 .AllowAnyOrigin()
