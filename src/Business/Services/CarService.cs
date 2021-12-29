@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
 using Business.Query.Car;
+using Data;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query.FiltrationModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
@@ -18,23 +21,20 @@ namespace Business.Services
         private readonly ICarRepository _carRepository;
         private readonly IRentalPointRepository _rentalPointRepository;
         private readonly ICarPictureRepository _carPictureRepository;
-        private readonly ICarLockRepository _carLockRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly CarRentalSystemContext _context;
 
         public CarService(
             IMapper mapper,
             ICarRepository carRepository,
             IRentalPointRepository rentalPointRepository,
             ICarPictureRepository carPictureRepository,
-            ICarLockRepository carLockRepository,
-            IUserRepository userRepository)
+            CarRentalSystemContext context)
         {
             _mapper = mapper;
             _carRepository = carRepository;
             _rentalPointRepository = rentalPointRepository;
             _carPictureRepository = carPictureRepository;
-            _carLockRepository = carLockRepository;
-            _userRepository = userRepository;
+            _context = context;
         }
 
         public async Task<CarModel> GetAsync(Guid id)
@@ -125,33 +125,45 @@ namespace Business.Services
 
         public async Task LockCarAsync(Guid carId, Guid userId)
         {
-            var carToLock = await _carRepository.GetAsync(carId);
-            if (carToLock.CarLockEntity != null)
+            await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+            try
             {
-                if (carToLock.CarLockEntity.LockTime.AddMinutes(5) > DateTime.Now && carToLock.CarLockEntity.UserId != userId)
+                var carToLock = await _context.Cars.Include(c => c.CarLockEntity).FirstOrDefaultAsync(c => c.Id == carId);
+                if (carToLock.CarLockEntity != null)
                 {
-                    throw new BadRequestException("This car is already locked.");
+                    if (carToLock.CarLockEntity.LockTime.AddMinutes(5) > DateTime.Now &&
+                        carToLock.CarLockEntity.UserId != userId)
+                    {
+                        throw new BadRequestException("This car is already locked.");
+                    }
+                    _context.CarLocks.Remove(carToLock.CarLockEntity);
+                    await _context.SaveChangesAsync();
                 }
 
-                await _carLockRepository.DeleteAsync(carToLock.CarLockEntity);
-            }
-
-            var user = await _userRepository.GetWithCarLockAsync(userId);
-            if (user.CarLockEntity != null)
-            {
-                user.CarLockEntity.CarId = carId;
-                user.CarLockEntity.LockTime = DateTime.Now;
-                await _carLockRepository.UpdateAsync(user.CarLockEntity);
-            }
-            else
-            {
-                var carLock = new CarLockEntity
+                var user = await _context.Users.Include(u => u.CarLockEntity).FirstOrDefaultAsync(u => u.Id == userId);
+                if (user.CarLockEntity != null)
                 {
-                    UserId = userId,
-                    CarId = carId,
-                    LockTime = DateTime.Now
-                };
-                await _carLockRepository.CreateAsync(carLock);
+                    user.CarLockEntity.CarId = carId;
+                    user.CarLockEntity.LockTime = DateTime.Now;
+                    _context.CarLocks.Update(user.CarLockEntity);
+                }
+                else
+                {
+                    var carLock = new CarLockEntity
+                    {
+                        UserId = userId,
+                        CarId = carId,
+                        LockTime = DateTime.Now
+                    };
+                    await _context.CarLocks.AddAsync(carLock);
+                }
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("Transaction is canceled!");
             }
         }
     }

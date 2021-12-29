@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -39,9 +40,9 @@ namespace Business.Services
             await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
             try
             {
-                var carFilterRule = GetCarFilterRule((Guid) bookingModel.RentalPointId, bookingModel.CarId);
+                var carFilter = GetCarFilterExpression((Guid) bookingModel.RentalPointId, bookingModel.CarId);
 
-                if (await _context.RentalPoints.CountAsync(carFilterRule.FilterExpression) == 0)
+                if (await _context.RentalPoints.CountAsync(carFilter) == 0)
                 {
                     throw new NotFoundException("Car not found.");
                 }
@@ -62,10 +63,10 @@ namespace Business.Services
                         "Invalid time range for this country. Entered time is over in this country!");
                 }
 
-                var filetRule = GetBookingExistsFilterRule(bookingModel.CarId, bookingModel.KeyReceivingTime,
+                var bookingFilter = GetBookingExistsFilterExpression(bookingModel.CarId, bookingModel.KeyReceivingTime,
                     bookingModel.KeyHandOverTime);
 
-                if (await _context.Bookings.CountAsync(filetRule.FilterExpression) > 0)
+                if (await _context.Bookings.CountAsync(bookingFilter) > 0)
                 {
                     throw new BadRequestException("The booking for the given time already exists.");
                 }
@@ -127,22 +128,21 @@ namespace Business.Services
             await _bookingRepository.DeleteAsync(entityToDelete);
         }
 
-        protected virtual FilterRule<BookingEntity> GetBookingExistsFilterRule(Guid carId,
+        protected virtual Expression<Func<BookingEntity, bool>> GetBookingExistsFilterExpression(Guid carId,
             DateTimeOffset keyReceivingTime,
-            DateTimeOffset keyHandOverTime) => new FilterRule<BookingEntity>
+            DateTimeOffset keyHandOverTime)
         {
-            FilterExpression = booking =>
+            return booking =>
                 booking.CarId == carId &&
                 !(booking.KeyReceivingTime > keyReceivingTime && booking.KeyReceivingTime > keyHandOverTime ||
-                  booking.KeyHandOverTime < keyReceivingTime && booking.KeyHandOverTime < keyHandOverTime)
-        };
+                  booking.KeyHandOverTime < keyReceivingTime && booking.KeyHandOverTime < keyHandOverTime);
+        }
 
-        protected virtual FilterRule<RentalPointEntity> GetCarFilterRule(Guid rentalPointId, Guid carId) =>
-            new FilterRule<RentalPointEntity>
-            {
-                FilterExpression = rentalPoint => 
-                    rentalPoint.Id == rentalPointId &&
-                    rentalPoint.Cars.AsQueryable().Count(car => car.Id == carId) > 0
-            };
+        protected virtual Expression<Func<RentalPointEntity, bool>> GetCarFilterExpression(Guid rentalPointId, Guid carId)
+        {
+            return rentalPoint =>
+                rentalPoint.Id == rentalPointId &&
+                rentalPoint.Cars.AsQueryable().Count(car => car.Id == carId) > 0;
+        }
     }
 }
