@@ -1,4 +1,4 @@
-﻿namespace API.CorsOptions
+﻿namespace API.ApplicationOptions
 {
     public class CorsOptions
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using API.ApplicationOptions;
 using API.Models.Response.CarPicture;
 using AutoMapper;
 using Business.IServices;
@@ -28,7 +29,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{carId}")]
-        [ResponseCache(CacheProfileName = CacheOptions.CacheOptions.BaseCacheProfile)]
+        [ResponseCache(CacheProfileName = CacheOptions.BaseCacheProfile)]
         public async Task<IActionResult> GetAsync(Guid carId, [FromHeader] string authorization)
         {
             SetCacheOptions(Response, authorization);

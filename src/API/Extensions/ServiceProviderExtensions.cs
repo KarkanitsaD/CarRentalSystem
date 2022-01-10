@@ -1,4 +1,5 @@
-﻿using Business.Helpers;
+﻿using API.ApplicationOptions;
+using Business.Helpers;
 using Business.IServices;
 using Business.Services;
 using Data.IRepositories;
@@ -46,10 +47,10 @@ namespace API.Extensions
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(name: CorsOptions.CorsOptions.ApiCorsName,
+                options.AddPolicy(name: CorsOptions.ApiCorsName,
                     builder =>
                     {
-                        builder.WithOrigins(CorsOptions.CorsOptions.WebApp)
+                        builder.WithOrigins(CorsOptions.WebApp)
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
@@ -67,7 +68,7 @@ namespace API.Extensions
         {
             services.AddControllers(options =>
             {
-                options.CacheProfiles.Add(CacheOptions.CacheOptions.BaseCacheProfile, new CacheProfile()
+                options.CacheProfiles.Add(CacheOptions.BaseCacheProfile, new CacheProfile()
                 {
                     Location = ResponseCacheLocation.Client,
                     Duration = 300
