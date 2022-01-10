@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query;
+using Data.Query.FiltrationModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
@@ -13,6 +15,10 @@ namespace Data.Repositories
         public UserRepository(CarRentalSystemContext context)
             : base(context)
         {
+        }
+        public override Task<UserEntity> GetAsync(Guid id)
+        {
+            return DbSet.Include(user => user.Role).FirstOrDefaultAsync(user => user.Id == id);
         }
 
         public async Task<UserEntity> GetByCredentialsAsync(string email, string password)
@@ -33,30 +39,30 @@ namespace Data.Repositories
                 .FirstOrDefaultAsync(u => u.RefreshToken.Token == refreshToken);
         }
 
-
-        public override async Task<PageResult<UserEntity>> GetPageListAsync(QueryParameters<UserEntity> queryParameters)
+        public async Task<UserEntity> GetWithCarLockAsync(Guid userId)
         {
-            var query = DbSet.AsQueryable();
+            return await DbSet.Include(user => user.CarLockEntity).FirstOrDefaultAsync(user => user.Id == userId);
+        }
 
-            query = BaseQuery(query, queryParameters);
+        public async Task<PageResult<UserEntity>> GetPageListAsync(UserFiltrationModel userFiltrationModel, int pageIndex, int pageSize)
+        {
+            var queryable = DbSet.AsQueryable().Where(GetFilterRule(userFiltrationModel));
 
-            int totalItemsCount = await query.CountAsync();
-
-            if (queryParameters.PaginationRule != null)
-            {
-                query = PaginationQuery(query, queryParameters.PaginationRule);
-            }
-
-            query = query.Include(u => u.Role);
-
-            var items = await query.ToListAsync();
+            var totalItemsCount = await queryable.CountAsync();
+            var items = await queryable.ToListAsync();
 
             return new PageResult<UserEntity>(items, totalItemsCount);
         }
 
-        public override Task<UserEntity> GetAsync(Guid id)
+        private Expression<Func<UserEntity, bool>> GetFilterRule(UserFiltrationModel filterModel)
         {
-            return DbSet.Include(user => user.Role).FirstOrDefaultAsync(user => user.Id == id);
+            return user =>
+                (filterModel.Name != null && user.Name.Contains(filterModel.Name) ||
+                 filterModel.Name == null) &&
+                (filterModel.Surname != null && user.Surname.Contains(filterModel.Surname) ||
+                 filterModel.Surname == null) &&
+                (filterModel.Email != null && user.Email.Contains(filterModel.Email) ||
+                 filterModel.Email == null);
         }
     }
 }

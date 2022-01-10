@@ -9,7 +9,7 @@ using Business.Models;
 using Business.Query;
 using Data.Entities;
 using Data.IRepositories;
-using Data.Query;
+using Data.Query.FiltrationModels;
 
 namespace Business.Services
 {
@@ -24,16 +24,6 @@ namespace Business.Services
             _mapper = mapper;
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
-        }
-
-        public async Task<UserModel> GetAsync(Guid id)
-        {
-            var entity = await _userRepository.GetAsync(id);
-
-            if (entity == null)
-                throw new NotFoundException($"{nameof(entity)} with id = {id} not found.");
-
-            return _mapper.Map<UserEntity, UserModel>(entity);
         }
 
         public async Task UpdateAsync(Guid id, UserModel userModel)
@@ -93,32 +83,13 @@ namespace Business.Services
             {
                 throw new BadRequestException("Pagination rule is not valid");
             }
-
-            var query = new QueryParameters<UserEntity>
-            {
-                FilterRule = GetFilterRule(queryModel),
-                PaginationRule = GetPaginationRule(queryModel)
-            };
-
-            var paginationResult = await _userRepository.GetPageListAsync(query);
+            
+            var userFilter = _mapper.Map<UserQueryModel, UserFiltrationModel>(queryModel);
+            var paginationResult = await _userRepository.GetPageListAsync(userFilter, queryModel.PageIndex, queryModel.PageSize);
 
             var userModels = _mapper.Map<List<UserEntity>, List<UserModel>>(paginationResult.Items);
 
             return (userModels, paginationResult.TotalItemsCount);
         }
-
-        protected virtual FilterRule<UserEntity> GetFilterRule(UserQueryModel userModel) => new FilterRule<UserEntity>
-        {
-            FilterExpression = user => 
-                (userModel.Name != null && user.Name.Contains(userModel.Name) || userModel.Name == null) &&
-                (userModel.Surname != null && user.Surname.Contains(userModel.Surname)  || userModel.Surname == null) &&
-                (userModel.Email != null && user.Email.Contains(userModel.Email) || userModel.Email == null)
-        };
-
-        protected virtual PaginationRule GetPaginationRule(UserQueryModel userModel) => new PaginationRule
-        {
-            Index = userModel.PageIndex,
-            Size = userModel.PageSize
-        };
     }
 }

@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(CarRentalSystemContext))]
-    partial class CarRentalSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20211203143635_BookingWithCustomerDetails")]
+    partial class BookingWithCustomerDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,32 +116,6 @@ namespace Data.Migrations
                     b.HasIndex("RentalPointId");
 
                     b.ToTable("Cars");
-                });
-
-            modelBuilder.Entity("Data.Entities.CarLockEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CarId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("LockTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarId")
-                        .IsUnique();
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("CarLocks");
                 });
 
             modelBuilder.Entity("Data.Entities.CarPictureEntity", b =>
@@ -354,25 +330,6 @@ namespace Data.Migrations
                     b.Navigation("RentalPoint");
                 });
 
-            modelBuilder.Entity("Data.Entities.CarLockEntity", b =>
-                {
-                    b.HasOne("Data.Entities.CarEntity", "Car")
-                        .WithOne("CarLockEntity")
-                        .HasForeignKey("Data.Entities.CarLockEntity", "CarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Entities.UserEntity", "User")
-                        .WithOne("CarLockEntity")
-                        .HasForeignKey("Data.Entities.CarLockEntity", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Car");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Data.Entities.CarPictureEntity", b =>
                 {
                     b.HasOne("Data.Entities.CarEntity", "Car")
@@ -439,8 +396,6 @@ namespace Data.Migrations
                 {
                     b.Navigation("Bookings");
 
-                    b.Navigation("CarLockEntity");
-
                     b.Navigation("Picture");
                 });
 
@@ -471,8 +426,6 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.UserEntity", b =>
                 {
                     b.Navigation("Bookings");
-
-                    b.Navigation("CarLockEntity");
 
                     b.Navigation("RefreshToken");
                 });

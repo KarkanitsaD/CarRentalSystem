@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
 using Business.Query.Car;
+using Data;
 using Data.Entities;
 using Data.IRepositories;
-using Data.Query;
+using Data.Query.FiltrationModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
@@ -19,13 +21,20 @@ namespace Business.Services
         private readonly ICarRepository _carRepository;
         private readonly IRentalPointRepository _rentalPointRepository;
         private readonly ICarPictureRepository _carPictureRepository;
+        private readonly CarRentalSystemContext _context;
 
-        public CarService(IMapper mapper, ICarRepository carRepository, IRentalPointRepository rentalPointRepository, ICarPictureRepository carPictureRepository)
+        public CarService(
+            IMapper mapper,
+            ICarRepository carRepository,
+            IRentalPointRepository rentalPointRepository,
+            ICarPictureRepository carPictureRepository,
+            CarRentalSystemContext context)
         {
             _mapper = mapper;
             _carRepository = carRepository;
             _rentalPointRepository = rentalPointRepository;
             _carPictureRepository = carPictureRepository;
+            _context = context;
         }
 
         public async Task<CarModel> GetAsync(Guid id)
@@ -38,20 +47,16 @@ namespace Business.Services
             return _mapper.Map<CarEntity, CarModel>(entity);
         }
 
-        public async Task<(List<CarModel>, int)> GetPageListAsync(CarQueryModel queryModel)
+        public async Task<(List<CarModel>, int)> GetPageListAsync(CarQueryModel queryModel, Guid? userId)
         {
             if (!queryModel.IsValidPagination)
             {
                 throw new BadRequestException("Pagination rule is not valid");
             }
 
-            var query = new QueryParameters<CarEntity>
-            {
-                FilterRule = GetFilterRule(queryModel),
-                PaginationRule = GetPaginationRule(queryModel)
-            };
+            var filtrationModel = _mapper.Map<CarQueryModel, CarFiltrationModel>(queryModel);
 
-            var paginationResult = await _carRepository.GetPageListAsync(query);
+            var paginationResult = await _carRepository.GetPageListAsync(userId, filtrationModel, queryModel.PageIndex, queryModel.PageSize);
 
             var carModels = _mapper.Map<List<CarEntity>, List<CarModel>>(paginationResult.Items);
 
@@ -60,7 +65,7 @@ namespace Business.Services
 
         public async Task CreateAsync(CarModel addCarModel)
         {
-            if (!await _rentalPointRepository.ExistsAsync(addCarModel.RentalPointId))
+            if (await _rentalPointRepository.GetAsync(addCarModel.RentalPointId) == null)
             {
                 throw new BadRequestException("Invalid rental point Id");
             }
@@ -118,27 +123,48 @@ namespace Business.Services
             await _carRepository.UpdateAsync(car);
         }
 
-        protected virtual FilterRule<CarEntity> GetFilterRule(CarQueryModel carModel) =>
-            new FilterRule<CarEntity>
-            {
-                FilterExpression = car =>
-                    car.LastViewTime.AddMinutes(5) < DateTime.Now &&
-                    (carModel.KeyReceivingTime != null && carModel.KeyHandOverTime != null && car.Bookings.AsQueryable()
-                         .Count(booking => 
-                             !(booking.KeyReceivingTime > carModel.KeyReceivingTime && booking.KeyReceivingTime > carModel.KeyHandOverTime ||
-                               booking.KeyHandOverTime < carModel.KeyReceivingTime && booking.KeyHandOverTime < carModel.KeyHandOverTime)) == 0 ||
-                     carModel.KeyReceivingTime == null || carModel.KeyHandOverTime == null) &&
-                    (carModel.Brand != null && car.Brand.Contains(carModel.Brand) || carModel.Brand == null) &&
-                    (carModel.Color != null && car.Color == carModel.Color || carModel.Color == null) &&
-                    (carModel.MaxPricePerDay != null && car.PricePerDay < carModel.MaxPricePerDay || carModel.MaxPricePerDay == null) &&
-                    (carModel.MinPricePerDay != null && car.PricePerDay > carModel.MinPricePerDay || carModel.MinPricePerDay == null) &&
-                    (carModel.RentalPointId != null && car.RentalPointId == carModel.RentalPointId || carModel.RentalPointId == null) 
-            };
-
-        protected virtual PaginationRule GetPaginationRule(CarQueryModel carModel) => new PaginationRule
+        public async Task LockCarAsync(Guid carId, Guid userId)
         {
-            Index = carModel.PageIndex,
-            Size = carModel.PageSize
-        };
+            await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+            try
+            {
+                var carToLock = await _context.Cars.Include(c => c.CarLockEntity).FirstOrDefaultAsync(c => c.Id == carId);
+                if (carToLock.CarLockEntity != null)
+                {
+                    if (carToLock.CarLockEntity.LockTime.AddMinutes(5) > DateTime.Now &&
+                        carToLock.CarLockEntity.UserId != userId)
+                    {
+                        throw new BadRequestException("This car is already locked.");
+                    }
+                    _context.CarLocks.Remove(carToLock.CarLockEntity);
+                    await _context.SaveChangesAsync();
+                }
+
+                var user = await _context.Users.Include(u => u.CarLockEntity).FirstOrDefaultAsync(u => u.Id == userId);
+                if (user.CarLockEntity != null)
+                {
+                    user.CarLockEntity.CarId = carId;
+                    user.CarLockEntity.LockTime = DateTime.Now;
+                    _context.CarLocks.Update(user.CarLockEntity);
+                }
+                else
+                {
+                    var carLock = new CarLockEntity
+                    {
+                        UserId = userId,
+                        CarId = carId,
+                        LockTime = DateTime.Now
+                    };
+                    await _context.CarLocks.AddAsync(carLock);
+                }
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("Transaction is canceled!");
+            }
+        }
     }
 }

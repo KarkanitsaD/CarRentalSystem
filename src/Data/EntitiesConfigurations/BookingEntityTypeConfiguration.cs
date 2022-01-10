@@ -12,6 +12,14 @@ namespace Data.EntitiesConfigurations
             builder.Property(o => o.Id)
                 .IsRequired();
 
+            builder.Property(b => b.CustomerName);
+
+            builder.Property(b => b.CustomerSurname);
+
+            builder.Property(b => b.CustomerEmail);
+
+            builder.Property(b => b.PhoneNumber);
+
             builder.HasOne(o => o.User)
                 .WithMany(u => u.Bookings)
                 .HasForeignKey(o => o.UserId)

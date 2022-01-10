@@ -1,4 +1,4 @@
-﻿namespace API.CacheOptions
+﻿namespace API.ApplicationOptions
 {
     public class CacheOptions
     {

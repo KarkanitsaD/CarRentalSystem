@@ -16,13 +16,10 @@ namespace Business.Helpers
 
         public string GeneratePasswordHash(string password)
         {
-            byte[] passwordBytes = Encoding.Default.GetBytes(password);
+            byte[] passwordBytes = Encoding.Default.GetBytes(password + _configuration.GetSection("Salt").Value);
             var hashBytes = new SHA256Managed().ComputeHash(passwordBytes);
             var hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-            var salt = _configuration.GetSection("Salt").Value;
-            var result = new StringBuilder(hash);
-            result.Append(salt);
-            return result.ToString();
+            return hash;
         }
     }
 }

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Data.Entities;
-using Data.IRepositories;
-using Data.Query;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
-    public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
+    public abstract class BaseRepository<TEntity>
         where TEntity : Entity
     {
 
@@ -26,6 +23,11 @@ namespace Data.Repositories
         public virtual async Task<TEntity> GetAsync(Guid id)
         {
             return await DbSet.FindAsync(id);
+        }
+
+        public virtual async Task<List<TEntity>>GetListAsync()
+        {
+            return await DbSet.ToListAsync();
         }
 
         public async Task<TEntity> CreateAsync(TEntity entity)
@@ -50,96 +52,6 @@ namespace Data.Repositories
         {
             DbSet.Remove(entityToDelete);
             await _carRentalSystemContext.SaveChangesAsync();
-        }
-
-        public virtual async Task<bool> ExistsAsync(Guid id)
-        {
-            return await DbSet.FindAsync(id) != null;
-        }
-
-        public virtual async Task<bool> ExistsAsync(FilterRule<TEntity> filterRule)
-        {
-            return await CountAsync(filterRule) > 0;
-        }
-
-        public virtual async Task<int> CountAsync(FilterRule<TEntity> filterRule = null)
-        {
-            var query = DbSet.AsQueryable();
-
-            if (filterRule == null)
-            {
-                return await query.CountAsync();
-            }
-
-            return await FilterQuery(query, filterRule).CountAsync();
-        }
-
-        public async Task<TEntity> GetAsync(FilterRule<TEntity> filterRule = null)
-        {
-            var query = DbSet.AsQueryable();
-
-            if (filterRule == null)
-            {
-                return await query.FirstOrDefaultAsync();
-            }
-
-            return await FilterQuery(query, filterRule).FirstOrDefaultAsync();
-        }
-
-        public virtual async Task<List<TEntity>> GetListAsync(QueryParameters<TEntity> queryParameters = null)
-        {
-            var query = DbSet.AsQueryable();
-
-            if (queryParameters == null)
-                return await query.ToListAsync();
-
-            query = BaseQuery(query, queryParameters);
-
-            return await query.ToListAsync();
-        }
-
-        public virtual async Task<PageResult<TEntity>> GetPageListAsync(QueryParameters<TEntity> queryParameters)
-        {
-            var query = DbSet.AsQueryable();
-
-            query = BaseQuery(query, queryParameters);
-
-            int totalItemsCount = await query.CountAsync();
-
-            if (queryParameters.PaginationRule != null)
-            {
-                query = PaginationQuery(query, queryParameters.PaginationRule);
-            }
-
-            var items = await query.ToListAsync();
-
-            return new PageResult<TEntity>(items, totalItemsCount);
-        }
-
-        protected virtual IQueryable<TEntity> BaseQuery(IQueryable<TEntity> queryable,
-            QueryParameters<TEntity> queryParameters)
-        {
-            if (queryParameters.FilterRule?.FilterExpression != null)
-                queryable = FilterQuery(queryable, queryParameters.FilterRule);
-
-            //add sort rule
-
-            return queryable;
-        }
-
-        protected virtual IQueryable<TEntity> FilterQuery(IQueryable<TEntity> queryable, FilterRule<TEntity> filterRule)
-        {
-            queryable = queryable.Where(filterRule.FilterExpression);
-
-            return queryable;
-        }
-
-        protected virtual IQueryable<TEntity> PaginationQuery(IQueryable<TEntity> queryable, PaginationRule paginationRule)
-        {
-            if(paginationRule.IsValid)
-                queryable = queryable.Skip((int)(paginationRule.Index * paginationRule.Size)).Take((int)paginationRule.Size);
-
-            return queryable;
         }
     }
 }

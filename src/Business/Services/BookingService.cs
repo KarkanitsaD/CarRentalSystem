@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -14,6 +15,7 @@ using Data;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query;
+using Data.Query.FiltrationModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
@@ -33,41 +35,43 @@ namespace Business.Services
             _context = context;
         }
 
-        public async Task CreateAsync(string authorization, BookingModel bookingModel)
+        public async Task CreateAsync(Guid userId, BookingModel bookingModel)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
             try
             {
-                var carFilterRule = GetCarFilterRule((Guid) bookingModel.RentalPointId, bookingModel.CarId);
+                var carFilter = GetCarFilterExpression((Guid) bookingModel.RentalPointId, bookingModel.CarId);
 
-                if (await _context.RentalPoints.CountAsync(carFilterRule.FilterExpression) == 0)
+                if (await _context.RentalPoints.CountAsync(carFilter) == 0)
                 {
                     throw new NotFoundException("Car not found.");
                 }
+
+                var carLock = await _context.CarLocks.FirstOrDefaultAsync(cl => cl.CarId == bookingModel.CarId);
+                if (carLock != null)
+                {
+                    _context.CarLocks.Remove(carLock);
+                }
+                await _context.SaveChangesAsync();
 
                 var rentalPoint = await _context.RentalPoints.Include(rp => rp.City)
                     .FirstOrDefaultAsync(rp => rp.Id == bookingModel.RentalPointId);
 
                 if (bookingModel.KeyReceivingTime < DateTime.UtcNow.AddSeconds(rentalPoint.City.TimeOffset))
                 {
-                    throw new BadRequestException("Invalid time range.");
+                    throw new InvalidTimeRangeException(
+                        "Invalid time range for this country. Entered time is over in this country!");
                 }
 
-                var carEntity = await _context.Cars.FirstOrDefaultAsync(car => car.Id == bookingModel.CarId);
-                carEntity.LastViewTime = DateTime.MinValue;
-                await _context.SaveChangesAsync();
-
-                var filetRule = GetBookingExistsFilterRule(bookingModel.CarId, bookingModel.KeyReceivingTime,
+                var bookingFilter = GetBookingExistsFilterExpression(bookingModel.CarId, bookingModel.KeyReceivingTime,
                     bookingModel.KeyHandOverTime);
 
-                if (await _context.Bookings.CountAsync(filetRule.FilterExpression) > 0)
+                if (await _context.Bookings.CountAsync(bookingFilter) > 0)
                 {
                     throw new BadRequestException("The booking for the given time already exists.");
                 }
 
-                var userId = _tokenService.GetClaimFromJwt(authorization.Split(' ')[1], ClaimTypes.NameIdentifier)
-                    .Value;
-                bookingModel.UserId = Guid.Parse(userId);
+                bookingModel.UserId = userId;
                 var entity = _mapper.Map<BookingModel, BookingEntity>(bookingModel);
 
                 await _context.Bookings.AddAsync(entity);
@@ -81,6 +85,11 @@ namespace Business.Services
                 await transaction.RollbackAsync();
                 throw;
             }
+            catch (InvalidTimeRangeException)
+            {
+                await transaction.CommitAsync();
+                throw;
+            }
             catch (Exception)
             {
                 await transaction.RollbackAsync();
@@ -88,78 +97,45 @@ namespace Business.Services
             }
         }
 
-        public async Task<(List<BookingModel>, int)> GetAllAsync(string authorization, BookingQueryModel queryModel)
+        public async Task<(List<BookingModel>, int)> GetAllAsync(Guid userId, BookingQueryModel queryModel)
         {
-            var jwt = authorization.Split(' ')[1];
-            var idClaim = _tokenService.GetClaimFromJwt(jwt, ClaimTypes.NameIdentifier);
-            var userId = Guid.Parse(idClaim.Value);
-            var queryParameters = new QueryParameters<BookingEntity>
-            {
-                FilterRule = GetBookingFilterRule(queryModel, userId),
-                PaginationRule = GetPaginationRule(queryModel)
-            };
-            var result = await _bookingRepository.GetPageListAsync(queryParameters);
+            var bookingFiltration = _mapper.Map<BookingQueryModel, BookingFiltrationModel>(queryModel);
+            var result = await _bookingRepository.GetPageListAsync(userId, bookingFiltration, queryModel.PageIndex, queryModel.PageSize);
 
             var bookings = _mapper.Map<List<BookingEntity>, List<BookingModel>>(result.Items);
             return (bookings, result.TotalItemsCount);
         }
 
-        public async Task DeleteAsync(string authorization, Guid id)
+        public async Task DeleteAsync(Guid userId, Guid id)
         {
             var entityToDelete = await _bookingRepository.GetAsync(id);
 
             if (entityToDelete == null)
                 throw new NotFoundException($"{nameof(entityToDelete)} with id = {id} not found.");
 
-            var jwt = authorization.Split(' ')[1];
-            var roleClaim = _tokenService.GetClaimFromJwt(jwt, ClaimTypes.Role);
-
-            if (roleClaim.Value == Policy.ForUserOnly)
-            {
-                var userId = _tokenService.GetClaimFromJwt(jwt, ClaimTypes.NameIdentifier).Value;
-                if (entityToDelete.UserId != Guid.Parse(userId))
-                {
-                    throw new NotAuthenticatedException($"No permission to delete booking with id = {id}.");
-                }
+            if (entityToDelete.UserId != userId)
+            { 
+                throw new NotAuthenticatedException($"No permission to delete booking with id = {id}.");
             }
 
             await _bookingRepository.DeleteAsync(entityToDelete);
         }
 
-        protected virtual FilterRule<BookingEntity> GetBookingExistsFilterRule(Guid carId,
+        protected virtual Expression<Func<BookingEntity, bool>> GetBookingExistsFilterExpression(Guid carId,
             DateTimeOffset keyReceivingTime,
-            DateTimeOffset keyHandOverTime) => new FilterRule<BookingEntity>
+            DateTimeOffset keyHandOverTime)
         {
-            FilterExpression = booking =>
+            return booking =>
                 booking.CarId == carId &&
                 !(booking.KeyReceivingTime > keyReceivingTime && booking.KeyReceivingTime > keyHandOverTime ||
-                  booking.KeyHandOverTime < keyReceivingTime && booking.KeyHandOverTime < keyHandOverTime)
-        };
+                  booking.KeyHandOverTime < keyReceivingTime && booking.KeyHandOverTime < keyHandOverTime);
+        }
 
-        protected virtual FilterRule<RentalPointEntity> GetCarFilterRule(Guid rentalPointId, Guid carId) =>
-            new FilterRule<RentalPointEntity>
-            {
-                FilterExpression = rentalPoint => 
-                    rentalPoint.Id == rentalPointId &&
-                    rentalPoint.Cars.AsQueryable().Count(car => car.Id == carId) > 0
-            };
-
-        protected virtual FilterRule<BookingEntity> GetBookingFilterRule(BookingQueryModel queryModel, Guid userId) =>
-            new FilterRule<BookingEntity>
-            {
-                FilterExpression = booking =>
-                    (userId != null && userId == booking.UserId || userId == null) &&
-                    (queryModel.CountryId != null && booking.RentalPoint.CountryId == queryModel.CountryId || queryModel.CountryId == null) && 
-                    (queryModel.CityId != null && booking.RentalPoint.CityId == queryModel.CityId || queryModel.CityId == null) && 
-                    (queryModel.GetCurrent == null ||
-                     queryModel.GetCurrent == false && booking.KeyHandOverTime < DateTimeOffset.Now ||
-                     queryModel.GetCurrent == true && booking.KeyHandOverTime > DateTimeOffset.Now)
-            };
-
-        protected virtual PaginationRule GetPaginationRule(BookingQueryModel queryModel) => new PaginationRule
+        protected virtual Expression<Func<RentalPointEntity, bool>> GetCarFilterExpression(Guid rentalPointId, Guid carId)
         {
-            Index = queryModel.PageIndex,
-            Size = queryModel.PageSize
-        };
+            return rentalPoint =>
+                rentalPoint.Id == rentalPointId &&
+                rentalPoint.Cars.AsQueryable().Count(car => car.Id == carId) > 0;
+        }
     }
 }

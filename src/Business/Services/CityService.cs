@@ -7,7 +7,6 @@ using Business.IServices;
 using Business.Models;
 using Data.Entities;
 using Data.IRepositories;
-using Data.Query;
 
 namespace Business.Services
 {
@@ -29,12 +28,7 @@ namespace Business.Services
 
         public async Task<CityModel> CreateAsync(CityModel cityModel)
         {
-            var filterRule = new FilterRule<CityEntity>
-            {
-                FilterExpression = city => city.CountryId == cityModel.CountryId && city.Title == cityModel.Title
-            };
-
-            if (await _cityRepository.CountAsync(filterRule) > 0)
+            if (await _cityRepository.GetByTitleAndCountryIdAsync(cityModel.Title, cityModel.CountryId) != null)
             {
                 throw new BadRequestException($"City with title = {cityModel.Title} already exists");
             }

@@ -4,8 +4,6 @@ using API.Models.Response.Auth;
 using AutoMapper;
 using Business.IServices;
 using Business.Models;
-using Business.Policies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,9 +34,9 @@ namespace API.Controllers
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginRegisterRequestModel loginRequest)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginRequest)
         {
-            var loginModel = _mapper.Map<LoginRegisterRequestModel, LoginRegisterModel>(loginRequest);
+            var loginModel = _mapper.Map<LoginRequest, LoginRegisterModel>(loginRequest);
             var loginSuccessModel = await _authService.LoginAsync(loginModel);
             return Ok(_mapper.Map<LoginSuccessModel, LoginResponseModel>(loginSuccessModel));
         }
@@ -68,14 +66,6 @@ namespace API.Controllers
         {
             var successRefresh = await _authService.RefreshTokenAsync(refreshRequestModel);
             return Ok(_mapper.Map<RefreshTokenSuccessModel, RefreshTokenResponseModel>(successRefresh));
-        }
-
-        [HttpGet]
-        [Authorize(Policy = Policy.ForUserOnly)]
-        [Route("test")]
-        public string TestAsync()
-        {
-            return "test";
         }
     }
 }

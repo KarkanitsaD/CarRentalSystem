@@ -1,5 +1,7 @@
-﻿using Data.Entities;
+﻿using System.Threading.Tasks;
+using Data.Entities;
 using Data.IRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
@@ -7,6 +9,11 @@ namespace Data.Repositories
     {
         public CountryRepository(CarRentalSystemContext carRentalSystemContext) : base(carRentalSystemContext)
         {
+        }
+
+        public async Task<CountryEntity> GetByTitleAsync(string title)
+        {
+            return await DbSet.FirstOrDefaultAsync(c => c.Title == title);
         }
     }
 }

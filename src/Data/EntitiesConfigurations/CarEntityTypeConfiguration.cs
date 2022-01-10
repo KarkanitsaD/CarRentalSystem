@@ -38,6 +38,10 @@ namespace Data.EntitiesConfigurations
                 .HasForeignKey(c => c.RentalPointId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasOne(c => c.CarLockEntity)
+                .WithOne(l => l.Car)
+                .HasForeignKey<CarLockEntity>(l => l.CarId);
+
             builder.Property(c => c.LastViewTime)
                 .IsRequired();
 
