@@ -20,5 +20,6 @@ namespace Data.Entities
         public CarLockEntity CarLockEntity { get; set; }
 
         public ICollection<BookingEntity> Bookings { get; set; }
+        public ICollection<BookingFeedbackEntity> BookingFeedbacks { get; set; }
     }
 }
