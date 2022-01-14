@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
-using Business.Policies;
 using Business.Query.Booking;
 using Data;
 using Data.Entities;
 using Data.IRepositories;
-using Data.Query;
 using Data.Query.FiltrationModels;
 using Microsoft.EntityFrameworkCore;
 
