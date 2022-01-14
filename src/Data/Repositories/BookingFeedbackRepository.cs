@@ -14,7 +14,7 @@ namespace Data.Repositories
         {
         }
 
-        public async Task<BookingFeedbackEntity> GetByBookingId(Guid bookingId)
+        public async Task<BookingFeedbackEntity> GetByBookingIdAsync(Guid bookingId)
         {
             return await DbSet.FirstOrDefaultAsync(bf => bf.BookingId == bookingId);
         }

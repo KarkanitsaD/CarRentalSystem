@@ -6,6 +6,6 @@ namespace Data.IRepositories
 {
     public interface IBookingFeedbackRepository: IBaseRepository<BookingFeedbackEntity>
     {
-        Task<BookingFeedbackEntity> GetByBookingId(Guid bookingId);
+        Task<BookingFeedbackEntity> GetByBookingIdAsync(Guid bookingId);
     }
 }
