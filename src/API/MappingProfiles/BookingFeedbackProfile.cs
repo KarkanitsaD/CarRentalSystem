@@ -1,4 +1,5 @@
-﻿using API.Models.Response.Booking;
+﻿using API.Models.Request.Booking;
+using API.Models.Response.Booking;
 using AutoMapper;
 using Business.Models;
 
@@ -8,6 +9,7 @@ namespace API.MappingProfiles
     {
         public BookingFeedbackProfile()
         {
+            CreateMap<CreateBookingFeedbackRequest, BookingFeedbackModel>();
             CreateMap<BookingFeedbackModel, BookingFeedbackResponse>();
         }
     }

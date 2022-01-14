@@ -24,6 +24,7 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetAsync([FromBody] Guid bookingId)
         {
             var model = await _bookingFeedbackService.GetAsync(bookingId);
@@ -31,6 +32,7 @@ namespace API.Controllers
             return Ok(response);
         }
 
+        [HttpPost]
         [Authorize(Policy = Policy.ForUserOnly)]
         public async Task<IActionResult> CreateAsync([FromBody] CreateBookingFeedbackRequest request)
         {
@@ -39,6 +41,7 @@ namespace API.Controllers
             return Ok();
         }
 
+        [HttpDelete]
         [Authorize(Policy = Policy.ForAdminOnly)]
         [Route("{bookingFeedbackId:guid}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid bookingFeedbackId)
