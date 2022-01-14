@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Models.Request.Booking;
 using API.Models.Response.Booking;
@@ -25,10 +26,20 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync([FromBody] Guid bookingId)
+        [Route("booking/{bookingId:guid}")]
+        public async Task<IActionResult> GetByBookingIdAsync([FromRoute] Guid bookingId)
         {
             var model = await _bookingFeedbackService.GetAsync(bookingId);
             var response = _mapper.Map<BookingFeedbackModel, BookingFeedbackResponse>(model);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("car/{carId:guid}")]
+        public async Task<IActionResult> GetByCarId([FromRoute] Guid carId)
+        {
+            var models = await _bookingFeedbackService.GetAllByCarIdAsync(carId);
+            var response = _mapper.Map<List<BookingFeedbackModel>, List<BookingFeedbackResponse>>(models);
             return Ok(response);
         }
 

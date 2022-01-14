@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
@@ -25,6 +26,13 @@ namespace Business.Services
             var entity =  await _bookingFeedbackRepository.GetByBookingIdAsync(bookingId);
             var model = _mapper.Map<BookingFeedbackEntity, BookingFeedbackModel>(entity);
             return model;
+        }
+
+        public async Task<List<BookingFeedbackModel>> GetAllByCarIdAsync(Guid carId)
+        {
+            var entities = await _bookingFeedbackRepository.GetAllByCarIdAsync(carId);
+            var models = _mapper.Map<List<BookingFeedbackEntity>, List<BookingFeedbackModel>>(entities);
+            return models;
         }
 
         public async Task CreateAsync(BookingFeedbackModel bookingFeedbackModel)
