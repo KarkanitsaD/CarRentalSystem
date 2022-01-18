@@ -24,6 +24,10 @@ namespace Business.Services
         public async Task<BookingFeedbackModel> GetAsync(Guid bookingId)
         {
             var entity =  await _bookingFeedbackRepository.GetByBookingIdAsync(bookingId);
+            if (entity == null)
+            {
+                throw new NotFoundException($"There are not bookingFeedback with booking id = {bookingId}");
+            }
             var model = _mapper.Map<BookingFeedbackEntity, BookingFeedbackModel>(entity);
             return model;
         }
