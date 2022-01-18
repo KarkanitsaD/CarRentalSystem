@@ -41,6 +41,24 @@ namespace Business.Services
             await _bookingFeedbackRepository.CreateAsync(entity);
         }
 
+        public async Task UpdateByAdminAsync(Guid id, BookingFeedbackModel updateModel)
+        {
+            var entityToUpdate = await GetBookingFeedbackEntityAsync(id, updateModel);
+            await UpdateEntityAsync(entityToUpdate, updateModel);
+        }
+
+        public async Task UpdateByUserAsync(Guid feedbackId, BookingFeedbackModel updateModel, Guid userId)
+        {
+            var entityToUpdate = await GetBookingFeedbackEntityAsync(feedbackId, updateModel);
+            
+            if (entityToUpdate.UserId != userId)
+            {
+                throw new NotAuthorizedException("You do not have permissions to do this action!");
+            }
+
+            await UpdateEntityAsync(entityToUpdate, updateModel);
+        }
+
         public async Task DeleteAsync(Guid bookingFeedbackId)
         {
             var entityToDelete = await _bookingFeedbackRepository.GetAsync(bookingFeedbackId);
@@ -50,6 +68,28 @@ namespace Business.Services
             }
 
             await _bookingFeedbackRepository.DeleteAsync(entityToDelete);
+        }
+        private async Task<BookingFeedbackEntity> GetBookingFeedbackEntityAsync(Guid feedbackId, BookingFeedbackModel updateModel)
+        {
+            if (feedbackId != updateModel.Id)
+            {
+                throw new BadRequestException("Check data!");
+            }
+
+            var entityToUpdate = await _bookingFeedbackRepository.GetAsync(feedbackId);
+            if (entityToUpdate == null)
+            {
+                throw new NotFoundException($"{nameof(updateModel)} with id = {feedbackId} not found.");
+            }
+
+            return entityToUpdate;
+        }
+
+        private async Task UpdateEntityAsync(BookingFeedbackEntity entityToUpdate, BookingFeedbackModel updateModel)
+        {
+            entityToUpdate.Comment = updateModel.Comment;
+            entityToUpdate.Rating = updateModel.Rating;
+            await _bookingFeedbackRepository.UpdateAsync(entityToUpdate);
         }
     }
 }
