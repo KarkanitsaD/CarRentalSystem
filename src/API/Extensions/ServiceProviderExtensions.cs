@@ -23,6 +23,7 @@ namespace API.Extensions
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<ICarLockRepository, CarLockRepository>();
+            services.AddScoped<IBookingFeedbackRepository, BookingFeedbackRepository>();
 
             return services;
         }
@@ -39,6 +40,7 @@ namespace API.Extensions
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<ICarPictureService, CarPictureService>();
+            services.AddScoped<IBookingFeedbackService, BookingFeedbackService>();
 
             return services;
         }

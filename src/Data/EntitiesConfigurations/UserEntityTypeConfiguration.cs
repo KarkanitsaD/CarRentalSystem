@@ -40,6 +40,10 @@ namespace Data.EntitiesConfigurations
                 .WithOne(o => o.User)
                 .HasForeignKey(o => o.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(u => u.BookingFeedbacks)
+                .WithOne(b => b.User)
+                .HasForeignKey(b => b.UserId);
         }
     }
 }

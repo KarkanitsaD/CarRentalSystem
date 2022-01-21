@@ -14,5 +14,6 @@ namespace Data.Entities
         public RefreshTokenEntity RefreshToken { get; set; }
         public CarLockEntity CarLockEntity { get; set; }
         public ICollection<BookingEntity> Bookings { get; set; }
+        public ICollection<BookingFeedbackEntity> BookingFeedbacks { get; set; }
     }
 }

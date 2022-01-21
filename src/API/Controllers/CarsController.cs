@@ -89,5 +89,12 @@ namespace API.Controllers
             await _carService.DeleteAsync(carId);
             return Ok();
         }
+
+        [HttpGet]
+        [Route("{carId:guid}/averageFeedback")]
+        public async Task<IActionResult> GetCarAverageFeedback([FromRoute] Guid carId)
+        {
+            return Ok(await _carService.GetCarAverageFeedbackAsync(carId));
+        }
     }
 }

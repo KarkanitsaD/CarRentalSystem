@@ -52,6 +52,10 @@ namespace Data.EntitiesConfigurations
             builder.HasOne(c => c.Picture)
                 .WithOne(p => p.Car)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(c => c.BookingFeedbacks)
+                .WithOne(b => b.Car)
+                .HasForeignKey(b => b.CarId);
         }
     }
 }

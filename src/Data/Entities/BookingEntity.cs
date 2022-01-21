@@ -15,6 +15,7 @@ namespace Data.Entities
         public RentalPointEntity RentalPoint { get; set; }
         public Guid? CarId { get; set; }
         public CarEntity Car { get; set; }
+        public BookingFeedbackEntity BookingFeedback { get; set; }
         public DateTime KeyReceivingTime { get; set; }
         public DateTime KeyHandOverTime { get; set; }
         public DateTime BookingTime { get; set; }

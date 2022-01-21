@@ -43,6 +43,10 @@ namespace Data.EntitiesConfigurations
 
             builder.Property(o => o.BookingTime)
                 .IsRequired();
+
+            builder.HasOne(b => b.BookingFeedback)
+                .WithOne(b => b.Booking)
+                .HasForeignKey<BookingFeedbackEntity>(b => b.BookingId);
         }
     }
 }

@@ -15,5 +15,6 @@ namespace Business.IServices
         Task DeleteAsync(Guid id);
         Task LockCarAsync(Guid id);
         Task LockCarAsync(Guid carId, Guid userId);
+        Task<double> GetCarAverageFeedbackAsync(Guid id);
     }
 }

@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
-using Business.Policies;
 using Business.Query.Booking;
 using Data;
 using Data.Entities;
 using Data.IRepositories;
-using Data.Query;
 using Data.Query.FiltrationModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +20,6 @@ namespace Business.Services
     public class BookingService : IBookingService
     {
         private readonly IMapper _mapper;
-        private readonly ITokenService _tokenService;
         private readonly IBookingRepository _bookingRepository;
         private readonly CarRentalSystemContext _context;
 
@@ -31,7 +27,6 @@ namespace Business.Services
         {
             _mapper = mapper;
             _bookingRepository = bookingRepository;
-            _tokenService = tokenService;
             _context = context;
         }
 
@@ -40,7 +35,7 @@ namespace Business.Services
             await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
             try
             {
-                var carFilter = GetCarFilterExpression((Guid) bookingModel.RentalPointId, bookingModel.CarId);
+                var carFilter = GetCarFilterExpression((Guid)bookingModel.RentalPointId, bookingModel.CarId);
 
                 if (await _context.RentalPoints.CountAsync(carFilter) == 0)
                 {
@@ -114,7 +109,7 @@ namespace Business.Services
                 throw new NotFoundException($"{nameof(entityToDelete)} with id = {id} not found.");
 
             if (entityToDelete.UserId != userId)
-            { 
+            {
                 throw new NotAuthenticatedException($"No permission to delete booking with id = {id}.");
             }
 

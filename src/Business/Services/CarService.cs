@@ -18,6 +18,7 @@ namespace Business.Services
     public class CarService : ICarService
     {
         private readonly IMapper _mapper;
+        private readonly IBookingFeedbackRepository _bookingFeedbackRepository;
         private readonly ICarRepository _carRepository;
         private readonly IRentalPointRepository _rentalPointRepository;
         private readonly ICarPictureRepository _carPictureRepository;
@@ -28,13 +29,14 @@ namespace Business.Services
             ICarRepository carRepository,
             IRentalPointRepository rentalPointRepository,
             ICarPictureRepository carPictureRepository,
-            CarRentalSystemContext context)
+            CarRentalSystemContext context, IBookingFeedbackRepository bookingFeedbackRepository)
         {
             _mapper = mapper;
             _carRepository = carRepository;
             _rentalPointRepository = rentalPointRepository;
             _carPictureRepository = carPictureRepository;
             _context = context;
+            _bookingFeedbackRepository = bookingFeedbackRepository;
         }
 
         public async Task<CarModel> GetAsync(Guid id)
@@ -165,6 +167,17 @@ namespace Business.Services
                 await transaction.RollbackAsync();
                 throw new Exception("Transaction is canceled!");
             }
+        }
+
+        public async Task<double> GetCarAverageFeedbackAsync(Guid id)
+        {
+            var car = await _carRepository.GetAsync(id);
+            if (car == null)
+            {
+                throw new NotFoundException("Car not found! Check car Id!");
+            }
+
+            return await _bookingFeedbackRepository.GetCarAverageFeedbackAsync(id);
         }
     }
 }
