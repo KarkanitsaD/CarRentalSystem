@@ -25,5 +25,10 @@ namespace Data.Repositories
         {
             return await DbSet.Where(bf => bf.CarId == carId).ToListAsync();
         }
+
+        public async Task<double> GetCarAverageFeedbackAsync(Guid carId)
+        {
+            return await DbSet.Where(bf => bf.CarId == carId).AverageAsync(bf => bf.Rating);
+        }
     }
 }

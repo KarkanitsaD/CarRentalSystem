@@ -9,5 +9,6 @@ namespace Data.IRepositories
     {
         Task<BookingFeedbackEntity> GetByBookingIdAsync(Guid bookingId);
         Task<List<BookingFeedbackEntity>> GetAllByCarIdAsync(Guid carId);
+        Task<double> GetCarAverageFeedbackAsync(Guid carId);
     }
 }
