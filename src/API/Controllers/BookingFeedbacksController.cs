@@ -66,24 +66,34 @@ namespace API.Controllers
             var isAdmin = _httpContextAccessor.HttpContext.User.IsInRole(Policy.ForAdminOnly);
             if (isAdmin)
             {
-                await _bookingFeedbackService.UpdateByAdminAsync(id, model);
+                await _bookingFeedbackService.UpdateAsync(id, model);
             }
             else
             {
                 var userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(claim =>
                     claim.Type == ClaimTypes.NameIdentifier)?.Value;
-                await _bookingFeedbackService.UpdateByUserAsync(id, model, Guid.Parse(userId));
+                await _bookingFeedbackService.UpdateAsync(id, model, Guid.Parse(userId));
             }
 
             return Ok();
         }
 
         [HttpDelete]
-        [Authorize(Policy = Policy.ForAdminOnly)]
+        [Authorize]
         [Route("{bookingFeedbackId:guid}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid bookingFeedbackId)
         {
-            await _bookingFeedbackService.DeleteAsync(bookingFeedbackId);
+            var isAdmin = _httpContextAccessor.HttpContext.User.IsInRole(Policy.ForAdminOnly);
+            if (isAdmin)
+            {
+                await _bookingFeedbackService.DeleteAsync(bookingFeedbackId);
+            }
+            else
+            {
+                var userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(claim =>
+                    claim.Type == ClaimTypes.NameIdentifier)?.Value;
+                await _bookingFeedbackService.DeleteAsync(bookingFeedbackId, Guid.Parse(userId));
+            }
             return Ok();
         }
     }
