@@ -12,6 +12,7 @@ namespace API.MappingProfiles
             CreateMap<CreateBookingFeedbackRequest, BookingFeedbackModel>();
             CreateMap<BookingFeedbackModel, BookingFeedbackResponse>();
             CreateMap<UpdateBookingFeedbackRequest, BookingFeedbackModel>()
+                .ForMember(src => src.Id, act => act.MapFrom(b => b.BookingFeedbackId))
                 .ForMember(src => src.CarId, act => act.Ignore())
                 .ForMember(src => src.Car, act => act.Ignore())
                 .ForMember(src => src.BookingId, act => act.Ignore())

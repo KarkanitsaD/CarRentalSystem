@@ -53,14 +53,25 @@ namespace Business.Services
 
         public async Task UpdateByUserAsync(Guid feedbackId, BookingFeedbackModel updateModel, Guid userId)
         {
-            var entityToUpdate = await GetBookingFeedbackEntityAsync(feedbackId, updateModel);
-            
+            if (feedbackId != updateModel.Id)
+            {
+                throw new BadRequestException("Check data!");
+            }
+
+            var entityToUpdate = await _bookingFeedbackRepository.GetAsync(feedbackId);
+            if (entityToUpdate == null)
+            {
+                throw new NotFoundException($"{nameof(updateModel)} with id = {feedbackId} not found.");
+            }
+
             if (entityToUpdate.UserId != userId)
             {
                 throw new NotAuthorizedException("You do not have permissions to do this action!");
             }
 
-            await UpdateEntityAsync(entityToUpdate, updateModel);
+            entityToUpdate.Comment = updateModel.Comment;
+            entityToUpdate.Rating = updateModel.Rating;
+            await _bookingFeedbackRepository.UpdateAsync(entityToUpdate);
         }
 
         public async Task DeleteAsync(Guid bookingFeedbackId)
