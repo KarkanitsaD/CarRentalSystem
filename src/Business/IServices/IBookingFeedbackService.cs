@@ -10,8 +10,7 @@ namespace Business.IServices
         Task<BookingFeedbackModel> GetAsync(Guid bookingId);
         Task<List<BookingFeedbackModel>> GetAllByCarIdAsync(Guid carId);
         Task CreateAsync(BookingFeedbackModel bookingFeedbackModel);
-        Task UpdateByAdminAsync(Guid id, BookingFeedbackModel updateModel);
-        Task UpdateByUserAsync(Guid feedbackId, BookingFeedbackModel updateModel, Guid userId);
-        Task DeleteAsync(Guid bookingFeedbackId);
+        Task DeleteAsync(Guid feedbackId, Guid? userId = null);
+        Task UpdateAsync(Guid feedbackId, BookingFeedbackModel updateModel, Guid? userId = null);
     }
 }
