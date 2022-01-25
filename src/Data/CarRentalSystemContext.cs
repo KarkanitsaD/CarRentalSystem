@@ -29,6 +29,7 @@ namespace Data
         public DbSet<CarPictureEntity> CarPictureEntities { get; set; }
         public DbSet<CarLockEntity> CarLocks { get; set; }
         public DbSet<BookingFeedbackEntity> BookingFeedbacks { get; set; }
+        public DbSet<AdditionalFacilityEntity> AdditionalFacilities { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,7 +43,8 @@ namespace Data
                 .ApplyConfiguration(new CountryEntityTypeConfiguration())
                 .ApplyConfiguration(new RefreshTokenEntityTypeConfiguration())
                 .ApplyConfiguration(new CarPictureEntityTypeConfiguration())
-                .ApplyConfiguration(new BookingFeedbackEntityTypeConfiguration());
+                .ApplyConfiguration(new BookingFeedbackEntityTypeConfiguration())
+                .ApplyConfiguration(new AdditionalFacilityEntityTypeConfiguration());
         }
 
         private void SeedData(ModelBuilder modelBuilder)

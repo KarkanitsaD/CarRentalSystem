@@ -15,5 +15,6 @@ namespace Data.Entities
         public CountryEntity Country { get; set; }
         public ICollection<BookingEntity> Bookings { get; set; }
         public ICollection<CarEntity> Cars { get; set; }
+        public ICollection<AdditionalFacilityEntity> AdditionalFacilities { get; set; }
     }
 }
