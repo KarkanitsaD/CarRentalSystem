@@ -25,6 +25,7 @@ namespace API.Extensions
             services.AddScoped<ICarLockRepository, CarLockRepository>();
             services.AddScoped<IBookingFeedbackRepository, BookingFeedbackRepository>();
             services.AddScoped<IAdditionalFacilityRepository, AdditionalFacilityRepository>();
+            services.AddScoped<IAdditionalFacilityBookingRepository, AdditionalFacilityBookingRepository>();
 
             return services;
         }

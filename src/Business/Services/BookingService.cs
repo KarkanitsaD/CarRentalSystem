@@ -23,14 +23,14 @@ namespace Business.Services
         private readonly IBookingRepository _bookingRepository;
         private readonly CarRentalSystemContext _context;
 
-        public BookingService(IMapper mapper, IBookingRepository bookingRepository, ITokenService tokenService, CarRentalSystemContext context)
+        public BookingService(IMapper mapper, IBookingRepository bookingRepository, CarRentalSystemContext context)
         {
             _mapper = mapper;
             _bookingRepository = bookingRepository;
             _context = context;
         }
 
-        public async Task CreateAsync(Guid userId, BookingModel bookingModel)
+        public async Task CreateAsync(Guid userId, BookingModel bookingModel, Guid[] additionalFacilitiesIds)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
             try
@@ -69,9 +69,25 @@ namespace Business.Services
                 bookingModel.UserId = userId;
                 var entity = _mapper.Map<BookingModel, BookingEntity>(bookingModel);
 
-                await _context.Bookings.AddAsync(entity);
+                var booking  = (await _context.Bookings.AddAsync(entity)).Entity;
 
                 await _context.SaveChangesAsync();
+
+                if (additionalFacilitiesIds != null && additionalFacilitiesIds.Length > 0)
+                {
+                    var facilities = new List<AdditionalFacilityBookingEntity>();
+                    foreach (var id in additionalFacilitiesIds)
+                    {
+                        facilities.Add(new AdditionalFacilityBookingEntity()
+                        {
+                            AdditionalFacilityId = id,
+                            BookingId = booking.Id
+                        });
+                    }
+
+                    await _context.AdditionalFacilityBookings.AddRangeAsync(facilities);
+                    await _context.SaveChangesAsync();
+                }
 
                 await transaction.CommitAsync();
             }

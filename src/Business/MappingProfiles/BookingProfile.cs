@@ -13,6 +13,7 @@ namespace Business.MappingProfiles
             CreateMap<BookingEntity, BookingModel>();
 
             CreateMap<BookingModel, BookingEntity>()
+                .ForMember(src => src.AdditionalFacilityBookings, act => act.Ignore())
                 .ForMember(src => src.Car, act => act.Ignore())
                 .ForMember(src => src.User, act => act.Ignore())
                 .ForMember(src => src.RentalPoint, act => act.Ignore());

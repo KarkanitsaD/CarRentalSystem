@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Data.Entities
 {
@@ -8,5 +9,6 @@ namespace Data.Entities
         public decimal Price { get; set; }
         public Guid RentalPointId { get; set; }
         public RentalPointEntity RentalPoint { get; set; }
+        public ICollection<AdditionalFacilityBookingEntity> AdditionalFacilityBookings { get; set; }
     }
 }

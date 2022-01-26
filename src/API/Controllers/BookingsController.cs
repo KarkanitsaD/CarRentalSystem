@@ -40,7 +40,7 @@ namespace API.Controllers
 
             var booking = _mapper.Map<CreateBookingRequest, BookingModel>(bookingRequest);
 
-            await _bookingService.CreateAsync(Guid.Parse(userId), booking);
+            await _bookingService.CreateAsync(Guid.Parse(userId), booking, bookingRequest.AdditionalFacilitiesIds);
 
             return Ok();
         }
