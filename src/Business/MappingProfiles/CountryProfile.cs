@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Business.Models;
-using Business.SingleR.EventModels;
+using Business.SignalR.EventModels;
 using Data.Entities;
 
 namespace Business.MappingProfiles

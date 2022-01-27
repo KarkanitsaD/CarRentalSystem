@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Business.SingleR.EventModels
+namespace Business.SignalR.EventModels
 {
     public class NewCityModel
     {
