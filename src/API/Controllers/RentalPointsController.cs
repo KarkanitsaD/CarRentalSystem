@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Models.Request.RentalPoint;
+using API.Models.Response.AdditionalFacility;
 using API.Models.Response.RentalPoint;
 using AutoMapper;
 using Business.IServices;
@@ -19,12 +20,14 @@ namespace API.Controllers
     public class RentalPointsController : ControllerBase
     {
         private readonly IRentalPointService _rentalPointService;
+        private readonly IAdditionalFacilityService _additionalFacilityService;
         private readonly IMapper _mapper;
 
-        public RentalPointsController(IRentalPointService rentalPointService, IMapper mapper)
+        public RentalPointsController(IRentalPointService rentalPointService, IMapper mapper, IAdditionalFacilityService additionalFacilityService)
         {
             _rentalPointService = rentalPointService;
             _mapper = mapper;
+            _additionalFacilityService = additionalFacilityService;
         }
         
         [HttpGet]
@@ -71,6 +74,16 @@ namespace API.Controllers
         {
             await _rentalPointService.DeleteAsync(id);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("{id:guid}/additionalFacilities")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAdditionalFacilitiesAsync([FromRoute] Guid id)
+        {
+            var models = await _additionalFacilityService.GetAllByRentalPointIdAsync(id);
+            var response = _mapper.Map<List<AdditionalFacilityModel>, List<AdditionalFacilityResponse>>(models);
+            return Ok(response);
         }
     }
 }

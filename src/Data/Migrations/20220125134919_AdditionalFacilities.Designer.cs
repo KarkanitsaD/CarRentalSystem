@@ -4,38 +4,22 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(CarRentalSystemContext))]
-    partial class CarRentalSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20220125134919_AdditionalFacilities")]
+    partial class AdditionalFacilities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Data.Entities.AdditionalFacilityBookingEntity", b =>
-                {
-                    b.Property<Guid>("AdditionalFacilityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BookingId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("AdditionalFacilityId", "BookingId");
-
-                    b.HasIndex("BookingId");
-
-                    b.ToTable("AdditionalFacilityBookings");
-                });
 
             modelBuilder.Entity("Data.Entities.AdditionalFacilityEntity", b =>
                 {
@@ -393,25 +377,6 @@ namespace Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Data.Entities.AdditionalFacilityBookingEntity", b =>
-                {
-                    b.HasOne("Data.Entities.AdditionalFacilityEntity", "AdditionalFacility")
-                        .WithMany("AdditionalFacilityBookings")
-                        .HasForeignKey("AdditionalFacilityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Entities.BookingEntity", "Booking")
-                        .WithMany("AdditionalFacilityBookings")
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AdditionalFacility");
-
-                    b.Navigation("Booking");
-                });
-
             modelBuilder.Entity("Data.Entities.AdditionalFacilityEntity", b =>
                 {
                     b.HasOne("Data.Entities.RentalPointEntity", "RentalPoint")
@@ -567,15 +532,8 @@ namespace Data.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Data.Entities.AdditionalFacilityEntity", b =>
-                {
-                    b.Navigation("AdditionalFacilityBookings");
-                });
-
             modelBuilder.Entity("Data.Entities.BookingEntity", b =>
                 {
-                    b.Navigation("AdditionalFacilityBookings");
-
                     b.Navigation("BookingFeedback");
                 });
 

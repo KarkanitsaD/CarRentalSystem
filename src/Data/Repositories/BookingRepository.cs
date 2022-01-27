@@ -26,7 +26,10 @@ namespace Data.Repositories
                 .Include(b => b.RentalPoint)
                     .ThenInclude(rp => rp.Country)
                 .Include(b => b.RentalPoint)
-                    .ThenInclude(rp => rp.City).ToListAsync();
+                    .ThenInclude(rp => rp.City)
+                .Include(b => b.AdditionalFacilityBookings)
+                    .ThenInclude(ab => ab.AdditionalFacility)
+                .ToListAsync();
 
             return new PageResult<BookingEntity>(items, totalItemsCount);
         }

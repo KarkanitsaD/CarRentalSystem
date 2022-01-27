@@ -24,6 +24,8 @@ namespace API.Extensions
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<ICarLockRepository, CarLockRepository>();
             services.AddScoped<IBookingFeedbackRepository, BookingFeedbackRepository>();
+            services.AddScoped<IAdditionalFacilityRepository, AdditionalFacilityRepository>();
+            services.AddScoped<IAdditionalFacilityBookingRepository, AdditionalFacilityBookingRepository>();
 
             return services;
         }
@@ -41,6 +43,7 @@ namespace API.Extensions
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<ICarPictureService, CarPictureService>();
             services.AddScoped<IBookingFeedbackService, BookingFeedbackService>();
+            services.AddScoped<IAdditionalFacilityService, AdditionalFacilityService>();
 
             return services;
         }

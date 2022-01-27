@@ -8,7 +8,7 @@ namespace Business.IServices
 {
     public interface IBookingService
     {
-        Task CreateAsync(Guid userId, BookingModel bookingModel);
+        Task CreateAsync(Guid userId, BookingModel bookingModel, Guid[] additionalFacilitiesIds = null);
         Task<(List<BookingModel>, int)> GetAllAsync(Guid userId, BookingQueryModel queryModel);
         Task DeleteAsync(Guid userId, Guid bookingId);
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Data.Entities
 {
@@ -19,5 +20,6 @@ namespace Data.Entities
         public DateTime KeyReceivingTime { get; set; }
         public DateTime KeyHandOverTime { get; set; }
         public DateTime BookingTime { get; set; }
+        public ICollection<AdditionalFacilityBookingEntity> AdditionalFacilityBookings { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using API.Models.Response.AdditionalFacility;
 
 namespace API.Models.Response.Booking
 {
@@ -18,5 +20,6 @@ namespace API.Models.Response.Booking
         public DateTime KeyReceivingTime { get; set; }
         public DateTime KeyHandOverTime { get; set; }
         public DateTime BookingTime { get; set; }
+        public ICollection<AdditionalFacilityResponse> AdditionalFacilities { get; set; }
     }
 }
