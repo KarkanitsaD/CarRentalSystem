@@ -1,4 +1,4 @@
-﻿namespace Business.Query
+﻿namespace Business.Query.User
 {
     public class UserQueryModel : QueryModel
     {

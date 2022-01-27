@@ -2,7 +2,7 @@ using API.ApplicationOptions;
 using API.Extensions;
 using Business.Extensions;
 using Business.Options;
-using Business.SingleR.Hubs;
+using Business.SignalR.Hubs;
 using Data;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;

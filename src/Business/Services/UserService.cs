@@ -7,6 +7,7 @@ using Business.Helpers;
 using Business.IServices;
 using Business.Models;
 using Business.Query;
+using Business.Query.User;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query.FiltrationModels;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Business.Models;
 using Business.Query;
+using Business.Query.User;
 
 namespace Business.IServices
 {

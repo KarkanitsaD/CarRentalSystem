@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Models;
 using Business.Query;
+using Business.Query.User;
 using Data.Entities;
 using Data.Query.FiltrationModels;
 
