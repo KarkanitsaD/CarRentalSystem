@@ -8,7 +8,5 @@ namespace Business.IServices
     public interface ICityService
     {
         Task<List<CityModel>> GetListAsync();
-        Task<CityModel> CreateAsync(CityModel city);
-        Task DeleteAsync(Guid id);
     }
 }

@@ -6,9 +6,12 @@ using Business.Exceptions;
 using Business.IServices;
 using Business.Models;
 using Business.Query.RentalPoint;
+using Business.SingleR.EventModels;
+using Business.SingleR.Hubs;
 using Data.Entities;
 using Data.IRepositories;
 using Data.Query.FiltrationModels;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Business.Services
 {
@@ -18,13 +21,15 @@ namespace Business.Services
         private readonly IRentalPointRepository _rentalPointRepository;
         private readonly ICountryRepository _countryRepository;
         private readonly ICityRepository _cityRepository;
+        private readonly IHubContext<LocationHub> _locationHub;
 
-        public RentalPointService(IMapper mapper, IRentalPointRepository rentalPointRepository, ICountryRepository countryRepository, ICityRepository cityRepository)
+        public RentalPointService(IMapper mapper, IRentalPointRepository rentalPointRepository, ICountryRepository countryRepository, ICityRepository cityRepository, IHubContext<LocationHub> locationHub)
         {
             _mapper = mapper;
             _rentalPointRepository = rentalPointRepository;
             _countryRepository = countryRepository;
             _cityRepository = cityRepository;
+            _locationHub = locationHub;
         }
 
         public async Task<RentalPointModel> GetAsync(Guid id)
@@ -42,14 +47,16 @@ namespace Business.Services
             var rentalPointFilter = _mapper.Map<RentalPointQueryModel, RentalPointFiltrationModel>(queryModel);
             var result = await _rentalPointRepository.GetPageListAsync(rentalPointFilter, queryModel.PageIndex, queryModel.PageSize);
 
-            var rentalPointModels = _mapper.Map<List<RentalPointEntity>, List<RentalPointModel>>(result.Items); 
+            var rentalPointModels = _mapper.Map<List<RentalPointEntity>, List<RentalPointModel>>(result.Items);
 
             return (rentalPointModels, result.TotalItemsCount);
         }
 
         public async Task CreateAsync(RentalPointModel rentalPointModel)
         {
-            var (countryId, cityId) = await GetCountryAndCityIdentifiersAsync(rentalPointModel);
+            var countryId = await GetCountryIdOrCreate(rentalPointModel.Country.Title);
+            var cityId = await GetCityIdOrCreate(countryId, rentalPointModel.City.Title,
+                rentalPointModel.City.TimeOffset);
 
             var entity = _mapper.Map<RentalPointModel, RentalPointEntity>(rentalPointModel);
             entity.CountryId = countryId;
@@ -61,21 +68,14 @@ namespace Business.Services
         public async Task UpdateAsync(Guid id, RentalPointModel rentalPointModel)
         {
             if (id != rentalPointModel.Id)
-                throw new BadRequestException("Check data.");
+                throw new BadRequestException("Ids from route and model are not equal.");
 
             var entityToUpdate = await _rentalPointRepository.GetAsync(id);
 
             if (entityToUpdate == null)
                 throw new NotFoundException($"{nameof(rentalPointModel)} with id = {id} not found.");
 
-            var (countryId, cityId) = await GetCountryAndCityIdentifiersAsync(rentalPointModel);
-
-            entityToUpdate.CountryId = countryId;
-            entityToUpdate.CityId = cityId;
-            entityToUpdate.Address = rentalPointModel.Address;
             entityToUpdate.Title = rentalPointModel.Title;
-            entityToUpdate.LocationX = rentalPointModel.LocationX;
-            entityToUpdate.LocationY = rentalPointModel.LocationY;
 
             await _rentalPointRepository.UpdateAsync(entityToUpdate);
         }
@@ -90,32 +90,34 @@ namespace Business.Services
             await _rentalPointRepository.DeleteAsync(entityToDelete);
         }
 
-        private async Task<(Guid, Guid)> GetCountryAndCityIdentifiersAsync(RentalPointModel rentalPoint)
+        private async Task<Guid> GetCountryIdOrCreate(string countryTitle)
         {
-            CountryEntity countryEntity;
-            CityEntity cityEntity;
-
-            var countryModel = rentalPoint.Country;
-            var cityModel = rentalPoint.City;
-
-            countryEntity = await _countryRepository.GetByTitleAsync(countryModel.Title);
-            if (countryEntity == null)
+            var country = await _countryRepository.GetByTitleAsync(countryTitle);
+            if (country == null)
             {
-                countryEntity = await _countryRepository.CreateAsync(_mapper.Map<CountryModel, CountryEntity>(countryModel));
-                cityModel.CountryId = countryEntity.Id;
-                cityModel.TimeOffset = rentalPoint.TimeOffset;
-                cityEntity = await _cityRepository.CreateAsync(_mapper.Map<CityModel, CityEntity>(cityModel));
+                country = new CountryEntity { Title = countryTitle };
+                country = await _countryRepository.CreateAsync(country);
+
+                var newCountryModel = _mapper.Map<CountryEntity, NewCountryModel>(country);
+                await _locationHub.Clients.All.SendAsync("addCountry", newCountryModel);
             }
-            else
+
+            return country.Id;
+        }
+
+        private async Task<Guid> GetCityIdOrCreate(Guid countryId, string title, float timeOffset)
+        {
+            var city = await _cityRepository.GetByTitleAndCountryIdAsync(title, countryId);
+            if (city == null)
             {
-                cityEntity = await _cityRepository.GetByTitleAndCountryIdAsync(cityModel.Title, countryEntity.Id);
-                if (cityEntity == null)
-                {
-                    cityModel.CountryId = countryEntity.Id;
-                    cityEntity = await _cityRepository.CreateAsync(_mapper.Map<CityModel, CityEntity>(cityModel));
-                }
+                city = new CityEntity { Title = title, CountryId = countryId, TimeOffset = timeOffset };
+                city = await _cityRepository.CreateAsync(city);
+
+                var newCityModel = _mapper.Map<CityEntity, NewCityModel>(city);
+                await _locationHub.Clients.All.SendAsync("addCity", newCityModel);
             }
-            return (countryEntity.Id, cityEntity.Id);
+
+            return city.Id;
         }
     }
 }
