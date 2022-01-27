@@ -19,9 +19,7 @@ namespace API.MappingProfiles
             CreateMap<UpdateRentalPointRequest, RentalPointModel>()
                 .ForMember(src => src.Bookings, act => act.Ignore())
                 .ForMember(src => src.Bookings, act => act.Ignore())
-                .ForMember(src => src.Cars, act => act.Ignore())
-                .ForMember(src => src.Country, act => act.MapFrom(dest => new CountryModel() { Title = dest.Country }))
-                .ForMember(src => src.City, act => act.MapFrom(dest => new CityModel() { Title = dest.City }));
+                .ForMember(src => src.Cars, act => act.Ignore());
 
             CreateMap<RentalPointModel, RentalPointResponseModel>()
                 .ForMember(src => src.Country, act => act.MapFrom(dest => dest.Country.Title))

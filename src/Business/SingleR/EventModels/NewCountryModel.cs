@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace API.Models.Request.RentalPoint
+namespace Business.SingleR.EventModels
 {
-    public class UpdateRentalPointRequest
+    public class NewCountryModel
     {
         public Guid Id { get; set; }
         public string Title { get; set; }

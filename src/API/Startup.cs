@@ -2,6 +2,7 @@ using API.ApplicationOptions;
 using API.Extensions;
 using Business.Extensions;
 using Business.Options;
+using Business.SingleR.Hubs;
 using Data;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -46,6 +47,7 @@ namespace API
             services.AddJwtBearerAuthentication(Configuration.GetSection(JwtOptions.Jwt).Get<JwtOptions>());
             services.AddAuthorizationService();
 
+            services.AddSignalR();
             services.AddControllersWithCache();
             services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
             services.AddSwaggerGenerator();
@@ -65,12 +67,7 @@ namespace API
 
             app.UseRouting();
 
-            app.UseCors(CorsOptions.WebApp);
-
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            app.UseCors(CorsOptions.ApiCorsName);
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -78,6 +75,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<LocationHub>("/location");
             });
         }
     }

@@ -57,7 +57,8 @@ namespace API.Extensions
                     {
                         builder.WithOrigins(CorsOptions.WebApp)
                             .AllowAnyHeader()
-                            .AllowAnyMethod();
+                            .AllowAnyMethod()
+                            .AllowCredentials();
                     });
             });
 
