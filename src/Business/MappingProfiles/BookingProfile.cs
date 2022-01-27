@@ -10,7 +10,8 @@ namespace Business.MappingProfiles
     {
         public BookingProfile()
         {
-            CreateMap<BookingEntity, BookingModel>();
+            CreateMap<BookingEntity, BookingModel>()
+                .ForMember(src => src.AdditionalFacilities, act => act.MapFrom(dest => dest.AdditionalFacilityBookings));
 
             CreateMap<BookingModel, BookingEntity>()
                 .ForMember(src => src.AdditionalFacilityBookings, act => act.Ignore())
