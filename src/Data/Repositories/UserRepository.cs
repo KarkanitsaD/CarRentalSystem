@@ -46,7 +46,8 @@ namespace Data.Repositories
 
         public async Task<PageResult<UserEntity>> GetPageListAsync(UserFiltrationModel userFiltrationModel, int pageIndex, int pageSize)
         {
-            var queryable = DbSet.AsQueryable().Where(GetFilterRule(userFiltrationModel));
+            var queryable = DbSet.AsQueryable().Include(u => u.Role)
+                .Where(GetFilterRule(userFiltrationModel));
 
             var totalItemsCount = await queryable.CountAsync();
             var items = await queryable.ToListAsync();
